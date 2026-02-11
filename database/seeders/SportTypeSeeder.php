@@ -3,10 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\SportType;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-
-use function Symfony\Component\Clock\now;
 
 class SportTypeSeeder extends Seeder
 {

@@ -19,7 +19,7 @@ class DatabaseSeeder extends Seeder
     public function seedLookups(): void
     {
         $this->call([
-            SportTypeSeeder::class
+            SportTypeSeeder::class,
         ]);
     }
 
