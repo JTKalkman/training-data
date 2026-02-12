@@ -14,12 +14,12 @@ class ParsedSession
 
     public function __construct(
         ParsedSessionData $sessionData,
-        ParsedSummaryData $summary,
+        ParsedSummaryData $summaryData,
         array $heartRateZones = [],
         array $rawData = []
     ) {
         $this->sessionData = $sessionData;
-        $this->summary = $summary;
+        $this->summary = $summaryData;
         $this->heartRateZones = $heartRateZones;
         $this->rawData = $rawData;
     }
