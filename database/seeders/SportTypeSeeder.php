@@ -17,5 +17,7 @@ class SportTypeSeeder extends Seeder
         SportType::create(['name' => 'running', 'label' => 'Running']);
         SportType::create(['name' => 'indoor_cycling', 'label' => 'Indoor Cycling']);
         SportType::create(['name' => 'weight_training', 'label' => 'Weight Training']);
+        SportType::create(['name' => 'other_indoor', 'label' => 'Other Indoor']);
+        SportType::create(['name' => 'bootcamp', 'label' => 'Bootcamp']);
     }
 }
