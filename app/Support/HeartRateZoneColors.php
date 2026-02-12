@@ -29,7 +29,7 @@ class HeartRateZoneColors
     {
         return match ($zoneCount) {
             5 => self::FIVE_ZONE_SYSTEM,
-            5 => self::FOUR_ZONE_SYSTEM,
+            4 => self::FOUR_ZONE_SYSTEM,
             3 => self::THREE_ZONE_SYSTEM,
             default => [],
         };
