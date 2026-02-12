@@ -12,14 +12,14 @@ class SportTypeMapper
         'RUN' => 'running',
         'OTHER_INDOOR' => 'other_indoor',
         'STRENGTH_TRAINING' => 'weight_training',
-        'BOOTCAMP' => 'bootcamp'
+        'BOOTCAMP' => 'bootcamp',
     ];
 
     public static function map(string $external): ?SportType
     {
         $internal = self::MAP[$external] ?? null;
 
-        if (!$internal) {
+        if (! $internal) {
             return null;
         }
 

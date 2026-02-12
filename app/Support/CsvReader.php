@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace App\Support;
 
@@ -9,6 +9,7 @@ class CsvReader
     public static function from(string $filePath): iterable
     {
         $csv = Reader::from($filePath, 'r');
+
         return $csv->getRecords();
     }
 }
