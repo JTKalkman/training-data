@@ -18,6 +18,8 @@ class TrainingSession extends Model
         'sport_type_id',
         'started_at',
         'duration_seconds',
+        'source',
+        'file_path',
     ];
 
     public function sportType(): BelongsTo
