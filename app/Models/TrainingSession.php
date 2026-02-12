@@ -22,6 +22,10 @@ class TrainingSession extends Model
         'file_path',
     ];
 
+    protected $casts = [
+        'started_at' => 'datetime',
+    ];
+
     public function sportType(): BelongsTo
     {
         return $this->belongsTo(SportType::class);
