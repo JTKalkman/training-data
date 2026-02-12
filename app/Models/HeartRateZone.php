@@ -17,6 +17,7 @@ class HeartRateZone extends Model
         'name',
         'min_bpm',
         'max_bpm',
+        'color',
     ];
 
     public function trainingSession(): BelongsTo
