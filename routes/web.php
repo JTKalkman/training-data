@@ -15,7 +15,7 @@ Route::get('/', function () {
         $year = $now->year;
         $week = $now->weekOfYear;
 
-        return redirect()->route('diary.week', [
+        return redirect()->route('sessions.week', [
             'year' => $year,
             'week' => $week,
         ]);
@@ -26,15 +26,19 @@ Route::get('/', function () {
     ]);
 })->name('home');
 
-Route::get('/diary/session/{session}', [SessionController::class, 'show'])
+Route::get('/sessions/{session}/raw-data', [SessionController::class, 'rawData'])
     ->middleware(['auth', 'verified'])
-    ->name('diary.session');
+    ->name('sessions.raw-data');
 
-Route::get('/diary/{year}/week/{week}', [WeekOverviewController::class, 'show'])
+Route::get('/sessions/{session}', [SessionController::class, 'show'])
+    ->middleware(['auth', 'verified'])
+    ->name('sessions.session');
+
+Route::get('/sessions/{year}/week/{week}', [WeekOverviewController::class, 'show'])
     ->whereNumber('year')
     ->whereNumber('week')
     ->middleware(['auth', 'verified'])
-    ->name('diary.week');
+    ->name('sessions.week');
 
 Route::get('dashboard', function () {
     return Inertia::render('Dashboard');

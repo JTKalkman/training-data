@@ -2,6 +2,7 @@
 import { Link } from '@inertiajs/vue3';
 import Layout from './Components/Layout.vue';
 import { computed } from 'vue';
+import SessionChart from './Components/SessionChart.vue';
 
 defineOptions({ layout: Layout })
 
@@ -24,8 +25,8 @@ const props = defineProps({
       </div>
     </div>
 
-    <div class="mb-6 text-center pt-10 pb-10 bg-gray-500">
-      Place holder for chart.
+    <div class="mb-6 text-center pt-10 pb-10">
+      <SessionChart :sessionId="session.data.id"></SessionChart>
     </div>
     
     <div v-if="session.data.heart_rate_zones.length > 0">
