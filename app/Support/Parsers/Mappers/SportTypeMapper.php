@@ -9,7 +9,7 @@ class SportTypeMapper
     protected const MAP = [
         'MTB' => 'mountain_bike',
         'CYCLING' => 'cycling',
-        'RUN' => 'running',
+        'RUNNING' => 'running',
         'OTHER_INDOOR' => 'other_indoor',
         'STRENGTH_TRAINING' => 'weight_training',
         'BOOTCAMP' => 'bootcamp',
