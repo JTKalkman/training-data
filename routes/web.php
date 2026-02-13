@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\SessionController;
 use App\Http\Controllers\WeekOverviewController;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -25,11 +26,14 @@ Route::get('/', function () {
     ]);
 })->name('home');
 
-Route::get('/diary/{year}/week/{week}', [WeekOverviewController::class, 'week'])
+Route::get('/diary/{year}/week/{week}', [WeekOverviewController::class, 'show'])
     ->whereNumber('year')
     ->whereNumber('week')
     ->middleware(['auth', 'verified'])
     ->name('diary.week');
+
+Route::get('/diary/session/{session-id}', [SessionController::class, 'show'])
+     ->name('diary.session');
 
 Route::get('dashboard', function () {
     return Inertia::render('Dashboard');
