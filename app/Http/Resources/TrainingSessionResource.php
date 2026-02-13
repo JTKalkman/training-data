@@ -26,10 +26,6 @@ class TrainingSessionResource extends JsonResource
                 'session' => $this->id,
             ]),
 
-            'detail_url' => route('sessions.session', [
-                'session' => $this->id,
-            ]),
-
             'week_url' => route('sessions.week', [
                 'year' => $this->started_at->isoWeekYear,
                 'week' => $this->started_at->isoWeek,
