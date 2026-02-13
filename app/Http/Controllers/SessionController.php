@@ -4,10 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\TrainingSessionResource;
 use App\Models\TrainingSession;
-use Carbon\Carbon;
-use Illuminate\Support\Facades\Auth;
+use App\Support\ChartData;
 use Inertia\Inertia;
-use Illuminate\Support\Facades\File;
 
 class SessionController extends Controller
 {
@@ -22,12 +20,12 @@ class SessionController extends Controller
 
     public function rawData(TrainingSession $session)
     {
-        if (! File::exists($session->file_path)) {
+        $data = ChartData::fromSession($session);
+
+        if (empty($data)) {
             abort(404, 'Raw data not found');
         }
 
-        $rawData = json_decode(File::get($session->file_path), true);
-
-        return response()->json($rawData);
+        return response()->json($data);
     }
 }
