@@ -2,9 +2,9 @@
 
 namespace App\Support\Parsers;
 
+use App\Support\Duration;
 use App\Support\Parsers\Mappers\SportTypeMapper;
 use Carbon\Carbon;
-use Carbon\CarbonInterval;
 
 class PolarCsvParser implements ParserInterface
 {
@@ -12,12 +12,12 @@ class PolarCsvParser implements ParserInterface
     {
         $sportType = SportTypeMapper::map($headerData['Sport']);
         $startedAt = Carbon::createFromFormat('d-m-Y H:i:s', $headerData['Date'].' '.$headerData['Start time']);
-        $duration = CarbonInterval::createFromFormat('H:i:s', $headerData['Duration']);
+        $duration = Duration::fromHms($headerData['Duration']);
 
         return new ParsedSessionData([
             'sport_type' => $sportType ? $sportType->id : null,
             'started_at' => $startedAt,
-            'duration_seconds' => $duration->totalSeconds,
+            'duration_seconds' => $duration,
             'source' => 'polar',
         ]);
     }
@@ -33,10 +33,10 @@ class PolarCsvParser implements ParserInterface
 
     public function createRawDataRecord(array $rawData): array
     {
-        $time = CarbonInterval::createFromFormat('H:i:s', $rawData['Time']);
+        $time = Duration::fromHms($rawData['Time']);
 
         return [
-            'time' => $time->totalSeconds,
+            'time' => $time,
             'heart_rate' => $rawData['HR (bpm)'] ?? null,
         ];
     }

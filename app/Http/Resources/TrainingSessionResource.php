@@ -2,7 +2,7 @@
 
 namespace App\Http\Resources;
 
-use Carbon\CarbonInterval;
+use App\Support\Duration;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -20,7 +20,7 @@ class TrainingSessionResource extends JsonResource
             'started_at' => $this->started_at->toIso8601String(),
             'started_at_human' => $this->started_at->format('D M d, Y H:i'),
             'duration' => $this->duration_seconds,
-            'duration_human' => CarbonInterval::seconds($this->duration_seconds)->cascade()->forHumans(),
+            'duration_human' => Duration::human($this->duration_seconds),
 
             'detail_url' => route('sessions.session', [
                 'session' => $this->id,
