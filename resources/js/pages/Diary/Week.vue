@@ -8,17 +8,18 @@ defineProps({
   trainingSessions: Object,
   year: Number,
   week: Number,
+  navigation: Object
 })
 </script>
 
 <template>
   <div class="p-4">
     <div class="flex justify-between px-4">
-      <Link href="#">Previous</Link>
+      <Link :href="navigation.prev.url">Previous</Link>
       <h1 class="text-xl font-bold mb-4">
         Week {{ week }} - {{ year }}
       </h1>
-      <Link href="#">Next</Link>
+      <Link :href="navigation.next.url">Next</Link>
     </div>
   
     <ul>
