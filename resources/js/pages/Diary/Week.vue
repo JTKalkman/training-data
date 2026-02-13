@@ -32,13 +32,17 @@ const hasSessions = computed(() => props.trainingSessions.data.length > 0);
     <div v-else>
       <ul>
         <li v-for="session in trainingSessions.data" :key="session.id" class="border p-2 my-1">
-          <div>{{ session.sport_type.label }}</div>
-          <div>{{ session.started_at }}</div>
-          <div v-if="session.training_summary">
-            HR min: {{ session.training_summary.min_heart_rate }}<br/>
-            HR avg: {{ session.training_summary.avg_heart_rate }}<br/>
-            HR max: {{ session.training_summary.max_heart_rate }}
+
+          <div>
+            <Link :href="session.detail_url">
+              {{ session.sport_type.label }} — {{ session.started_at_human }}
+            </Link>
           </div>
+
+          <div v-if="session.duration_human">
+            {{ session.duration_human }}
+          </div>
+
         </li>
       </ul>
     </div>
