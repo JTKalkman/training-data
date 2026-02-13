@@ -26,14 +26,15 @@ Route::get('/', function () {
     ]);
 })->name('home');
 
+Route::get('/diary/session/{session}', [SessionController::class, 'show'])
+    ->middleware(['auth', 'verified'])
+    ->name('diary.session');
+
 Route::get('/diary/{year}/week/{week}', [WeekOverviewController::class, 'show'])
     ->whereNumber('year')
     ->whereNumber('week')
     ->middleware(['auth', 'verified'])
     ->name('diary.week');
-
-Route::get('/diary/session/{session-id}', [SessionController::class, 'show'])
-     ->name('diary.session');
 
 Route::get('dashboard', function () {
     return Inertia::render('Dashboard');

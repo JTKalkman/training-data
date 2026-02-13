@@ -10,7 +10,7 @@ use Inertia\Inertia;
 
 class WeekOverviewController extends Controller
 {
-    public function week (int $year, int $week)
+    public function show (int $year, int $week)
     {
         $user = Auth::user();
 
