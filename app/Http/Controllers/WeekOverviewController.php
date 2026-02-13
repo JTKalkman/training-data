@@ -33,12 +33,12 @@ class WeekOverviewController extends Controller
             'prev' => [
                 'year' => $prevWeek->isoWeekYear,
                 'week' => $prevWeek->isoWeek,
-                'url'  => route('diary.week', [$prevWeek->isoWeekYear, $prevWeek->isoWeek]),
+                'url'  => route('sessions.week', [$prevWeek->isoWeekYear, $prevWeek->isoWeek]),
             ],
             'next' => [
                 'year' => $nextWeek->isoWeekYear,
                 'week' => $nextWeek->isoWeek,
-                'url'  => route('diary.week', [$nextWeek->isoWeekYear, $nextWeek->isoWeek]),
+                'url'  => route('sessions.week', [$nextWeek->isoWeekYear, $nextWeek->isoWeek]),
             ],
         ];
 

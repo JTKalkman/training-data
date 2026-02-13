@@ -22,15 +22,15 @@ class TrainingSessionResource extends JsonResource
             'duration' => $this->duration_seconds,
             'duration_human' => CarbonInterval::seconds($this->duration_seconds)->cascade()->forHumans(),
 
-            'detail_url' => route('diary.session', [
+            'detail_url' => route('sessions.session', [
                 'session' => $this->id,
             ]),
 
-            'detail_url' => route('diary.session', [
+            'detail_url' => route('sessions.session', [
                 'session' => $this->id,
             ]),
 
-            'week_url' => route('diary.week', [
+            'week_url' => route('sessions.week', [
                 'year' => $this->started_at->isoWeekYear,
                 'week' => $this->started_at->isoWeek,
             ]),
