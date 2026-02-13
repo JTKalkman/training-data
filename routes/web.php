@@ -30,7 +30,7 @@ Route::get('/sessions/{session}/raw-data', [SessionController::class, 'rawData']
     ->middleware(['auth', 'verified'])
     ->name('sessions.raw-data');
 
-Route::get('/sessions/session/{session}', [SessionController::class, 'show'])
+Route::get('/sessions/{session}', [SessionController::class, 'show'])
     ->middleware(['auth', 'verified'])
     ->name('sessions.session');
 
