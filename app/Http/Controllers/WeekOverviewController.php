@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\TrainingSessionResource;
 use App\Models\TrainingSession;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -42,7 +43,7 @@ class WeekOverviewController extends Controller
         ];
 
         return Inertia::render('Diary/Week', [
-            'trainingSessions' => $trainingSessions,
+            'trainingSessions' => TrainingSessionResource::collection($trainingSessions),
             'year' => $year,
             'week' => $week,
             'navigation' => $navigation
