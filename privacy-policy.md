@@ -1,0 +1,1 @@
+This application retrieves training data from Polar Flow via the official Polar API. Data is used solely for personal analysis and is not shared with third parties. Users can disconnect their Polar account at any time, after which all tokens are revoked and synchronisation stops.
