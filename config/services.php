@@ -40,5 +40,4 @@ return [
         'client_secret' => env('POLAR_CLIENT_SECRET'),
         'redirect_uri' => env('POLAR_REDIRECT_URI')
     ]
-
 ];
