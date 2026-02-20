@@ -1,8 +1,8 @@
 <script setup>
 import { Link } from '@inertiajs/vue3';
-import Layout from './Components/Layout.vue';
+import Layout from './../Components/Layout.vue';
 import { computed } from 'vue';
-import SessionChart from './Components/SessionChart.vue';
+import SessionChart from './../Components/SessionChart.vue';
 
 defineOptions({ layout: Layout })
 
