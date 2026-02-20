@@ -16,7 +16,6 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->string('polar_user_id');
             $table->text('access_token');
-            $table->text('refresh_token');
             $table->timestamp('token_expires_at');
             $table->timestamp('unlinked_at')->nullable();
             $table->timestamps();
