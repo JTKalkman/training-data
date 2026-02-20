@@ -9,12 +9,13 @@ use App\Support\API\Polar\PolarApiException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class PolarAuthController extends Controller
 {
     protected const GENERIC_ERROR_MESSAGE = 'Something went wrong when trying to authorize access to your account. Please try again in a couple of minutes.';
 
-    public function redirect(Request $request)
+    public function redirect(Request $request): RedirectResponse
     {
         $user = Auth::user();
         $state = encrypt([
@@ -28,7 +29,7 @@ class PolarAuthController extends Controller
         return redirect($redirectUrl);
     }
 
-    public function callback(Request $request)
+    public function callback(Request $request): RedirectResponse
     {
         $user = Auth::user();
 
