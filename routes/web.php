@@ -31,10 +31,10 @@ Route::get('/', function () {
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/sessions/{session}/raw-data', [SessionController::class, 'rawData'])
         ->name('sessions.raw-data');
-    
+
     Route::get('/sessions/{session}', [SessionController::class, 'show'])
         ->name('sessions.session');
-    
+
     Route::get('/sessions/{year}/week/{week}', [WeekOverviewController::class, 'show'])
         ->whereNumber('year')
         ->whereNumber('week')
@@ -42,13 +42,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('/account/settings', [AccountController::class, 'settings'])
         ->name('account.settings');
-    
+
     Route::get('/auth/polar/callback', [PolarAuthController::class, 'callback'])
         ->name('auth.polar.callback');
     Route::get('/auth/polar/redirect', [PolarAuthController::class, 'redirect'])
         ->name('auth.polar.redirect');
 });
-
 
 Route::get('dashboard', function () {
     return Inertia::render('Dashboard');

@@ -2,11 +2,8 @@
 
 namespace App\Support\API\Polar\Auth;
 
-use App\Support\API\Polar\Auth\PolarAuthException;
 use App\Support\API\Polar\PolarApiException;
 use App\Support\API\Polar\PolarClient;
-use GuzzleHttp\Psr7\Response;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 
 class PolarAuthService
@@ -15,12 +12,12 @@ class PolarAuthService
     {
         $query = http_build_query([
             'response_type' => 'code',
-            'client_id'     => config('services.polar.client_id'),
-            'redirect_uri'  => config('services.polar.redirect_uri'),
-            'state'         => $state,
+            'client_id' => config('services.polar.client_id'),
+            'redirect_uri' => config('services.polar.redirect_uri'),
+            'state' => $state,
         ]);
 
-        return 'https://flow.polar.com/oauth2/authorization?' . $query;
+        return 'https://flow.polar.com/oauth2/authorization?'.$query;
     }
 
     public static function exchangeToken(string $code): PolarTokenData
@@ -53,7 +50,7 @@ class PolarAuthService
             );
         }
 
-        throw new PolarAuthException('Polar token exchange failed: ' . $response->body());
+        throw new PolarAuthException('Polar token exchange failed: '.$response->body());
     }
 
     public static function registerUser(string $userId, string $accessToken): bool
@@ -61,15 +58,15 @@ class PolarAuthService
         try {
             PolarClient::post('users',
                 ['member-id' => $userId],
-                ['Authorization' => 'Bearer ' . $accessToken]
+                ['Authorization' => 'Bearer '.$accessToken]
             );
         } catch (PolarApiException $e) {
             // 409 = already registered, that's fine
-            if (!str_contains($e->getMessage(), '409')) {
+            if (! str_contains($e->getMessage(), '409')) {
                 throw $e;
             }
         }
-        
+
         return true;
     }
 }

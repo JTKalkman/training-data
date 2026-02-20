@@ -18,7 +18,7 @@ class PolarAuthController extends Controller
     {
         $user = Auth::user();
         $state = encrypt([
-            'user_id' => $user->id
+            'user_id' => $user->id,
         ]);
 
         session(['polar_oauth_state' => $state]);
@@ -32,7 +32,7 @@ class PolarAuthController extends Controller
     {
         $user = Auth::user();
 
-        // Handle errors.   
+        // Handle errors.
         if ($request->has('error')) {
             $error_message = match ($request->error) {
                 'access_denied' => 'Access has been denied to this account.',
@@ -60,7 +60,7 @@ class PolarAuthController extends Controller
         }
 
         $request->session()->forget('polar_oauth_state');
-        
+
         try {
             $tokens = PolarAuthService::exchangeToken($request['code']);
             PolarAuthService::registerUser($tokens->xUserId, $tokens->accessToken);
@@ -71,14 +71,17 @@ class PolarAuthController extends Controller
                 ->with('success', 'Your Polar account has been linked.');
         } catch (PolarApiException $e) {
             Log::error('Polar API error', ['message' => $e->getMessage()]);
+
             return redirect()->route('account.settings')
                 ->with('error', self::GENERIC_ERROR_MESSAGE);
         } catch (PolarAuthException $e) {
             Log::error('Polar auth error', ['message' => $e->getMessage()]);
+
             return redirect()->route('account.settings')
                 ->with('error', self::GENERIC_ERROR_MESSAGE);
         } catch (\Throwable $th) {
             Log::error('Unexpected error', ['message' => $th->getMessage()]);
+
             return redirect()->route('account.settings')
                 ->with('error', self::GENERIC_ERROR_MESSAGE);
         }

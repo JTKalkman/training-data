@@ -10,21 +10,21 @@ use Inertia\Inertia;
 
 class WeekOverviewController extends Controller
 {
-    public function show (int $year, int $week)
+    public function show(int $year, int $week)
     {
         $user = Auth::user();
 
         $weekDate = Carbon::now()->setISODate($year, $week);
         $startOfWeek = $weekDate->copy()->startOfWeek()->startOfDay()->utc();
-        $endOfWeek   = $weekDate->copy()->endOfWeek()->endOfDay()->utc();
+        $endOfWeek = $weekDate->copy()->endOfWeek()->endOfDay()->utc();
         $prevWeek = $weekDate->copy()->subWeek();
         $nextWeek = $weekDate->copy()->addWeek();
-        
+
         $trainingSessions = TrainingSession::where('user_id', $user->id)
             ->whereBetween('started_at', [$startOfWeek, $endOfWeek])
             ->with([
                 'sportType',
-                'trainingSummary'
+                'trainingSummary',
             ])
             ->orderBy('started_at')
             ->get();
@@ -33,12 +33,12 @@ class WeekOverviewController extends Controller
             'prev' => [
                 'year' => $prevWeek->isoWeekYear,
                 'week' => $prevWeek->isoWeek,
-                'url'  => route('sessions.week', [$prevWeek->isoWeekYear, $prevWeek->isoWeek]),
+                'url' => route('sessions.week', [$prevWeek->isoWeekYear, $prevWeek->isoWeek]),
             ],
             'next' => [
                 'year' => $nextWeek->isoWeekYear,
                 'week' => $nextWeek->isoWeek,
-                'url'  => route('sessions.week', [$nextWeek->isoWeekYear, $nextWeek->isoWeek]),
+                'url' => route('sessions.week', [$nextWeek->isoWeekYear, $nextWeek->isoWeek]),
             ],
         ];
 
@@ -46,7 +46,7 @@ class WeekOverviewController extends Controller
             'trainingSessions' => TrainingSessionResource::collection($trainingSessions),
             'year' => $year,
             'week' => $week,
-            'navigation' => $navigation
+            'navigation' => $navigation,
         ]);
     }
 }
