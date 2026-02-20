@@ -1,0 +1,20 @@
+- [ ] API class for Polar Flow API.
+- [ ] OAuth2 flow. User instantiated.
+- [ ] Delete/destroy option for users authentication for Polar Flow API.
+- [ ] Delete/destroy of the users data.
+- [ ] Sync of the users data. For example, a cron job.
+    - [ ] Rate limiting.
+    - [ ] Exercise data.
+    - [ ] Daily activity.
+    - [ ] Physical info.
+    - [ ] Token refresh.
+    - [ ] Device information. A training session should link to a device.
+- [ ] Upload and import of historical Polar Flow data. Zip and JSON should be supported.
+    - [ ] Version-aware JSON parser voor de historische import (exportVersion differences)
+    - [ ] Deduplicatie strategie bij overlap import en sync
+    - [ ] Exercise data.
+    - [ ] Daily activity.
+    - [ ] Physical info.
+    - [ ] Import progess tracking.
+- [ ] Timezone support.
+- [ ] Privacy policy.
