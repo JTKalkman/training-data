@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('polar_user_id');
             $table->text('access_token');
             $table->timestamp('token_expires_at');
+            $table->timestamp('linked_at');
             $table->timestamp('unlinked_at')->nullable();
             $table->timestamps();
 
