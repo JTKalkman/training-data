@@ -7,12 +7,12 @@ use App\Support\API\Polar\PolarClient;
 
 class PolarUserResource
 {
-    public static function registerUser(string $userId, string $accessToken): bool
+    public static function register(string $userId, string $accessToken): bool
     {
         try {
             PolarClient::post('users',
                 ['member-id' => $userId],
-                ['Authorization' => 'Bearer '.$accessToken]
+                PolarClient::bearerHeader($accessToken)
             );
         } catch (PolarApiException $e) {
             // 409 = already registered, that's fine
@@ -22,5 +22,16 @@ class PolarUserResource
         }
 
         return true;
+    }
+
+    public static function get(string $userId, string $accessToken): array
+    {
+        $response = PolarClient::get(
+            "users/{$userId}",
+            [],
+            PolarClient::bearerHeader($accessToken)
+        );
+
+        return $response->json();
     }
 }
