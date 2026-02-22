@@ -12,6 +12,8 @@ class PolarProfile extends Model
         'polar_user_id',
         'access_token',
         'token_expires_at',
+        'first_name',
+        'last_name',
         'linked_at',
         'unlinked_at',
     ];
