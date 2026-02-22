@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class HeartRateZone extends Model
 {
-
     protected $fillable = [
         'training_session_id',
         'zone_number',

@@ -3,7 +3,6 @@
 namespace App\Http\Resources;
 
 use App\Support\Duration;
-use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class TrainingSessionResource extends JsonResource
@@ -45,7 +44,7 @@ class TrainingSessionResource extends JsonResource
                 ];
             }),
 
-            'heart_rate_zones' => $this->whenLoaded('heartRateZones', function() {
+            'heart_rate_zones' => $this->whenLoaded('heartRateZones', function () {
                 return $this->heartRateZones->map(function ($zone) {
                     return [
                         'id' => $zone->id,

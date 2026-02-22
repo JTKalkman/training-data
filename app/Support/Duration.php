@@ -12,6 +12,7 @@ class Duration
     public static function fromHms(string $time): int
     {
         $ci = CarbonInterval::createFromFormat('H:i:s', $time);
+
         return ($ci->hours * 3600) + ($ci->minutes * 60) + $ci->seconds;
     }
 

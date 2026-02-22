@@ -6,6 +6,7 @@ A Laravel demo application for importing and visualizing training sessions from 
 
 This demo project focuses on:
 - Importing Polar CSV exports
+- Linking user accounts to Polar via OAuth 2.0
 - Storing and retrieving heart rate data efficiently
 - Visualizing training sessions and heart rate zones
 
@@ -14,6 +15,7 @@ Out of scope for this demo:
 - Cadence, power, distance metrics
 - Training feedback forms (planned for future)
 - Multi-user features beyond basic authentication
+- Real-time automatic syncing (planned for future)
 
 ## Architecture
 
@@ -25,6 +27,14 @@ Out of scope for this demo:
 - **Helpers / Domain Logic:**
     - Duration class: reusable methods to format seconds → human-friendly or chart-friendly strings
     - ChartData: transforms raw JSON session data into frontend-ready structure (labels, HR, zones)
+
+## Polar Account Integration
+
+Users can link their Polar account via OAuth 2.0 to enable automatic data synchronization (future feature):
+- **OAuth Flow:** Redirects to Polar's authentication server; tokens are securely stored
+- **Token Storage:** Access tokens and expiration times are stored in the `polar_profiles` table
+- **Account Status:** Users can disconnect their Polar account from account settings
+- **Note:** Disconnecting removes the stored credentials and will prevent future sync operations until re-linked
 
 ## Data Storage & Design Decisions
 

@@ -1,6 +1,6 @@
 <script setup>
 import { Link } from '@inertiajs/vue3';
-import Layout from './Components/Layout.vue';
+import Layout from './../Components/Layout.vue';
 import { computed } from 'vue';
 
 defineOptions({ layout: Layout })

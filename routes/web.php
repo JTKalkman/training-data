@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\AccountController;
+use App\Http\Controllers\PolarAuthController;
 use App\Http\Controllers\SessionController;
 use App\Http\Controllers\WeekOverviewController;
 use Illuminate\Support\Carbon;
@@ -26,19 +28,27 @@ Route::get('/', function () {
     ]);
 })->name('home');
 
-Route::get('/sessions/{session}/raw-data', [SessionController::class, 'rawData'])
-    ->middleware(['auth', 'verified'])
-    ->name('sessions.raw-data');
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/sessions/{session}/raw-data', [SessionController::class, 'rawData'])
+        ->name('sessions.raw-data');
 
-Route::get('/sessions/{session}', [SessionController::class, 'show'])
-    ->middleware(['auth', 'verified'])
-    ->name('sessions.session');
+    Route::get('/sessions/{session}', [SessionController::class, 'show'])
+        ->name('sessions.session');
 
-Route::get('/sessions/{year}/week/{week}', [WeekOverviewController::class, 'show'])
-    ->whereNumber('year')
-    ->whereNumber('week')
-    ->middleware(['auth', 'verified'])
-    ->name('sessions.week');
+    Route::get('/sessions/{year}/week/{week}', [WeekOverviewController::class, 'show'])
+        ->whereNumber('year')
+        ->whereNumber('week')
+        ->name('sessions.week');
+
+    Route::get('/account/settings', [AccountController::class, 'settings'])
+        ->name('account.settings');
+
+    Route::get('/auth/polar/callback', [PolarAuthController::class, 'callback'])
+        ->name('auth.polar.callback');
+
+    Route::get('/auth/polar/redirect', [PolarAuthController::class, 'redirect'])
+        ->name('auth.polar.redirect');
+});
 
 Route::get('dashboard', function () {
     return Inertia::render('Dashboard');
