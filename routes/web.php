@@ -45,6 +45,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('/auth/polar/callback', [PolarAuthController::class, 'callback'])
         ->name('auth.polar.callback');
+
     Route::get('/auth/polar/redirect', [PolarAuthController::class, 'redirect'])
         ->name('auth.polar.redirect');
 });
