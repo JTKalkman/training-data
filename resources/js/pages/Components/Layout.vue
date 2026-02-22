@@ -1,5 +1,6 @@
 <script setup>
 import { Link } from '@inertiajs/vue3';
+import { route } from 'ziggy-js';
 defineProps({
   title: String,
 })
@@ -9,12 +10,12 @@ defineProps({
   <div>
     <header class="bg-gray-800 text-white p-4 flex justify-between">
       <h1 class="font-bold">
-        <Link href="/">
+        <Link :href="route('home')">
           Training Diary
         </Link>
       </h1>
       
-      <Link href="/account/settings">
+      <Link :href="route('account.settings')">
         Account settings
       </Link>
     </header>

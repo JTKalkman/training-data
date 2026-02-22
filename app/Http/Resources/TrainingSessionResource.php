@@ -21,14 +21,8 @@ class TrainingSessionResource extends JsonResource
             'duration' => $this->duration_seconds,
             'duration_human' => Duration::human($this->duration_seconds),
 
-            'detail_url' => route('sessions.session', [
-                'session' => $this->id,
-            ]),
-
-            'week_url' => route('sessions.week', [
-                'year' => $this->started_at->isoWeekYear,
-                'week' => $this->started_at->isoWeek,
-            ]),
+            'year' => $this->started_at->isoWeekYear,
+            'week' => $this->started_at->isoWeek,
 
             'sport_type' => [
                 'id' => $this->sportType->id,

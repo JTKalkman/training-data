@@ -1,7 +1,6 @@
 <script setup>
 import { Link } from '@inertiajs/vue3';
 import Layout from './../Components/Layout.vue';
-import { computed } from 'vue';
 import SessionChart from './../Components/SessionChart.vue';
 
 defineOptions({ layout: Layout })
@@ -16,7 +15,7 @@ const props = defineProps({
   <div class="p-4">
 
     <div class="flex flex-col px-4 mb-6">
-      <Link :href="session.data.week_url">← Back</Link>
+      <Link :href="route('sessions.week', { year: session.data.year, week: session.data.week })">← Back</Link>
       <div class="flex justify-center">
         <h1 class="text-xl font-bold mb-4">
           {{ session.data.sport_type.label }} - 
