@@ -3,7 +3,7 @@ import { Link } from '@inertiajs/vue3';
 import { route } from 'ziggy-js';
 
 const props = defineProps<{
-  title: string,
+  title?: string,
 }>();
 </script>
 
