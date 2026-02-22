@@ -37,17 +37,17 @@ class PolarAuthService
                 ]
             );
 
-        if ($response->successful()) {
-            $data = $response->json();
-
-            return new PolarTokenData(
-                $data['access_token'],
-                $data['token_type'],
-                $data['expires_in'],
-                $data['x_user_id'],
-            );
+        if (! $response->successful()) {
+            throw new PolarAuthException('Polar token exchange failed: '.$response->body());
         }
 
-        throw new PolarAuthException('Polar token exchange failed: '.$response->body());
+        $data = $response->json();
+
+        return new PolarTokenData(
+            $data['access_token'],
+            $data['token_type'],
+            $data['expires_in'],
+            $data['x_user_id'],
+        );
     }
 }
