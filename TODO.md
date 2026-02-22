@@ -5,7 +5,7 @@
 - [ ] Snake case in data, also for Vue.
 - [X] Create branch for unrelated changes such as Telescope installation.
 - [X] Use Ziggy.
-- [ ] Use TypeScript.
+- [X] Use TypeScript.
  
 ## Polar Integration - Sync Implementation
 

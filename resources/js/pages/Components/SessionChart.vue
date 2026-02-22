@@ -1,27 +1,28 @@
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import Chart from 'chart.js/auto'
 import axios from 'axios'
 import { route } from 'ziggy-js'
+import { HeartRateDataPoint } from '@/types'
 
-const chartCanvas = ref(null)
+const chartCanvas = ref<HTMLCanvasElement | null>(null)
 const loading = ref(true)
-const error = ref(null)
+const error = ref<string | null>(null)
 
 let chartInstance = null
 
-const props = defineProps({
+const props = defineProps<{
   sessionId: {
-    type: Number,
+    type: number,
     required: true,
   }
-})
+}>()
 
-const drawChart = (responseData) => {
+const drawChart = (responseData: HeartRateDataPoint[]) => {
   const labels = responseData.map(d => d.time)
   const chartData = responseData.map(d => d.heart_rate)
 
-  chartInstance = new Chart(chartCanvas.value, {
+  chartInstance = new Chart(chartCanvas.value!, {
     type: 'line',
     data: {
       labels: labels,

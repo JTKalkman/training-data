@@ -9,3 +9,4 @@ export * from './training-session';
 export * from './heart-rate-zone';
 export * from './training-summary';
 export * from './week-navigation';
+export * from './heart-rate-data-point';

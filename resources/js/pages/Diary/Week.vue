@@ -11,8 +11,8 @@ const props = defineProps<{
   trainingSessions?: {
     data: TrainingSession[]
   },
-  year: Number,
-  week: Number,
+  year: number,
+  week: number,
   navigation: WeekNavigation
 }>()
 
