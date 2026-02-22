@@ -2,6 +2,7 @@
 import { Link } from '@inertiajs/vue3';
 import Layout from './../Components/Layout.vue';
 import { computed } from 'vue';
+import { route } from 'ziggy-js';
 
 defineOptions({ layout: Layout })
 
