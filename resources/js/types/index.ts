@@ -4,3 +4,8 @@ export * from './ui';
 export * from './flash';
 export * from './page-props';
 export * from './polar-profile';
+export * from './sport-type';
+export * from './training-session';
+export * from './heart-rate-zone';
+export * from './training-summary';
+export * from './week-navigation';

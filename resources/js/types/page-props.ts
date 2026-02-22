@@ -1,10 +1,12 @@
-import { User } from "./auth"
-import { Flash } from "./flash"
+import { User } from './auth'
+import { Flash } from './flash'
 
 export interface PageProps {
-  [key: string]: unknown
-  flash?: Flash
+  [key: string]: unknown;
+  name?: string;
   auth?: {
-    user: User
-  }
-}
+    user: User;
+  };
+  sidebarOpen?: boolean;
+  flash?: Flash;
+};
