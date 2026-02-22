@@ -4,7 +4,7 @@
 - [X] Show linked Polar accounts, just a barebone integration.
 - [ ] Snake case in data, also for Vue.
 - [X] Create branch for unrelated changes such as Telescope installation.
-- [ ] Use Ziggy.
+- [X] Use Ziggy.
 - [ ] Use TypeScript.
  
 ## Polar Integration - Sync Implementation

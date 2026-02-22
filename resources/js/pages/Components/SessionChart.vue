@@ -2,6 +2,7 @@
 import { ref, onMounted } from 'vue'
 import Chart from 'chart.js/auto'
 import axios from 'axios'
+import { route } from 'ziggy-js'
 
 const chartCanvas = ref(null)
 const loading = ref(true)
@@ -46,7 +47,7 @@ const drawChart = (responseData) => {
 }
 
 onMounted(() => {
-  axios.get(`/sessions/${props.sessionId}/raw-data`)
+  axios.get(route('sessions.raw-data', { session: props.sessionId }))
     .then(function (response) {
       drawChart(response.data)
     })

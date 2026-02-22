@@ -2,6 +2,7 @@
 import { computed } from 'vue';
 import Layout from './../Components/Layout.vue';
 import { usePage } from '@inertiajs/vue3';
+import { route } from 'ziggy-js';
 
 defineOptions({ layout: Layout })
 
@@ -42,7 +43,7 @@ const flash = computed(() => usePage().props.flash)
         bg-blue-600 rounded px-4 py-2 font-medium
         hover:bg-blue-700
       "
-      href="/auth/polar/redirect"
+      :href="route('auth.polar.redirect')"
     >
       Link Polar account
     </a>
