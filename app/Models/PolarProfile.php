@@ -18,6 +18,12 @@ class PolarProfile extends Model
         'unlinked_at',
     ];
 
+    protected $casts = [
+        'linked_at' => 'datetime',
+        'unlinked_at' => 'datetime',
+        'token_expires_at' => 'datetime',
+    ];
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
