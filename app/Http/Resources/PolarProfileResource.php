@@ -16,6 +16,7 @@ class PolarProfileResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
+            'id' => $this->id,
             'linked_at' => $this->linked_at?->toDateString(),
             'first_name' => $this->first_name,
             'last_name' => $this->last_name,
