@@ -1,14 +1,17 @@
-<script setup>
+<script setup lang="ts">
 import { Link } from '@inertiajs/vue3';
 import Layout from './../Components/Layout.vue';
 import SessionChart from './../Components/SessionChart.vue';
 import { route } from 'ziggy-js';
+import { TrainingSession } from '@/types';
 
 defineOptions({ layout: Layout })
 
-const props = defineProps({
-  session: Object
-})
+const props = defineProps<{
+  session: {
+    data: TrainingSession
+  }
+}>()
 
 </script>
 
