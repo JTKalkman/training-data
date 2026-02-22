@@ -18,8 +18,8 @@ return new class extends Migration
             $table->text('access_token');
             $table->timestamp('token_expires_at');
             $table->timestamp('linked_at');
-            $table->string('first_name');
-            $table->string('last_name');
+            $table->string('first_name')->nullable();
+            $table->string('last_name')->nullable();
             $table->timestamp('unlinked_at')->nullable();
             $table->timestamps();
 
