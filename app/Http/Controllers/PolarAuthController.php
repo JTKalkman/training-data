@@ -6,6 +6,7 @@ use App\Support\API\Polar\Auth\PolarAuthException;
 use App\Support\API\Polar\Auth\PolarAuthService;
 use App\Support\API\Polar\Auth\PolarTokenManager;
 use App\Support\API\Polar\PolarApiException;
+use App\Support\API\Polar\Resources\PolarUserResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -63,8 +64,15 @@ class PolarAuthController extends Controller
         $request->session()->forget('polar_oauth_state');
 
         try {
+            // Get the OAuth tokens.
             $tokens = PolarAuthService::exchangeToken($request['code']);
-            PolarAuthService::registerUser($tokens->xUserId, $tokens->accessToken);
+            
+            // Registher the user to be able to access its data.
+            PolarUserResource::registerUser($tokens->xUserId, $tokens->accessToken);
+ 
+            // Make sure that we have all the required data.
+
+            // Store the tokens.
             PolarTokenManager::store($user, $tokens);
 
             // At this point the registration should be successful.
