@@ -66,14 +66,19 @@ class PolarAuthController extends Controller
         try {
             // Get the OAuth tokens.
             $tokens = PolarAuthService::exchangeToken($request['code']);
-            
+
             // Registher the user to be able to access its data.
-            PolarUserResource::registerUser($tokens->xUserId, $tokens->accessToken);
- 
-            // Make sure that we have all the required data.
+            PolarUserResource::register($tokens->xUserId, $tokens->accessToken);
 
             // Store the tokens.
-            PolarTokenManager::store($user, $tokens);
+            $polarProfile = PolarTokenManager::store($user, $tokens);
+
+            // Make sure that we have all the required data.
+            $userInfo = PolarUserResource::get($tokens->xUserId, $tokens->accessToken);
+            $polarProfile->update([
+                'first_name' => $userInfo['first-name'],
+                'last_name' => $userInfo['last-name'],
+            ]);
 
             // At this point the registration should be successful.
             return redirect()->route('account.settings')
