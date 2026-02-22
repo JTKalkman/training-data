@@ -10,6 +10,11 @@ class PolarClient implements ApiClientInterface
 {
     const API_URL = 'https://www.polaraccesslink.com/v3/';
 
+    public static function bearerHeader(string $accessToken): array
+    {
+        return ['Authorization' => 'Bearer '.$accessToken];
+    }
+
     protected static function throwException($response): void
     {
         throw new PolarApiException(
