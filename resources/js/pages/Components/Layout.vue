@@ -1,9 +1,10 @@
-<script setup>
+<script setup lang="ts">
 import { Link } from '@inertiajs/vue3';
 import { route } from 'ziggy-js';
-defineProps({
-  title: String,
-})
+
+const props = defineProps<{
+  title?: string;
+}>();
 </script>
 
 <template>

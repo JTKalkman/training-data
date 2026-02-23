@@ -20,7 +20,7 @@ Out of scope for this demo:
 ## Architecture
 
 - **Backend:** Laravel 12, Eloquent ORM, Controllers + JSON Resources
-- **Frontend:** Inertia.js + Vue 3, single-page demo app
+- **Frontend:** Inertia.js + Vue 3 + TypeScript, single-page demo app
 - **Data flow:**
     - CSV → Parser → DB + raw JSON files
     - Backend provides aggregated session data and chart-ready raw data

@@ -2,11 +2,10 @@
 
 namespace App\Http\Resources;
 
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class PolarProfileResource extends JsonResource
+class TrainingSummaryResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,11 +15,9 @@ class PolarProfileResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'id' => $this->id,
-            'linked_at' => $this->linked_at?->toDateString(),
-            'first_name' => $this->first_name,
-            'last_name' => $this->last_name,
-            'unlinked_at' => $this->unlinked_at?->toDateString(),
+            'min_heart_rate' => $this->min_heart_rate,
+            'avg_heart_rate' => $this->avg_heart_rate,
+            'max_heart_rate' => $this->max_heart_rate,
         ];
     }
 }

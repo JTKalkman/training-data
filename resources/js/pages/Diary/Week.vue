@@ -1,19 +1,22 @@
-<script setup>
+<script setup lang="ts">
 import { Link } from '@inertiajs/vue3';
 import Layout from './../Components/Layout.vue';
 import { computed } from 'vue';
 import { route } from 'ziggy-js';
+import { TrainingSession, WeekNavigation } from '@/types';
 
 defineOptions({ layout: Layout })
 
-const props = defineProps({
-  trainingSessions: Object,
-  year: Number,
-  week: Number,
-  navigation: Object
-})
+const props = defineProps<{
+  trainingSessions?: {
+    data: TrainingSession[];
+  };
+  year: number;
+  week: number;
+  navigation: WeekNavigation;
+}>()
 
-const hasSessions = computed(() => props.trainingSessions.data.length > 0);
+const hasSessions = computed(() => props.trainingSessions?.data.length ?? 0 > 0);
 </script>
 
 <template>
@@ -32,7 +35,7 @@ const hasSessions = computed(() => props.trainingSessions.data.length > 0);
   
     <div v-else>
       <ul>
-        <li v-for="session in trainingSessions.data" :key="session.id" class="border p-2 my-1">
+        <li v-for="session in trainingSessions?.data" :key="session.id" class="border p-2 my-1">
 
           <div>
             <Link :href="route('sessions.session', { session: session.id })" class="underline">
