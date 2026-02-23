@@ -6,6 +6,7 @@
 - [X] Create branch for unrelated changes such as Telescope installation.
 - [X] Use Ziggy.
 - [X] Use TypeScript.
+- [ ] Use UUID's instead of just a db index.
  
 ## Polar Integration - Sync Implementation
 
