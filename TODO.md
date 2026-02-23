@@ -7,6 +7,8 @@
 - [X] Use Ziggy.
 - [X] Use TypeScript.
 - [ ] Use UUID's instead of just a db index.
+- [ ] Use branch protection for main branch.
+- [ ] Unit/Feature tests for OAuth flow.
  
 ## Polar Integration - Sync Implementation
 
