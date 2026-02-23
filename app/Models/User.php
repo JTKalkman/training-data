@@ -55,4 +55,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(PolarProfile::class);
     }
+
+    public function trainingSession(): HasMany
+    {
+        return $this->hasMany(TrainingSession::class);
+    }
 }
