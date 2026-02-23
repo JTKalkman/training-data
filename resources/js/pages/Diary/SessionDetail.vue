@@ -9,8 +9,8 @@ defineOptions({ layout: Layout })
 
 const props = defineProps<{
   session: {
-    data: TrainingSession
-  }
+    data: TrainingSession;
+  };
 }>()
 
 </script>

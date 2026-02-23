@@ -9,11 +9,11 @@ defineOptions({ layout: Layout })
 
 const props = defineProps<{
   trainingSessions?: {
-    data: TrainingSession[]
-  },
-  year: number,
-  week: number,
-  navigation: WeekNavigation
+    data: TrainingSession[];
+  };
+  year: number;
+  week: number;
+  navigation: WeekNavigation;
 }>()
 
 const hasSessions = computed(() => props.trainingSessions?.data.length ?? 0 > 0);

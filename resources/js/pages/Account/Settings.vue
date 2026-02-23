@@ -9,8 +9,8 @@ defineOptions({ layout: Layout })
 
 const props = defineProps<{
   polar_profiles: {
-    data: PolarProfile[]
-  }
+    data: PolarProfile[];
+  };
 }>()
 
 const flash = computed(() => usePage<PageProps>().props.flash)

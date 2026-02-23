@@ -13,9 +13,9 @@ let chartInstance = null
 
 const props = defineProps<{
   sessionId: {
-    type: number,
-    required: true,
-  }
+    type: number;
+    required: true;
+  };
 }>()
 
 const drawChart = (responseData: HeartRateDataPoint[]) => {
