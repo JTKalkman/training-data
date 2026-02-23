@@ -12,10 +12,7 @@ const error = ref<string | null>(null)
 let chartInstance = null
 
 const props = defineProps<{
-  sessionId: {
-    type: number;
-    required: true;
-  };
+  sessionId: number;
 }>()
 
 const drawChart = (responseData: HeartRateDataPoint[]) => {
