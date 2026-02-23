@@ -11,6 +11,7 @@ class SessionController extends Controller
 {
     public function show(TrainingSession $session)
     {
+        $this->authorize('view', $session);
         $session->load(['sportType', 'trainingSummary', 'heartRateZones']);
 
         return Inertia::render('Diary/SessionDetail', [
@@ -20,6 +21,7 @@ class SessionController extends Controller
 
     public function rawData(TrainingSession $session)
     {
+        $this->authorize('view', $session);
         $data = ChartData::fromSession($session);
 
         if (empty($data)) {
