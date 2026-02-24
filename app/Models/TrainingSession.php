@@ -22,7 +22,6 @@ class TrainingSession extends Model
         'started_at',
         'duration_seconds',
         'source',
-        'file_path',
     ];
 
     protected $casts = [
@@ -47,5 +46,10 @@ class TrainingSession extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function filePath(): string
+    {
+        return storage_path("app/training_data/{$this->user_id}/{$this->id}.json");
     }
 }
