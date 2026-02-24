@@ -12,24 +12,20 @@ class TrainingSessionImporter
 {
     public function import(ParsedSession $parsedSession, int $userId): TrainingSession
     {
-        $year = $parsedSession->sessionData->startedAt->year;
-        $month = $parsedSession->sessionData->startedAt->month;
-        $day = $parsedSession->sessionData->startedAt->day;
-
-        $jsonPath = storage_path("app/training_data/{$userId}/{$year}/{$month}/$day/session_".uniqid().'.json');
-        if (! File::exists(dirname($jsonPath))) {
-            File::makeDirectory(dirname($jsonPath), 0755, true);
-        }
-        File::put($jsonPath, json_encode($parsedSession->rawData));
-
         $trainingSession = TrainingSession::create([
             'user_id' => $userId,
             'sport_type_id' => $parsedSession->sessionData->sportType,
             'started_at' => $parsedSession->sessionData->startedAt->toString(),
             'duration_seconds' => $parsedSession->sessionData->durationSeconds,
             'source' => $parsedSession->sessionData->source,
-            'file_path' => $jsonPath,
         ]);
+
+        $jsonPath = $trainingSession->filePath();
+
+        if (! File::exists(dirname($jsonPath))) {
+            File::makeDirectory(dirname($jsonPath), 0755, true);
+        }
+        File::put($jsonPath, json_encode($parsedSession->rawData));
 
         TrainingSummary::create([
             'training_session_id' => $trainingSession->id,

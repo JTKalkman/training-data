@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('training_summaries', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('training_session_id')
+            $table->foreignUuid('training_session_id')
                 ->constrained()
                 ->cascadeOnDelete();
             $table->integer('min_heart_rate')->nullable();

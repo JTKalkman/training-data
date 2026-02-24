@@ -8,11 +8,13 @@ class ChartData
 {
     public static function fromSession(TrainingSession $session): array
     {
-        if (! file_exists($session->file_path)) {
+        $path = $session->filePath();
+
+        if (! file_exists($path)) {
             return [];
         }
 
-        $rawData = json_decode(file_get_contents($session->file_path), true);
+        $rawData = json_decode(file_get_contents($session->filePath()), true);
 
         return array_map(fn ($row) => [
             'time' => Duration::clock($row['time']),
