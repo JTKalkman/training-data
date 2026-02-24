@@ -25,7 +25,6 @@ class TrainingSessionFactory extends Factory
             'started_at' => $this->faker->dateTimeBetween('-1 year', 'now'),
             'duration_seconds' => $this->faker->numberBetween(1800, 14400),
             'source' => 'test',
-            'file_path' => $this->faker->filePath(),
         ];
     }
 }
