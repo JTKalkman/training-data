@@ -19,6 +19,11 @@ return new class extends Migration
             $table->integer('min_heart_rate')->nullable();
             $table->integer('avg_heart_rate')->nullable();
             $table->integer('max_heart_rate')->nullable();
+            $table->integer('distance')->nullable(); // In meters.
+            $table->integer('calories')->nullable();
+            $table->boolean('has_route');
+            $table->json('training_load')->nullable();
+
             $table->timestamps();
         });
     }
