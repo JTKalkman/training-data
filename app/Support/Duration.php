@@ -36,4 +36,12 @@ class Duration
                 'parts' => 3,
             ]);
     }
+
+    /**
+     * Formats SO 8601 duration format to total seconds.
+     */
+    public static function fromIso(string $duration): int
+    {
+        return (int) CarbonInterval::make($duration)->totalSeconds;
+    }
 }
