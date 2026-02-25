@@ -16,9 +16,15 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->foreignId('sport_type_id')->nullable()->constrained()->nullOnDelete();
             $table->timestamp('started_at');
+            $table->integer('utc_offset')->nullable();
             $table->integer('duration_seconds');
-            $table->string('source')->nullable();
+            $table->foreignId('data_source_id')->nullable()->constrained()->nullOnDelete();
+            $table->string('external_id');
             $table->timestamps();
+
+            // Unique per user and source to handle edge cases where
+            // multiple users share the same device (e.g. shared Polar watch)
+            $table->unique(['user_id', 'data_source_id', 'external_id']);
 
             $table->index('user_id');
             $table->index('sport_type_id');
