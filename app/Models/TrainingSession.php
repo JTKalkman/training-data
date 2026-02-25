@@ -59,4 +59,9 @@ class TrainingSession extends Model
     {
         return $this->belongsTo(DataSource::class);
     }
+
+    public function device(): BelongsTo
+    {
+        return $this->belongsTo(Device::class);
+    }
 }

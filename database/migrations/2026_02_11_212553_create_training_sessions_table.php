@@ -20,6 +20,7 @@ return new class extends Migration
             $table->integer('duration_seconds');
             $table->foreignId('data_source_id')->nullable()->constrained()->nullOnDelete();
             $table->string('external_id');
+            $table->foreignId('device_id')->nullable()->constrained()->nullOnDelete();
             $table->timestamps();
 
             // Unique per user and source to handle edge cases where
