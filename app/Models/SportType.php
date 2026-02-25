@@ -13,7 +13,7 @@ class SportType extends Model
 
     protected $fillable = ['name', 'label'];
 
-    public function trainingSession(): HasMany
+    public function trainingSessions(): HasMany
     {
         return $this->hasMany(TrainingSession::class);
     }
