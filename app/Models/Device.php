@@ -12,6 +12,13 @@ class Device extends Model
     /** @use HasFactory<\Database\Factories\DeviceFactory> */
     use HasFactory;
 
+    protected $fillable = [
+        'user_id',
+        'data_source_id',
+        'name',
+        'external_id',
+    ];
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
