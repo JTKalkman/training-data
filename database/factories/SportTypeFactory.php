@@ -2,7 +2,6 @@
 
 namespace Database\Factories;
 
-use App\Models\SportType;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
