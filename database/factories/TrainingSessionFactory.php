@@ -3,7 +3,6 @@
 namespace Database\Factories;
 
 use App\Models\SportType;
-use App\Models\TrainingSession;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -25,6 +24,7 @@ class TrainingSessionFactory extends Factory
             'started_at' => $this->faker->dateTimeBetween('-1 year', 'now'),
             'duration_seconds' => $this->faker->numberBetween(1800, 14400),
             'source' => 'test',
+            // TODO Update source here.
         ];
     }
 }

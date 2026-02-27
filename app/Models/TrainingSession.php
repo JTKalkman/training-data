@@ -20,8 +20,10 @@ class TrainingSession extends Model
         'user_id',
         'sport_type_id',
         'started_at',
+        'utc_offset',
         'duration_seconds',
-        'source',
+        'data_source_id',
+        'external_id',
     ];
 
     protected $casts = [
@@ -51,5 +53,25 @@ class TrainingSession extends Model
     public function filePath(): string
     {
         return storage_path("app/training_data/{$this->user_id}/{$this->id}.json");
+    }
+
+    public function sampleDataPath(): string
+    {
+        return "app/training_data/{$this->user_id}/{$this->id}/samples.json";
+    }
+
+    public function routePath(): string
+    {
+        return "app/training_data/{$this->user_id}/{$this->id}/route.json";
+    }
+
+    public function dataSource(): BelongsTo
+    {
+        return $this->belongsTo(DataSource::class);
+    }
+
+    public function device(): BelongsTo
+    {
+        return $this->belongsTo(Device::class);
     }
 }

@@ -3,22 +3,18 @@
 namespace App\Support;
 
 use App\Models\TrainingSession;
+use Illuminate\Support\Facades\Storage;
 
 class ChartData
 {
-    public static function fromSession(TrainingSession $session): array
+    public static function fromSession(TrainingSession $session): ?string
     {
-        $path = $session->filePath();
+        $path = $session->sampleDataPath();
 
-        if (! file_exists($path)) {
-            return [];
+        if (! Storage::exists($path)) {
+            return null;
         }
 
-        $rawData = json_decode(file_get_contents($session->filePath()), true);
-
-        return array_map(fn ($row) => [
-            'time' => Duration::clock($row['time']),
-            'heart_rate' => $row['heart_rate'],
-        ], $rawData);
+        return Storage::get($path);
     }
 }

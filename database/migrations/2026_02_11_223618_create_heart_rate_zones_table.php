@@ -21,7 +21,10 @@ return new class extends Migration
             $table->integer('min_bpm');
             $table->integer('max_bpm');
             $table->string('color', 20)->nullable();
+            $table->integer('in_zone_seconds')->nullable();
             $table->timestamps();
+
+            $table->unique(['training_session_id', 'zone_number']);
 
             $table->index(['training_session_id', 'zone_number']);
         });

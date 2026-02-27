@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             SportTypeSeeder::class,
+            DataSourceSeeder::class,
         ]);
     }
 
@@ -40,6 +41,6 @@ class DatabaseSeeder extends Seeder
         // User::factory(10)->create();
         $this->seedUsers();
         $this->seedLookups();
-        $this->seedTrainingSessions();
+        // $this->seedTrainingSessions();
     }
 }

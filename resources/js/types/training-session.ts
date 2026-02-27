@@ -3,7 +3,7 @@ import { SportType } from './sport-type'
 import { TrainingSummary } from './training-summary'
 
 export interface TrainingSession {
-  id: number;
+  id: string;
   started_at: string;
   started_at_human: string;
   duration: number;

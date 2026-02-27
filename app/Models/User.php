@@ -51,13 +51,18 @@ class User extends Authenticatable
         ];
     }
 
-    public function polarProfile(): HasMany
+    public function polarProfiles(): HasMany
     {
         return $this->hasMany(PolarProfile::class);
     }
 
-    public function trainingSession(): HasMany
+    public function trainingSessions(): HasMany
     {
         return $this->hasMany(TrainingSession::class);
+    }
+
+    public function devices(): HasMany
+    {
+        return $this->hasMany(Device::class);
     }
 }

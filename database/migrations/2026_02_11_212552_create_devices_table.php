@@ -11,27 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('training_sessions', function (Blueprint $table) {
-            $table->uuid('id')->primary();
+        Schema::create('devices', function (Blueprint $table) {
+            $table->id();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('sport_type_id')->nullable()->constrained()->nullOnDelete();
-            $table->timestamp('started_at');
-            $table->integer('utc_offset')->nullable();
-            $table->integer('duration_seconds');
             $table->foreignId('data_source_id')->nullable()->constrained()->nullOnDelete();
+            $table->string('name');
             $table->string('external_id');
-            $table->foreignId('device_id')->nullable()->constrained()->nullOnDelete();
-            $table->timestamps();
 
             // Unique per user and source to handle edge cases where
             // multiple users share the same device (e.g. shared Polar watch)
             $table->unique(['user_id', 'data_source_id', 'external_id']);
 
-            $table->index('user_id');
-            $table->index('sport_type_id');
-            $table->index('started_at');
-            $table->index(['user_id', 'started_at']);
-            $table->index(['user_id', 'sport_type_id']);
+            $table->timestamps();
         });
     }
 
@@ -40,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('training_sessions');
+        Schema::dropIfExists('devices');
     }
 };

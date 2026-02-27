@@ -15,6 +15,11 @@ class PolarClient implements ApiClientInterface
         return ['Authorization' => 'Bearer '.$accessToken];
     }
 
+    public static function requestParameters(array $params = []): array
+    {
+        return array_map(fn ($value) => is_bool($value) ? ($value ? 'true' : 'false') : $value, $params);
+    }
+
     protected static function throwException($response): void
     {
         throw new PolarApiException(
@@ -24,6 +29,8 @@ class PolarClient implements ApiClientInterface
 
     public static function get(string $path, array $params = [], array $headers = []): Response
     {
+        $params = self::requestParameters($params);
+
         $response = Http::withHeaders($headers)
             ->get(self::API_URL.$path, $params);
 

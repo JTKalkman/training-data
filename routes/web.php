@@ -29,8 +29,8 @@ Route::get('/', function () {
 })->name('home');
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/sessions/{session}/raw-data', [SessionController::class, 'rawData'])
-        ->name('sessions.raw-data');
+    Route::get('/sessions/{session}/sample-data', [SessionController::class, 'sampleData'])
+        ->name('sessions.sample-data');
 
     Route::get('/sessions/{session}', [SessionController::class, 'show'])
         ->name('sessions.session');

@@ -26,11 +26,11 @@ class TrainingSessionResource extends JsonResource
 
             'sport_type' => new SportTypeResource($this->sportType),
 
-            'training_summary' => $this->whenLoaded('trainingSummary', 
-                fn() => new TrainingSummaryResource($this->trainingSummary)
+            'training_summary' => $this->whenLoaded('trainingSummary',
+                fn () => new TrainingSummaryResource($this->trainingSummary)
             ),
 
-            'heart_rate_zones' => $this->whenLoaded('heartRateZones', 
+            'heart_rate_zones' => $this->whenLoaded('heartRateZones',
                 fn () => HeartRateZoneResource::collection($this->heartRateZones)
             ),
         ];
