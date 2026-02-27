@@ -6,6 +6,7 @@ use App\Models\DataSource;
 use App\Models\Device;
 use App\Models\HeartRateZone;
 use App\Models\TrainingSession;
+use App\Models\TrainingSummary;
 use App\Models\User;
 use App\Support\Duration;
 use App\Support\Parsers\ParsedSession;
@@ -63,6 +64,17 @@ class TrainingSessionImporter
             'data_source_id' => $parsedSession->sessionData->dataSourceId,
             'external_id' => $parsedSession->sessionData->externalId,
             'device_id' => $device->id,
+        ]);
+
+        $trainingSummary = TrainingSummary::firstOrCreate([
+            'training_session_id' => $trainingSession->id,
+            'min_heart_rate' => $parsedSession->summary->minHeartRate,
+            'avg_heart_rate' => $parsedSession->summary->avgHeartRate,
+            'max_heart_rate' => $parsedSession->summary->maxHeartRate,
+            'distance' => $parsedSession->summary->distance,
+            'calories' => $parsedSession->summary->calories,
+            'has_route' => $parsedSession->summary->hasRoute,
+            'training_load' => json_encode($parsedSession->summary->trainingLoad),
         ]);
 
         foreach ($parsedSession->heartRateZones as $heartRateZone) {
