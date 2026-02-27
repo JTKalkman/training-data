@@ -11,8 +11,8 @@ This demo project focuses on:
 - Visualizing training sessions and heart rate zones
 
 Out of scope for this demo:
-- GPS / route tracking
-- Cadence, power, distance metrics
+- GPS / route tracking (maps are parsed and stored but not yet displayed)
+- Cadence, power, distance, speed, altitude metrics (parsed and stored but not yet displayed in frontend)
 - Training feedback forms (planned for future)
 - Multi-user features beyond basic authentication
 - Real-time automatic syncing (planned for future)
@@ -81,7 +81,7 @@ Raw per-second heart rate samples are stored as JSON files rather than relationa
 - Raw data transform:
     - ChartData class handles conversion of raw JSON → chart-ready structure
     - Duration labels, HR values, optional zones
-    - Controller remains slim (rawData endpoint just fetches transformed data)
+    - Controller remains slim (sampleData endpoint just fetches transformed data)
 
 ## Known Limitations / Future Improvements
 
@@ -110,6 +110,24 @@ php artisan key:generate
 
 # Database
 php artisan migrate --seed
+```
+
+## Manual Polar API Testing
+
+A console command is available for manually testing and syncing training sessions from the Polar API:
+
+```
+php artisan app:test-polar-sync {userId}
+```
+
+This command:
+- Syncs the user's training sessions from Polar API
+- Parses and stores session metadata, raw heart rate data, map data, and additional metrics (speed, cadence, altitude, etc.)
+- Imports data that can be viewed in the training session dashboard
+
+**Example:**
+```
+php artisan app:test-polar-sync 1
 ```
 
 ## Demo Login
