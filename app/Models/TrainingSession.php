@@ -55,6 +55,16 @@ class TrainingSession extends Model
         return storage_path("app/training_data/{$this->user_id}/{$this->id}.json");
     }
 
+    public function sampleDataPath(): string
+    {
+        return "app/training_data/{$this->user_id}/{$this->id}/samples.json";
+    }
+
+    public function routePath(): string
+    {
+        return "app/training_data/{$this->user_id}/{$this->id}/route.json";
+    }
+
     public function dataSource(): BelongsTo
     {
         return $this->belongsTo(DataSource::class);
