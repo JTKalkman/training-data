@@ -4,13 +4,17 @@ namespace App\Support\Parsers;
 
 interface ParserInterface
 {
-    public function createSessionData(array $headerData): ParsedSessionData;
+    public function createDeviceData(array $data): ParsedDeviceData;
 
-    public function createSummaryData(array $headerData): ParsedSummaryData;
+    public function createSessionData(array $data): ParsedSessionData;
 
-    public function createRawDataRecord(array $rawData): array;
+    public function createSummaryData(array $data): ParsedSummaryData;
 
-    public function createHeartRateZones(): array;
+    public function createHeartRateZones(array $data): array;
 
-    public function parse(iterable $rows): ParsedSession;
+    public function createSampleData(array $data): ParsedSampleData;
+
+    public function createRouteData(array $data): ParsedRouteData;
+
+    public function parse(iterable $data): ParsedSession;
 }

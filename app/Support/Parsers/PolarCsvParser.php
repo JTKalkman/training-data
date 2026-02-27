@@ -17,8 +17,9 @@ class PolarCsvParser implements ParserInterface
         return new ParsedSessionData([
             'sport_type' => $sportType ? $sportType->id : null,
             'started_at' => $startedAt,
+            // TODO: UTC Offset.
             'duration_seconds' => $duration,
-            'source' => 'polar',
+            'source' => 'polar', // TODO Update source here.
         ]);
     }
 
@@ -41,7 +42,7 @@ class PolarCsvParser implements ParserInterface
         ];
     }
 
-    public function createHeartRateZones(): array
+    public function createHeartRateZones(array $data): array
     {
         $fakeHeartRateZones = require database_path('seeders/sample-data/fake_heart_rate_zones.php');
 

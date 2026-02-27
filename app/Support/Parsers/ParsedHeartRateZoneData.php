@@ -6,13 +6,15 @@ class ParsedHeartRateZoneData
 {
     public int $zoneNumber;
 
-    public string $name;
+    public ?string $name;
 
     public int $minBpm;
 
     public int $maxBpm;
 
-    public string $color;
+    public ?string $color;
+
+    public ?int $inZoneSeconds;
 
     public function __construct(array $data)
     {
@@ -21,5 +23,6 @@ class ParsedHeartRateZoneData
         $this->minBpm = $data['min_bpm'];
         $this->maxBpm = $data['max_bpm'];
         $this->color = $data['color'];
+        $this->inZoneSeconds = $data['in_zone_seconds'];
     }
 }

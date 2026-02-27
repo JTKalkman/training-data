@@ -5,7 +5,7 @@ namespace App\Support\Parsers;
 class ParsedDeviceData
 {
     public string $name;
- 
+
     public string $externalId;
 
     public function __construct(array $data)

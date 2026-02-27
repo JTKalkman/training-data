@@ -12,19 +12,23 @@ class ParsedSession
 
     public array $heartRateZones;
 
-    public array $rawData;
+    public ParsedSampleData $sampleData;
+
+    public ParsedRouteData $routeData;
 
     public function __construct(
         ParsedDeviceData $deviceData,
         ParsedSessionData $sessionData,
         ParsedSummaryData $summaryData,
-        array $heartRateZones = [],
-        array $rawData = []
+        array $heartRateZones,
+        ParsedSampleData $sampleData,
+        ParsedRouteData $routeData,
     ) {
         $this->deviceData = $deviceData;
         $this->sessionData = $sessionData;
         $this->summary = $summaryData;
         $this->heartRateZones = $heartRateZones;
-        $this->rawData = $rawData;
+        $this->sampleData = $sampleData;
+        $this->routeData = $routeData;
     }
 }
