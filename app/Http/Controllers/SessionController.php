@@ -19,15 +19,17 @@ class SessionController extends Controller
         ]);
     }
 
-    public function rawData(TrainingSession $session)
+    public function sampleData(TrainingSession $session)
     {
         $this->authorize('view', $session);
         $data = ChartData::fromSession($session);
 
-        if (empty($data)) {
+        if (! $data) {
             abort(404, 'Raw data not found');
         }
 
-        return response()->json($data);
+        return response($data, 200, [
+            'Content-Type' => 'application/json',
+        ]);
     }
 }
