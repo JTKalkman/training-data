@@ -16,7 +16,7 @@ const props = defineProps<{
 }>()
 
 const drawChart = (responseData: HeartRateDataPoint[]) => {
-  const labels = responseData.map(d => d.time)
+  const labels = responseData.map(d => d.time_label)
   const chartData = responseData.map(d => d.heart_rate)
 
   chartInstance = new Chart(chartCanvas.value!, {
@@ -45,7 +45,7 @@ const drawChart = (responseData: HeartRateDataPoint[]) => {
 }
 
 onMounted(() => {
-  axios.get(route('sessions.raw-data', { session: props.sessionId }))
+  axios.get(route('sessions.sample-data', { session: props.sessionId }))
     .then(function (response) {
       drawChart(response.data)
     })
