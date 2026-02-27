@@ -17,7 +17,7 @@ class PolarClient implements ApiClientInterface
 
     public static function requestParameters(array $params = []): array
     {
-        return array_map(fn($value) => is_bool($value) ? ($value ? 'true' : 'false') : $value, $params);
+        return array_map(fn ($value) => is_bool($value) ? ($value ? 'true' : 'false') : $value, $params);
     }
 
     protected static function throwException($response): void

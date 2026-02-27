@@ -24,7 +24,7 @@ class PolarExerciseResource
         return $response->json();
     }
 
-    public static function get(string $accessToken, string $exerciseId): array|null
+    public static function get(string $accessToken, string $exerciseId): ?array
     {
         $response = PolarClient::get(
             "exercises/{$exerciseId}",
