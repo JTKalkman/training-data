@@ -7,6 +7,11 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class DataSource extends Model
 {
+    protected $fillable = [
+        'name',
+        'label',
+    ];
+
     public function trainingSessions(): HasMany
     {
         return $this->hasMany(TrainingSession::class);
