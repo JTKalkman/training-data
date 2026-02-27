@@ -26,3 +26,9 @@ yarn-error.log
 /.nova
 /.vscode
 /.zed
+.agents/
+.claude/
+.codex/
+.github/skills/
+AGENTS.md
+boost.json
