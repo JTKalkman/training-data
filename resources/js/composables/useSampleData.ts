@@ -1,0 +1,28 @@
+import { SampleDataPoint } from '@/types/SampleDataPoint';
+import axios from 'axios';
+import { ref } from 'vue';
+import { route } from 'ziggy-js';
+
+export function useSampleData(sessionId: string) {
+  const data = ref<SampleDataPoint[] | null>(null);
+  const loading = ref(true);
+  const error = ref<string | null>(null);
+
+  const fetch = async () => {
+    loading.value = true;
+    try {
+      const response = await axios.get(route('sessions.sample-data', { session: sessionId }));
+      data.value = response.data
+    } catch (e) {
+      if (Error.isError(e)) {
+        error.value = e.message;
+      } else {
+        error.value = 'Failed to get the data.';
+      }
+    } finally {
+      loading.value = false;
+    }
+  }
+
+  return { data, loading, error, fetch };
+}
