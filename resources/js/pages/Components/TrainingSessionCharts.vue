@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { useSampleData } from '@/composables/useSampleData';
-import { computed, onMounted } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import Spinner from './Spinner.vue';
 import TrainingSessionChart from './TrainingSessionChart.vue';
-import { SampleDataPoint } from '@/types/SampleDataPoint';
+import { SampleDataPoint } from '@/types/sample-data-point';
+import { HoverPosition } from '@/types';
 
 const props = defineProps<{
   sessionId: string;
@@ -41,6 +42,14 @@ const chartData = computed(() => {
   };
 })
 
+const chartHoverPosition = ref<HoverPosition | null>(null);
+const hoverSource = ref<string | null>(null);
+
+const handleChartHover = (position: HoverPosition | null, sourceField: string | null) => {
+  chartHoverPosition.value = position;
+  hoverSource.value = sourceField;
+}
+
 onMounted(() => {
   fetch();
 })
@@ -61,6 +70,9 @@ onMounted(() => {
     v-for="field in availableFields"
     :field="field"
     :data="chartData[field]"
+    :chartHoverPosition="chartHoverPosition"
+    :hoverSource="hoverSource"
+    @hover="handleChartHover"
   />
   
 </template> 

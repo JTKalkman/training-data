@@ -1,4 +1,4 @@
-import { SampleDataPoint } from '@/types/SampleDataPoint';
+import { SampleDataPoint } from '@/types/sample-data-point';
 import axios from 'axios';
 import { ref } from 'vue';
 import { route } from 'ziggy-js';
