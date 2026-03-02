@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { HoverPosition } from '@/types';
 import { ChartDataPoint } from '@/types/chart-data-point';
-import Chart from 'chart.js/auto';
+import Chart, { ChartTypeRegistry } from 'chart.js/auto';
 import { onMounted, ref, watch } from 'vue';
 
 const props = defineProps<{
@@ -15,7 +15,7 @@ const emit = defineEmits(['hover']);
 
 const chartCanvas = ref<HTMLCanvasElement | null>(null);
 
-let chartInstance: null | Chart<"line", number[], number> = null;
+let chartInstance: null | Chart<keyof ChartTypeRegistry, number[], number> = null;
 
 watch(() => props.chartHoverPosition, (position) => {
   if (props.hoverSource === props.field) return;
@@ -42,6 +42,28 @@ const destroyTooltip = () => {
   chartInstance?.tooltip?.setActiveElements([], { x: 0, y: 0 });
   chartInstance?.update();
 }
+
+const crosshairPlugin = {
+  id: 'crosshair',
+  afterDraw(chart: Chart) {
+    const tooltip = chart.tooltip as any; // TODO: A bit ugly for only one property.
+    if (tooltip?._active?.length) {
+      const x = tooltip._active[0].element.x;
+      const ctx = chart.ctx;
+      const topY = chart.scales.y.top;
+      const bottomY = chart.scales.y.bottom;
+
+      ctx.save();
+      ctx.beginPath();
+      ctx.moveTo(x, topY);
+      ctx.lineTo(x, bottomY);
+      ctx.lineWidth = 1;
+      ctx.strokeStyle = '#6B7280';
+      ctx.stroke();
+      ctx.restore();
+    }
+  }
+};
 
 const drawChart = () => {
   const labels = props.data.map(d => d.x)
@@ -79,7 +101,8 @@ const drawChart = () => {
           emit('hover', null, props.field)
         }
       }
-    }
+    },
+    plugins: [crosshairPlugin]
   })
 }
 
