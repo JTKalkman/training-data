@@ -15,10 +15,9 @@ export function useSampleData(sessionId: string) {
       data.value = response.data
     } catch (e) {
       if (Error.isError(e)) {
-        error.value = e.message;
-      } else {
-        error.value = 'Failed to get the data.';
+        console.error(e.message); // Or Sentry
       }
+      error.value = 'Failed to get the data.';
     } finally {
       loading.value = false;
     }
