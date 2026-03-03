@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { Link } from '@inertiajs/vue3';
 import Layout from './../Components/Layout.vue';
-import SessionChart from './../Components/SessionChart.vue';
 import { route } from 'ziggy-js';
 import { TrainingSession } from '@/types';
 import TrainingSessionCharts from '../Components/TrainingSessionCharts.vue';
+import TrainingSessionMap from '../Components/TrainingSessionMap.vue';
 
 defineOptions({ layout: Layout })
 
@@ -31,6 +31,10 @@ const props = defineProps<{
 
     <div class="mb-6 text-center pt-10 pb-10">
       <TrainingSessionCharts :sessionId="session.data.id" />
+    </div>
+
+    <div v-if="session.data.training_summary?.has_route" class="mb-6">
+      <TrainingSessionMap :sessionId="session.data.id" />
     </div>
     
     <div v-if="session.data.heart_rate_zones.length > 0">
