@@ -4,6 +4,7 @@ import Layout from './../Components/Layout.vue';
 import SessionChart from './../Components/SessionChart.vue';
 import { route } from 'ziggy-js';
 import { TrainingSession } from '@/types';
+import TrainingSessionCharts from '../Components/TrainingSessionCharts.vue';
 
 defineOptions({ layout: Layout })
 
@@ -29,7 +30,7 @@ const props = defineProps<{
     </div>
 
     <div class="mb-6 text-center pt-10 pb-10">
-      <SessionChart :sessionId="session.data.id"></SessionChart>
+      <TrainingSessionCharts :sessionId="session.data.id" />
     </div>
     
     <div v-if="session.data.heart_rate_zones.length > 0">
