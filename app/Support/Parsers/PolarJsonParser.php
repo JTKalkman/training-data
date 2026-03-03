@@ -145,6 +145,16 @@ class PolarJsonParser implements ParserInterface
         return new ParsedRouteData($parsedRoute);
     }
 
+    protected function calculatePace(string $speedData): string
+    {
+        $speeds = explode(',', $speedData);
+        $paces = array_map(function ($speed) {
+            $speed = (float) $speed;
+            return $speed > 0 ? round(1000 / $speed) : 0;
+        }, $speeds);
+        return implode(',', $paces); 
+    }
+
     public function parse(iterable $data): ParsedSession
     {
         $deviceData = $this->createDeviceData($data);
@@ -152,6 +162,13 @@ class PolarJsonParser implements ParserInterface
         $summaryData = $this->createSummaryData($data);
         $heartRateZones = $this->createHeartRateZones($data);
         $sampleData = $this->createSampleData($data);
+
+        $isRunning = SportTypeMapper::map($data['detailed_sport_info'] ?? '')?->name === 'running';
+
+        if ($isRunning && $sampleData->speed && is_string($sampleData->speed)) {
+            $sampleData->addPace($this->calculatePace($sampleData->speed));
+        }
+
         $routeData = $this->createRouteData($data);
 
         return new ParsedSession($deviceData, $sessionData, $summaryData, $heartRateZones, $sampleData, $routeData);
