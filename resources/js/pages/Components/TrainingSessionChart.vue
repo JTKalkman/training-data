@@ -1,7 +1,10 @@
 <script setup lang="ts">
 import { HoverPosition } from '@/types';
 import { ChartDataPoint } from '@/types/chart-data-point';
-import Chart, { ChartType, ChartTypeRegistry, Tooltip, TooltipPositionerFunction } from 'chart.js/auto';
+import { 
+  Chart, CategoryScale, LinearScale, LineController, PointElement, 
+  LineElement, Tooltip, TooltipPositionerFunction, ChartType 
+} from 'chart.js';
 import { onMounted, ref, watch } from 'vue';
 
 const props = defineProps<{
@@ -75,6 +78,8 @@ const drawChart = () => {
   const labels = props.data.map(d => d.x)
   const chartData = props.data.map(d => d.y)
 
+  Chart.register(CategoryScale, LinearScale, LineController, PointElement, LineElement, Tooltip)
+
   chartInstance = new Chart(chartCanvas.value!, {
     type: 'line',
     data: {
@@ -119,7 +124,7 @@ const drawChart = () => {
   Tooltip.positioners.positionTooltip = (elements, eventPosition) => {
     return {
       x: eventPosition.x,
-      y: chartInstance.chartArea.height,
+      y: chartInstance.chartArea.height / 2,
       xAlign: 'center',
       yAlign: 'bottom',
     };
