@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { HoverPosition } from '@/types';
 import { ChartDataPoint } from '@/types/chart-data-point';
-import Chart, { ChartTypeRegistry } from 'chart.js/auto';
+import Chart, { ChartType, ChartTypeRegistry, Tooltip, TooltipPositionerFunction } from 'chart.js/auto';
 import { onMounted, ref, watch } from 'vue';
 
 const props = defineProps<{
@@ -15,7 +15,7 @@ const emit = defineEmits(['hover']);
 
 const chartCanvas = ref<HTMLCanvasElement | null>(null);
 
-let chartInstance: null | Chart<keyof ChartTypeRegistry, number[], number> = null;
+let chartInstance: Chart;
 
 watch(() => props.chartHoverPosition, (position) => {
   if (props.hoverSource === props.field) return;
@@ -28,26 +28,26 @@ watch(() => props.chartHoverPosition, (position) => {
 });
 
 const showTooltip = (position: HoverPosition) => {
-  chartInstance?.tooltip?.setActiveElements(
+  chartInstance.tooltip?.setActiveElements(
     [{
       datasetIndex: 0,
       index: position.index
     }], 
     { x: position.x, y: 0 }
   );
-  chartInstance?.update();
+  chartInstance.update();
 }
 
 const destroyTooltip = () => {
-  chartInstance?.tooltip?.setActiveElements([], { x: 0, y: 0 });
-  chartInstance?.update();
+  chartInstance.tooltip?.setActiveElements([], { x: 0, y: 0 });
+  chartInstance.update();
 }
 
 const crosshairPlugin = {
   id: 'crosshair',
   afterDraw(chart: Chart) {
     const tooltip = chart.tooltip as any; // TODO: A bit ugly for only one property.
-    if (tooltip?._active?.length) {
+    if (tooltip._active?.length) {
       const x = tooltip._active[0].element.x;
       const ctx = chart.ctx;
       const topY = chart.scales.y.top;
@@ -64,6 +64,12 @@ const crosshairPlugin = {
     }
   }
 };
+
+declare module 'chart.js' {
+  interface TooltipPositionerMap {
+    positionTooltip: TooltipPositionerFunction<ChartType>;
+  }
+}
 
 const drawChart = () => {
   const labels = props.data.map(d => d.x)
@@ -100,10 +106,24 @@ const drawChart = () => {
         } else {
           emit('hover', null, props.field)
         }
+      },
+      plugins: {
+        tooltip: {
+          position: 'positionTooltip'
+        }
       }
     },
     plugins: [crosshairPlugin]
   })
+
+  Tooltip.positioners.positionTooltip = (elements, eventPosition) => {
+    return {
+      x: eventPosition.x,
+      y: chartInstance.chartArea.height,
+      xAlign: 'center',
+      yAlign: 'bottom',
+    };
+  };
 }
 
 onMounted(() => {
