@@ -18,6 +18,13 @@ class ParsedSampleData
 
     public array|string|null $distance;
 
+    public array|string|null $pace;
+
+    public function addPace(array|string $paceSamples)
+    {
+        $this->pace = $paceSamples;
+    }
+
     public function __construct(array $data)
     {
         $this->sampleRate = $data['sample_rate'];
@@ -27,5 +34,6 @@ class ParsedSampleData
         $this->altitude = $data['altitude'] ?? null;
         $this->temperature = $data['temperature'] ?? null;
         $this->distance = $data['distance'] ?? null;
+        $this->pace = $data['pace'] ?? null;
     }
 }

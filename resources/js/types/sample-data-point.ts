@@ -6,4 +6,5 @@ export interface SampleDataPoint {
   cadence?: number;
   altitude?: number;
   distance?: number;
+  pace?: number;
 };

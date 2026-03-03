@@ -12,7 +12,7 @@ const props = defineProps<{
 
 const { data, loading, error, fetch } = useSampleData(props.sessionId);
 
-const fields = ['heart_rate', 'speed', 'cadence', 'altitude'] as const;
+const fields = ['heart_rate', 'speed', 'cadence', 'altitude', 'pace'] as const;
 const availableFields = computed(() => {
   if (!data.value?.length) return [];
 
@@ -26,6 +26,7 @@ const chartData = computed(() => {
     speed: [],
     cadence: [],
     altitude: [],
+    pace: [],
   };
 
   return {
@@ -33,6 +34,9 @@ const chartData = computed(() => {
     speed: data.value
       .filter((row): row is SampleDataPoint & { speed: number } => row.speed !== undefined)
       .map(row => ({ x: row.time, y: row.speed })),
+    pace: data.value
+        .filter((row): row is SampleDataPoint & { pace: number } => row.pace !== undefined)
+        .map(row => ({ x: row.time, y: row.pace })),
     cadence: data.value
       .filter((row): row is SampleDataPoint & { cadence: number } => row.cadence !== undefined)
       .map(row => ({ x: row.time, y: row.cadence })),

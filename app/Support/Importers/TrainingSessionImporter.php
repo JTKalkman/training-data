@@ -101,6 +101,7 @@ class TrainingSessionImporter
             $altitudeSamples = $parsedSession->sampleData->altitude ? $this->parseSamples('float', $parsedSession->sampleData->altitude) : null;
             $temperatureSamples = $parsedSession->sampleData->temperature ? $this->parseSamples('float', $parsedSession->sampleData->temperature) : null;
             $distanceSamples = $parsedSession->sampleData->distance ? $this->parseSamples('float', $parsedSession->sampleData->distance) : null;
+            $paceSamples = $parsedSession->sampleData->pace ? $this->parseSamples('int', $parsedSession->sampleData->pace) : null;
 
             $sampleCount = count($heartRateSamples);
             $time = 0;
@@ -130,6 +131,10 @@ class TrainingSessionImporter
 
                 if ($distanceSamples) {
                     $dataPoint['distance'] = $distanceSamples[$i] ?? null;
+                }
+
+                if ($paceSamples) {
+                    $dataPoint['pace'] = $paceSamples[$i] ?? null;
                 }
 
                 $dataStreamer->write($dataPoint);
