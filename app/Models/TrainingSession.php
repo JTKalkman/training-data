@@ -60,7 +60,7 @@ class TrainingSession extends Model
         return "app/training_data/{$this->user_id}/{$this->id}/samples.json";
     }
 
-    public function routePath(): string
+    public function routeDataPath(): string
     {
         return "app/training_data/{$this->user_id}/{$this->id}/route.json";
     }

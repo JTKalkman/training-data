@@ -145,7 +145,7 @@ class TrainingSessionImporter
         }
 
         if ($parsedSession->routeData->coordinates) {
-            $dataStreamer = new DataStreamer($trainingSession->routePath());
+            $dataStreamer = new DataStreamer($trainingSession->routeDataPath());
 
             foreach ($parsedSession->routeData->coordinates as $coordinate) {
                 $dataStreamer->write($coordinate);
