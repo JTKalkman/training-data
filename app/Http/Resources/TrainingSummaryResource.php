@@ -18,6 +18,7 @@ class TrainingSummaryResource extends JsonResource
             'min_heart_rate' => $this->min_heart_rate,
             'avg_heart_rate' => $this->avg_heart_rate,
             'max_heart_rate' => $this->max_heart_rate,
+            'has_route' => $this->has_route,
         ];
     }
 }

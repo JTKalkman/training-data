@@ -7,6 +7,7 @@ export * from './hover-position';
 export * from './navigation';
 export * from './page-props';
 export * from './polar-profile';
+export * from './route-data-point';
 export * from './sample-data-point';
 export * from './sport-type'; 
 export * from './training-session';

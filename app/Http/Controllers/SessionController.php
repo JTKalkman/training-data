@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\TrainingSessionResource;
 use App\Models\TrainingSession;
 use App\Support\ChartData;
+use App\Support\MapData;
 use Inertia\Inertia;
 
 class SessionController extends Controller
@@ -23,6 +24,20 @@ class SessionController extends Controller
     {
         $this->authorize('view', $session);
         $data = ChartData::fromSession($session);
+
+        if (! $data) {
+            abort(404, 'Raw data not found');
+        }
+
+        return response($data, 200, [
+            'Content-Type' => 'application/json',
+        ]);
+    }
+
+    public function routeData(TrainingSession $session)
+    {
+        $this->authorize('view', $session);
+        $data = MapData::fromSession($session);
 
         if (! $data) {
             abort(404, 'Raw data not found');

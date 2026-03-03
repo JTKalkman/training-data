@@ -69,7 +69,7 @@ onMounted(() => {
       {{ error }}
     </p>
   </div>
-  
+
   <TrainingSessionChart 
     v-for="field in availableFields"
     :field="field"
