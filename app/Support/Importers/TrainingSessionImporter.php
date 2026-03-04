@@ -10,6 +10,7 @@ use App\Models\TrainingSummary;
 use App\Models\User;
 use App\Support\Duration;
 use App\Support\Parsers\ParsedSession;
+use App\Support\Samplers\VisvalingamSimplifier;
 
 class TrainingSessionImporter
 {
@@ -145,9 +146,21 @@ class TrainingSessionImporter
         }
 
         if ($parsedSession->routeData->coordinates) {
-            $dataStreamer = new DataStreamer($trainingSession->routeDataPath());
+            // Full route data set.
+            $dataStreamer = new DataStreamer($trainingSession->fullRouteDataPath());
 
             foreach ($parsedSession->routeData->coordinates as $coordinate) {
+                $dataStreamer->write($coordinate);
+            }
+
+            $dataStreamer->close();
+
+            // Downsampled route data set.
+            $simplifier = new VisvalingamSimplifier();
+            $downSampledCoordinates = $simplifier->simplify($parsedSession->routeData->coordinates);
+            $dataStreamer = new DataStreamer($trainingSession->routeDataPath());
+
+            foreach ($downSampledCoordinates as $coordinate) {
                 $dataStreamer->write($coordinate);
             }
 
