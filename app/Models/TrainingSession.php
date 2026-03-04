@@ -65,6 +65,11 @@ class TrainingSession extends Model
         return "app/training_data/{$this->user_id}/{$this->id}/route.json";
     }
 
+    public function fullRouteDataPath(): string
+    {
+        return "app/training_data/{$this->user_id}/{$this->id}/full-route.json";
+    }
+
     public function dataSource(): BelongsTo
     {
         return $this->belongsTo(DataSource::class);
