@@ -8,6 +8,7 @@ Route::post('/login', [AuthController::class, 'login']);
 
 Route::middleware('auth:sanctum')->group(function() {
     Route::post('/refresh', [AuthController::class, 'refresh']);
+    Route::delete('/logout', [AuthController::class, 'logout']);
 });
 
 /**
@@ -16,7 +17,6 @@ Route::middleware('auth:sanctum')->group(function() {
  * Rate limiting.
  * 
  * Authenticated:
- * DELETE   /api/v1/auth/logout                                                     DELETE with current token.
  * GET      /api/v1/me                                                              Current user. Can only request own data.
  * GET      /api/v1/me/polar-profiles                                               The users Polar profiles. No pagination because we expect a small number of profiles.
  * GET      /api/v1/me/devices                                                      The users devices. No pagination because we expect a small number of devices.
