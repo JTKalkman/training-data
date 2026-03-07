@@ -1,14 +1,20 @@
 <?php
 
-use App\Http\Controllers\Api\V1\AuthController;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::post('/login', [AuthController::class, 'login']);
+use App\Http\Controllers\Api\V1\AuthController;
+use App\Http\Controllers\Api\V1\ProfileController;
+
+Route::post('/auth/login', [AuthController::class, 'login']);
 
 Route::middleware('auth:sanctum')->group(function() {
-    Route::post('/refresh', [AuthController::class, 'refresh']);
-    Route::delete('/logout', [AuthController::class, 'logout']);
+    Route::post('/auth/refresh', [AuthController::class, 'refresh']);
+    Route::delete('/auth/logout', [AuthController::class, 'logout']);
+
+    Route::get('profiles', [ProfileController::class, 'index']);
+    // Route::delete('profiles/{}', []); // TODO
+    // Route::put('profiles/{}/restore', []); // TODO
 });
 
 /**
@@ -17,8 +23,6 @@ Route::middleware('auth:sanctum')->group(function() {
  * Rate limiting.
  * 
  * Authenticated:
- * GET      /api/v1/me                                                              Current user. Can only request own data.
- * GET      /api/v1/me/polar-profiles                                               The users Polar profiles. No pagination because we expect a small number of profiles.
  * GET      /api/v1/me/devices                                                      The users devices. No pagination because we expect a small number of devices.
  * GET      /api/v1/training-sessions                                               All training sessions in the last 30 days with sports types and summaries.
  * GET      /api/v1/training-sessions?from=2026-03-01&to=2026-03-07&sport=running   All training sessions with filtering. Paginated.

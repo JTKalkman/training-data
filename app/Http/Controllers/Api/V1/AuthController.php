@@ -7,9 +7,7 @@ use App\Http\Requests\Api\V1\AuthLoginRequest;
 use App\Models\User;
 use App\Permissions\Api\V1\Abilities;
 use App\Traits\Api\V1\ApiResponses;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Laravel\Sanctum\NewAccessToken;
 
 class AuthController extends Controller
 {
