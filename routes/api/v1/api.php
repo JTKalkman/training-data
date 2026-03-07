@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Controllers\Api\V1\ProfileController;
+use App\Http\Controllers\Api\V1\DeviceController;
 
 Route::post('/auth/login', [AuthController::class, 'login']);
 
@@ -15,6 +16,7 @@ Route::middleware('auth:sanctum')->group(function() {
     Route::get('profiles', [ProfileController::class, 'index']);
     // Route::delete('profiles/{}', []); // TODO
     // Route::put('profiles/{}/restore', []); // TODO
+    Route::get('devices', [DeviceController::class, 'index']);
 });
 
 /**
