@@ -1,24 +1,21 @@
 <?php
 
+use App\Http\Controllers\Api\V1\AuthController;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::post('/login', function() {
-    return response()->json([
-        'data' => [
-            
-        ],
-    ]);
+Route::post('/login', [AuthController::class, 'login']);
+
+Route::middleware('auth:sanctum')->group(function() {
+   
 });
 
 /**
- * TODO: Prevent errors from being shown in the output.
+ * TODO: 
  * 
- * Public:
- * POST /api/V1/auth/login                                                          POST with credentials.
+ * Rate limiting.
  * 
  * Authenticated:
- * POST     /api/v1/auth/refresh                                                    POST with current token or OAuth style with refresh token.
  * DELETE   /api/v1/auth/logout                                                     DELETE with current token.
  * GET      /api/v1/me                                                              Current user. Can only request own data.
  * GET      /api/v1/me/polar-profiles                                               The users Polar profiles. No pagination because we expect a small number of profiles.
