@@ -10,6 +10,7 @@ use App\Support\DTO\Api\V1\PaginationMeta;
 use App\Traits\Api\V1\ApiResponses;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Storage;
 
 class TrainingSessionController extends Controller
@@ -51,7 +52,7 @@ class TrainingSessionController extends Controller
         );
     }
 
-    public function sampleData(TrainingSession $trainingSession)
+    public function sampleData(TrainingSession $trainingSession): JsonResponse|Response
     {
         $this->authorize('view', $trainingSession);
 
@@ -63,7 +64,7 @@ class TrainingSessionController extends Controller
         return $this->error('Not found', [], 404);
     }
 
-    public function routeData(TrainingSession $trainingSession)
+    public function routeData(TrainingSession $trainingSession): JsonResponse|Response
     {
         $this->authorize('view', $trainingSession);
 
