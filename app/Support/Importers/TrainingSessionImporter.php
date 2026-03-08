@@ -156,7 +156,7 @@ class TrainingSessionImporter
             $dataStreamer->close();
 
             // Downsampled route data set.
-            $simplifier = new VisvalingamSimplifier();
+            $simplifier = new VisvalingamSimplifier;
             $downSampledCoordinates = $simplifier->simplify($parsedSession->routeData->coordinates);
             $dataStreamer = new DataStreamer($trainingSession->routeDataPath());
 

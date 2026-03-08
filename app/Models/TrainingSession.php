@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Http\Filters\Api\V1\QueryFilter;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -24,6 +26,7 @@ class TrainingSession extends Model
         'duration_seconds',
         'data_source_id',
         'external_id',
+        'device_id',
     ];
 
     protected $casts = [
@@ -78,5 +81,10 @@ class TrainingSession extends Model
     public function device(): BelongsTo
     {
         return $this->belongsTo(Device::class);
+    }
+
+    public function scopeFilter(Builder $builder, QueryFilter $filters)
+    {
+        return $filters->apply($builder);
     }
 }

@@ -4,8 +4,8 @@ namespace App\Support\Samplers;
 
 use App\Support\Samplers\Contracts\SimplifierInterface;
 
-class VisvalingamSimplifier implements SimplifierInterface {
-
+class VisvalingamSimplifier implements SimplifierInterface
+{
     public function __construct(
         private string $xKey = 'lat',
         private string $yKey = 'lng',
@@ -16,11 +16,11 @@ class VisvalingamSimplifier implements SimplifierInterface {
     {
         $simplified = $samples;
         $targetSize = (int) round(count($samples) * $this->target_ratio);
-        
+
         while (count($simplified) > $targetSize) {
             $minArea = null;
             $minIndex = null;
-            
+
             for ($i = 1; $i < count($simplified) - 1; $i++) {
                 $x1 = $simplified[$i - 1][$this->xKey];
                 $y1 = $simplified[$i - 1][$this->yKey];
@@ -28,9 +28,9 @@ class VisvalingamSimplifier implements SimplifierInterface {
                 $y2 = $simplified[$i][$this->yKey];
                 $x3 = $simplified[$i + 1][$this->xKey];
                 $y3 = $simplified[$i + 1][$this->yKey];
-                
+
                 $area = abs($x1 * ($y2 - $y3) + $x2 * ($y3 - $y1) + $x3 * ($y1 - $y2)) / 2;
-                
+
                 if ($minArea === null || $area < $minArea) {
                     $minArea = $area;
                     $minIndex = $i;
@@ -43,4 +43,3 @@ class VisvalingamSimplifier implements SimplifierInterface {
         return $simplified;
     }
 }
-
