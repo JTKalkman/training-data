@@ -21,11 +21,11 @@ trait ApiResponses
                 'next' => $data->nextPageUrl(),
                 'prev' => $data->previousPageUrl(),
             ],
-            'statusCode' => $statusCode
+            'statusCode' => $statusCode,
         ]);
     }
 
-    protected function error(string $message, string|array $errors = [], int|null $statusCode = null): JsonResponse
+    protected function error(string $message, string|array $errors = [], ?int $statusCode = null): JsonResponse
     {
         return response()->json([
             'status' => 'error',

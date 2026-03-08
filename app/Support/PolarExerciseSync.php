@@ -37,7 +37,9 @@ class PolarExerciseSync
                         'data_source_id' => $polarSource->id,
                     ])->first();
 
-                    if ($trainingSession !== null) continue;
+                    if ($trainingSession !== null) {
+                        continue;
+                    }
 
                     $parser = new PolarJsonParser;
                     $parsedExercise = $parser->parse($exercise);

@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 abstract class QueryFilter
 {
     protected Builder $builder;
+
     protected Request $request;
 
     public function __construct(Request $request)

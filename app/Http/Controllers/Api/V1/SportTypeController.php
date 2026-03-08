@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\SportTypeResource;
 use App\Models\SportType;
 use App\Traits\Api\V1\ApiResponses;
-use Illuminate\Http\Request;
 
 class SportTypeController extends Controller
 {

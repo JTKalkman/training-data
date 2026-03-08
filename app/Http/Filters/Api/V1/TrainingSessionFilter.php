@@ -18,7 +18,7 @@ class TrainingSessionFilter extends QueryFilter
 
     public function sport($value): Builder
     {
-        return $this->builder->whereHas('sportType', function($query) use ($value) {
+        return $this->builder->whereHas('sportType', function ($query) use ($value) {
             $query->where('name', $value);
         });
     }

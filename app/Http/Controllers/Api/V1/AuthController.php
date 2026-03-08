@@ -32,7 +32,7 @@ class AuthController extends Controller
 
     public function login(AuthLoginRequest $request): string
     {
-        if (!Auth::attempt($request->only('email', 'password'))) {
+        if (! Auth::attempt($request->only('email', 'password'))) {
             return $this->error('Invalid credentials', [], 401);
         }
 

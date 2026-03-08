@@ -23,22 +23,22 @@ class TrainingSessionResource extends JsonResource
 
         return [
             'id' => $this->id,
-            'startedAt' =>$startedAt,
+            'startedAt' => $startedAt,
             'utcOffset' => $this->utc_offset,
             'durationSeconds' => $this->duration_seconds,
             'durationIso' => Duration::toIso($this->duration_seconds),
-            'device' => $this->whenLoaded('device', function() {
+            'device' => $this->whenLoaded('device', function () {
                 return DeviceResource::make($this->device);
             }),
-            'platform' => $this->whenLoaded('dataSource', function() {
+            'platform' => $this->whenLoaded('dataSource', function () {
                 return DeviceResource::make($this->dataSource);
             }),
-            'trainingSummary' => $this->whenLoaded('trainingSummary', function() {
+            'trainingSummary' => $this->whenLoaded('trainingSummary', function () {
                 return TrainingSummaryResource::make($this->trainingSummary);
             }),
-            'heartRateZones' => $this->whenLoaded('heartRateZones', function() {
+            'heartRateZones' => $this->whenLoaded('heartRateZones', function () {
                 return HeartRateZoneResource::collection($this->heartRateZones);
-            })
+            }),
         ];
 
         return parent::toArray($request);

@@ -150,9 +150,11 @@ class PolarJsonParser implements ParserInterface
         $speeds = explode(',', $speedData);
         $paces = array_map(function ($speed) {
             $speed = (float) $speed;
+
             return $speed > 0 ? round(1000 / $speed) : 0;
         }, $speeds);
-        return implode(',', $paces); 
+
+        return implode(',', $paces);
     }
 
     public function parse(iterable $data): ParsedSession

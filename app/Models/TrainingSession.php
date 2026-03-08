@@ -83,7 +83,8 @@ class TrainingSession extends Model
         return $this->belongsTo(Device::class);
     }
 
-    public function scopeFilter(Builder $builder, QueryFilter $filters) {
+    public function scopeFilter(Builder $builder, QueryFilter $filters)
+    {
         return $filters->apply($builder);
     }
 }

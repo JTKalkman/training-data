@@ -3,12 +3,11 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Api\V1\DeviceResource;
 use App\Models\Device;
 use App\Traits\Api\V1\ApiResponses;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Resources\Api\V1\DeviceResource;
 
 class DeviceController extends Controller
 {
