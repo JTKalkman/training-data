@@ -9,6 +9,7 @@ use App\Models\TrainingSession;
 use App\Traits\Api\V1\ApiResponses;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class TrainingSessionController extends Controller
 {
@@ -35,9 +36,8 @@ class TrainingSessionController extends Controller
         );
     }
 
-    public function show(TrainingSession $trainingSession)
+    public function show(TrainingSession $trainingSession): JsonResponse
     {
-        // abort_if($trainingSession->user_id !== Auth::id(), 404);
         $this->authorize('view', $trainingSession);
 
         $trainingSession->load(['dataSource', 'device', 'trainingSummary', 'heartRateZones']);
@@ -48,5 +48,29 @@ class TrainingSessionController extends Controller
             $data->resolve(),
             200
         );
+    }
+
+    public function sampleData(TrainingSession $trainingSession)
+    {
+        $this->authorize('view', $trainingSession);
+
+        if (Storage::exists($trainingSession->sampleDataPath())) {
+            return response(Storage::get($trainingSession->sampleDataPath()), 200)
+                ->header('Content-Type', 'application/json');
+        }
+
+        return $this->error('Not found', [], 404);
+    }
+
+    public function routeData(TrainingSession $trainingSession)
+    {
+        $this->authorize('view', $trainingSession);
+
+        if (Storage::exists($trainingSession->routeDataPath())) {
+            return response(Storage::get($trainingSession->routeDataPath()), 200)
+                ->header('Content-Type', 'application/json');
+        }
+
+        return $this->error('Not found', [], 404);
     }
 }

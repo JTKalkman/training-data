@@ -22,8 +22,8 @@ Route::middleware('auth:sanctum')->group(function() {
 
     Route::get('training-sessions', [TrainingSessionController::class, 'index']);
     Route::get('training-sessions/{trainingSession} ', [TrainingSessionController::class, 'show']);
-    // Route::get('training-sessions/training-sessions/{id}/sample-data', []);
-    // Route::get('/training-sessions/{id}/route', []);
+    Route::get('training-sessions/{trainingSession}/sample-data', [TrainingSessionController::class, 'sampleData']);
+    Route::get('training-sessions/{trainingSession}/route-data', [TrainingSessionController::class, 'routeData']);
     // Route::patch('/training-sessions/{id} ', []);
     // Route::get('training-sessions', []);
 });
@@ -32,8 +32,6 @@ Route::middleware('auth:sanctum')->group(function() {
  * TODO: 
  * 
  * Authenticated:
- * GET      /api/v1/training-sessions/{id}/sample-data                              The sample data for the current training session. Large json file from storage.
- * GET      /api/v1/training-sessions/{id}/route                                    The down sampled route data for the current training session. Large json file from storage.
  * PATCH    /api/v1/training-sessions/{id}                                          Update or add feedback or notes.                                    
  * GET      /api/v1/sport-types                                                     List of all supported sport types.
  */
