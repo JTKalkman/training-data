@@ -24,6 +24,7 @@ class TrainingSession extends Model
         'duration_seconds',
         'data_source_id',
         'external_id',
+        'device_id',
     ];
 
     protected $casts = [
