@@ -34,4 +34,19 @@ class TrainingSessionController extends Controller
             200
         );
     }
+
+    public function show(TrainingSession $trainingSession)
+    {
+        // abort_if($trainingSession->user_id !== Auth::id(), 404);
+        $this->authorize('view', $trainingSession);
+
+        $trainingSession->load(['dataSource', 'device', 'trainingSummary', 'heartRateZones']);
+        $data = new TrainingSessionResource($trainingSession);
+
+        return $this->success(
+            'Training session retrieved',
+            $data->resolve(),
+            200
+        );
+    }
 }
