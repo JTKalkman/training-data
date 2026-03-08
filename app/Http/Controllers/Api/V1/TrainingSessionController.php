@@ -25,9 +25,10 @@ class TrainingSessionController extends Controller
             ->paginate();
         $collection = TrainingSessionResource::collection($trainingSessions);
 
-        return $this->success(
+        return $this->paginated(
             'Training sessions retrieved',
-            $collection->resolve(),
+            $collection,
+            $trainingSessions,
             200
         );
     }
