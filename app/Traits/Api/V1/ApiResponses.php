@@ -6,6 +6,25 @@ use Illuminate\Http\JsonResponse;
 
 trait ApiResponses
 {
+    protected function paginated($message, $collection, $data, $statusCode)
+    {
+        return response()->json([
+            'message' => $message,
+            'data' => $collection->resolve(),
+            'meta' => [
+                'currentPage' => $data->currentPage(),
+                'lastPage' => $data->lastPage(),
+                'perPage' => $data->perPage(),
+                'total' => $data->total(),
+            ],
+            'links' => [
+                'next' => $data->nextPageUrl(),
+                'prev' => $data->previousPageUrl(),
+            ],
+            'statusCode' => $statusCode
+        ]);
+    }
+
     protected function error(string $message, string|array $errors = [], int|null $statusCode = null): JsonResponse
     {
         return response()->json([
