@@ -31,9 +31,11 @@ class PolarExerciseSync
 
                 foreach ($exercises as $exercise) {
                     $exerciseId = $exercise['id'];
-                    $trainingSession = TrainingSession::where('external_id', $exerciseId)
-                        ->whereHas('dataSource', fn ($q) => $q->where('name', 'polar'))
-                        ->first();
+                    $trainingSession = TrainingSession::where([
+                        'external_id' => $exerciseId,
+                        'user_id' => $user->id,
+                        'data_source_id' => $polarSource->id,
+                    ])->first();
 
                     if ($trainingSession !== null) continue;
 

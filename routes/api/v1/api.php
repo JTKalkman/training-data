@@ -31,13 +31,12 @@ Route::middleware('auth:sanctum')->group(function() {
 /**
  * TODO: 
  * 
- * 
  * Authenticated:
- * GET      /api/v1/training-sessions?from=2026-03-01&to=2026-03-07&sport=running   All training sessions with filtering. Paginated.
  * GET      /api/v1/training-sessions/{id}                                          The current training session with sport type, training summary and heart rate zones.
  * GET      /api/v1/training-sessions/{id}/sample-data                              The sample data for the current training session. Large json file from storage.
  * GET      /api/v1/training-sessions/{id}/route                                    The down sampled route data for the current training session. Large json file from storage.
  * PATCH    /api/v1/training-sessions/{id}                                          Update or add feedback or notes.
  * DELETE   /api/v1/me/profiles/{id}                                                Soft deletes, keeps data intact.
  * PUT      /api/v1/me/profiles/{id}/restore                                        Restore if deleted by mistake.
+ * GET      /api/v1/sport-types                                                     List of all supported sport types.
  */
