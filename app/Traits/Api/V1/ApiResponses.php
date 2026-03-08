@@ -2,24 +2,25 @@
 
 namespace App\Traits\Api\V1;
 
+use App\Support\DTO\Api\V1\PaginationMeta;
 use Illuminate\Http\JsonResponse;
 
 trait ApiResponses
 {
-    protected function paginated($message, $collection, $data, $statusCode): JsonResponse
+    protected function paginated(string $message, array $data, PaginationMeta $meta, int $statusCode): JsonResponse
     {
         return response()->json([
             'message' => $message,
-            'data' => $collection->resolve(),
+            'data' => $data,
             'meta' => [
-                'currentPage' => $data->currentPage(),
-                'lastPage' => $data->lastPage(),
-                'perPage' => $data->perPage(),
-                'total' => $data->total(),
+                'currentPage' => $meta->currentPage,
+                'lastPage' => $meta->lastPage,
+                'perPage' => $meta->perPage,
+                'total' => $meta->total,
             ],
             'links' => [
-                'next' => $data->nextPageUrl(),
-                'prev' => $data->previousPageUrl(),
+                'next' => $meta->next,
+                'prev' => $meta->prev,
             ],
             'statusCode' => $statusCode,
         ]);
