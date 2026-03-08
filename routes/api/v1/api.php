@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Controllers\Api\V1\ProfileController;
 use App\Http\Controllers\Api\V1\DeviceController;
+use App\Http\Controllers\Api\V1\SportTypeController;
 use App\Http\Controllers\Api\V1\TrainingSessionController;
 
 Route::post('/auth/login', [AuthController::class, 'login']);
@@ -24,14 +25,7 @@ Route::middleware('auth:sanctum')->group(function() {
     Route::get('training-sessions/{trainingSession} ', [TrainingSessionController::class, 'show']);
     Route::get('training-sessions/{trainingSession}/sample-data', [TrainingSessionController::class, 'sampleData']);
     Route::get('training-sessions/{trainingSession}/route-data', [TrainingSessionController::class, 'routeData']);
-    // Route::patch('/training-sessions/{id} ', []);
-    // Route::get('training-sessions', []);
-});
+    // Route::patch('/training-sessions/{id} ', []); // TODO: Update or add feedback or notes.
 
-/**
- * TODO: 
- * 
- * Authenticated:
- * PATCH    /api/v1/training-sessions/{id}                                          Update or add feedback or notes.                                    
- * GET      /api/v1/sport-types                                                     List of all supported sport types.
- */
+    Route::get('sport-types', [SportTypeController::class, 'index']);
+});
