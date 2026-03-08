@@ -17,6 +17,6 @@ class DataSourceResource extends JsonResource
         return [
             'name' => $this->name,
             'label' => $this->label,
-        ];;
+        ];
     }
 }
