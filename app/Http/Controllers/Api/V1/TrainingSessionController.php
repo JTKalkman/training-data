@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Filters\Api\V1\TrainingSessionFilter;
 use App\Http\Resources\Api\V1\TrainingSessionResource;
 use App\Models\TrainingSession;
 use App\Traits\Api\V1\ApiResponses;
@@ -13,16 +14,17 @@ class TrainingSessionController extends Controller
 {
     use ApiResponses;
 
-    public function index(): JsonResponse
+    public function index(TrainingSessionFilter $filters): JsonResponse
     {
         $user = Auth::user();
 
-        $trainingSessions = TrainingSession::where('user_id', $user->id)
+        $trainingSessions = TrainingSession::filter($filters)
+            ->where('user_id', $user->id)
             ->with('dataSource')
             ->with('device')
             ->with('trainingSummary')
             ->with('heartRateZones')
-            ->paginate();
+            ->paginate(10);
         $collection = TrainingSessionResource::collection($trainingSessions);
 
         return $this->paginated(
