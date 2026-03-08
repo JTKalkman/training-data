@@ -38,7 +38,15 @@ class Duration
     }
 
     /**
-     * Formats SO 8601 duration format to total seconds.
+     * Format seconds to ISO 8601 duration format.
+     */
+    public static function toIso(int $seconds): string
+    {
+        return CarbonInterval::seconds($seconds)->spec();
+    }
+
+    /**
+     * Formats ISO 8601 duration format to total seconds.
      */
     public static function fromIso(string $duration): int
     {
