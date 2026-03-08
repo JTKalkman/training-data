@@ -17,8 +17,8 @@ class DeviceController extends Controller
     {
         $user = Auth::user();
 
-        $polarProfiles = Device::where('user_id', $user->id)->with('dataSource')->get();
-        $collection = DeviceResource::collection($polarProfiles);
+        $devices = Device::where('user_id', $user->id)->with('dataSource')->get();
+        $collection = DeviceResource::collection($devices);
 
         return $this->success(
             'Devices retrieved',
