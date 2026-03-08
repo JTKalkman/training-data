@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Filters\Api\V1\TrainingSessionFilter;
 use App\Http\Resources\Api\V1\TrainingSessionResource;
 use App\Models\TrainingSession;
+use App\Support\DTO\Api\V1\PaginationMeta;
 use App\Traits\Api\V1\ApiResponses;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
@@ -30,8 +31,8 @@ class TrainingSessionController extends Controller
 
         return $this->paginated(
             'Training sessions retrieved',
-            $collection,
-            $trainingSessions,
+            $collection->resolve(),
+            PaginationMeta::fromPaginator($trainingSessions),
             200
         );
     }
