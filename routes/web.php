@@ -30,7 +30,7 @@ Route::get('/', function () {
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/sessions/{session}/sample-data', [SessionController::class, 'sampleData'])
-    ->name('sessions.sample-data');
+        ->name('sessions.sample-data');
 
     Route::get('/sessions/{session}/route-data', [SessionController::class, 'routeData'])
         ->name('sessions.route-data');
