@@ -19,10 +19,7 @@ class DeviceResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'platform' => $this->whenLoaded('dataSource', function($data) {
-                return [
-                    'name' => $data->name,
-                    'label' => $data->label,
-                ];
+                return DataSourceResource::make($data);
             }),
             'linkedAt' => $this->created_at->toIso8601String(),
         ];
