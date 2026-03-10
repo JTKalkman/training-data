@@ -112,6 +112,116 @@ php artisan key:generate
 php artisan migrate --seed
 ```
 
+## API Documentation
+
+The application provides a REST API for accessing training data and user information.
+
+### Base URL
+```
+/api/v1
+```
+
+### Authentication
+
+Most endpoints require authentication using Bearer tokens (Sanctum). After logging in, use the returned token in the `Authorization` header:
+
+```
+Authorization: Bearer {token}
+```
+
+### Available Endpoints
+
+#### Authentication
+
+**Login**
+```
+POST /auth/login
+```
+- **Description:** Authenticate user and receive access token
+- **Body:** `{ "email": "user@example.com", "password": "password" }`
+- **Returns:** Access token for use in subsequent requests
+
+**Refresh Token**
+```
+POST /auth/refresh
+```
+- **Description:** Refresh the authentication token
+- **Requires:** Authentication
+
+**Logout**
+```
+DELETE /auth/logout
+```
+- **Description:** Revoke the current authentication token
+- **Requires:** Authentication
+
+#### Profiles
+
+**Get Profiles**
+```
+GET /profiles
+```
+- **Description:** Retrieve all linked user profiles (e.g., Polar profiles)
+- **Requires:** Authentication
+- **Returns:** List of user profiles with integration details
+
+#### Devices
+
+**Get Devices**
+```
+GET /devices
+```
+- **Description:** Retrieve all registered devices
+- **Requires:** Authentication
+- **Returns:** List of devices (e.g., Polar heart rate monitors)
+
+#### Training Sessions
+
+**Get Training Sessions**
+```
+GET /training-sessions
+```
+- **Description:** Retrieve all training sessions for the authenticated user
+- **Requires:** Authentication
+- **Returns:** List of training sessions with metadata (duration, average HR, sport type, etc.)
+
+**Get Training Session Details**
+```
+GET /training-sessions/{trainingSession}
+```
+- **Description:** Retrieve detailed information for a specific training session
+- **Requires:** Authentication
+- **Parameters:** `trainingSession` (session ID or slug)
+- **Returns:** Full session details including heart rate zones breakdown
+
+**Get Training Session Sample Data**
+```
+GET /training-sessions/{trainingSession}/sample-data
+```
+- **Description:** Retrieve per-second heart rate samples for charting
+- **Requires:** Authentication
+- **Parameters:** `trainingSession` (session ID or slug)
+- **Returns:** Chart-ready data with heart rate values, timestamps, and zone information
+
+**Get Training Session Route Data**
+```
+GET /training-sessions/{trainingSession}/route-data
+```
+- **Description:** Retrieve GPS route/map data for the training session
+- **Requires:** Authentication
+- **Parameters:** `trainingSession` (session ID or slug)
+- **Returns:** Map coordinates and geographical data
+
+#### Sport Types
+
+**Get Sport Types**
+```
+GET /sport-types
+```
+- **Description:** Retrieve all available sport types (e.g., running, cycling)
+- **Requires:** Authentication
+- **Returns:** List of sport types used in training sessions
+
 ## Manual Polar API Testing
 
 A console command is available for manually testing and syncing training sessions from the Polar API:
