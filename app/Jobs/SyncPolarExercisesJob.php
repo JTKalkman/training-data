@@ -5,7 +5,6 @@ namespace App\Jobs;
 use App\Models\PolarProfile;
 use App\Support\PolarExerciseSync;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
