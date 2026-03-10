@@ -117,7 +117,7 @@ php artisan migrate --seed
 A console command is available for manually testing and syncing training sessions from the Polar API:
 
 ```
-php artisan app:test-polar-sync {userId}
+sudo -u www-data php artisan app:test-polar-sync {userId}
 ```
 
 This command:
@@ -127,7 +127,7 @@ This command:
 
 **Example:**
 ```
-php artisan app:test-polar-sync 1
+sudo -u www-data php artisan app:test-polar-sync 1
 ```
 
 ## Demo Login
