@@ -11,22 +11,12 @@ use Inertia\Inertia;
 use Laravel\Fortify\Features;
 
 Route::get('/', function () {
-
-    if (Auth::user()) {
-        $now = Carbon::now();
-        $year = $now->year;
-        $week = $now->weekOfYear;
-
-        return redirect()->route('sessions.week', [
-            'year' => $year,
-            'week' => $week,
-        ]);
-    }
-
-    return Inertia::render('Welcome', [
-        'canRegister' => Features::enabled(Features::registration()),
+    $now = Carbon::now();
+    return redirect()->route('sessions.week', [
+        'year' => $now->year,
+        'week' => $now->weekOfYear,
     ]);
-})->name('home');
+})->middleware('auth')->name('home');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/sessions/{session}/sample-data', [SessionController::class, 'sampleData'])
