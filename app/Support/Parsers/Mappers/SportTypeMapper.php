@@ -14,6 +14,7 @@ class SportTypeMapper
         'STRENGTH_TRAINING' => 'weight_training',
         'BOOTCAMP' => 'bootcamp',
         'MOUNTAIN_BIKING' => 'mountain_bike',
+        'INDOOR_CYCLING' => 'indoor_cycling',
     ];
 
     public static function map(string $external): ?SportType
