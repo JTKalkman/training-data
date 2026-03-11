@@ -14,7 +14,7 @@ use App\Support\Samplers\VisvalingamSimplifier;
 
 class TrainingSessionImporter
 {
-    private function cast(string $type, string $value): int|float|null
+    private function cast(string $type, string|int|null $value): int|float|null
     {
         return match ($type) {
             'int' => (int) $value,
