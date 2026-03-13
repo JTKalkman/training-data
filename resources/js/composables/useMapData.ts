@@ -11,7 +11,7 @@ export function useRouteData(sessionId: string) {
   const fetch = async () => {
     loading.value = true;
     try {
-      const response = await axios.get(route('sessions.route-data', { session: sessionId }));
+      const response = await axios.get(route('training-sessions.route-data', { session: sessionId }));
       data.value = response.data
     } catch (e) {
       if (Error.isError(e)) {
