@@ -20,7 +20,7 @@ const props = defineProps<{
   <div class="p-4">
 
     <div class="flex flex-col px-4 mb-6">
-      <Link :href="route('sessions.week', { year: session.data.year, week: session.data.week })">← Back</Link>
+      <Link :href="route('training-sessions.week', { year: session.data.year, week: session.data.week })">← Back</Link>
       <div class="flex justify-center">
         <h1 class="text-xl font-bold mb-4">
           {{ session.data.sport_type.label }} - 
