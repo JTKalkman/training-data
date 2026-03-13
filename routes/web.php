@@ -5,33 +5,35 @@ use App\Http\Controllers\PolarAuthController;
 use App\Http\Controllers\SessionController;
 use App\Http\Controllers\WeekOverviewController;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
-use Laravel\Fortify\Features;
 
 Route::get('/', function () {
-    $now = Carbon::now();
-    return redirect()->route('sessions.week', [
-        'year' => $now->year,
-        'week' => $now->weekOfYear,
-    ]);
+    return redirect()->route('training-sessions');
 })->middleware('auth')->name('home');
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/sessions/{session}/sample-data', [SessionController::class, 'sampleData'])
-        ->name('sessions.sample-data');
+    Route::get('/training-sessions/{session}/sample-data', [SessionController::class, 'sampleData'])
+        ->name('training-sessions.sample-data');
 
-    Route::get('/sessions/{session}/route-data', [SessionController::class, 'routeData'])
-        ->name('sessions.route-data');
+    Route::get('/training-sessions/{session}/route-data', [SessionController::class, 'routeData'])
+        ->name('training-sessions.route-data');
 
-    Route::get('/sessions/{session}', [SessionController::class, 'show'])
-        ->name('sessions.session');
+    Route::get('/training-sessions/{session}', [SessionController::class, 'show'])
+        ->name('training-sessions.session');
 
-    Route::get('/sessions/{year}/week/{week}', [WeekOverviewController::class, 'show'])
+    Route::get('/training-sessions/{year}/week/{week}', [WeekOverviewController::class, 'show'])
         ->whereNumber('year')
         ->whereNumber('week')
-        ->name('sessions.week');
+        ->name('training-sessions.week');
+
+    Route::get('/training-sessions', function () {
+        $now = Carbon::now();
+        return redirect()->route('training-sessions.week', [
+            'year' => $now->year,
+            'week' => $now->weekOfYear,
+        ]);
+    })->name('training-sessions');
 
     Route::get('/account/settings', [AccountController::class, 'settings'])
         ->name('account.settings');

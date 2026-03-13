@@ -38,7 +38,7 @@ const hasSessions = computed(() => props.trainingSessions?.data.length ?? 0 > 0)
         <li v-for="session in trainingSessions?.data" :key="session.id" class="border p-2 my-1">
 
           <div>
-            <Link :href="route('sessions.session', { session: session.id })" class="underline">
+            <Link :href="route('training-sessions.session', { session: session.id })" class="underline">
               {{ session.sport_type.label }} — {{ session.started_at_human }}
             </Link>
           </div>
