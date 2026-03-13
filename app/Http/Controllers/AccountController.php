@@ -9,14 +9,14 @@ use Inertia\Inertia;
 
 class AccountController extends Controller
 {
-    public function settings()
+    public function PolarAccounts()
     {
         $user = Auth::user();
         $polarProfiles = PolarProfile::where('user_id', $user->id)
             ->get();
 
-        return Inertia::render('Account/Settings', [
-            'polar_profiles' => PolarProfileResource::collection($polarProfiles),
+        return Inertia::render('PolarAccounts', [
+            'polarProfiles' => PolarProfileResource::collection($polarProfiles),
         ]);
     }
 }

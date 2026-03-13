@@ -16,11 +16,17 @@ import {
 import { dashboard } from '@/routes';
 import { type NavItem } from '@/types';
 import AppLogo from './AppLogo.vue';
+import { route } from 'ziggy-js';
 
 const mainNavItems: NavItem[] = [
     {
-        title: 'Dashboard',
-        href: dashboard(),
+        title: 'Training sessions',
+        href: route('training-sessions'),
+        icon: LayoutGrid,
+    },
+    {
+        title: 'Polar accounts',
+        href: route('polar-accounts'),
         icon: LayoutGrid,
     },
 ];
@@ -45,7 +51,7 @@ const footerNavItems: NavItem[] = [
             <SidebarMenu>
                 <SidebarMenuItem>
                     <SidebarMenuButton size="lg" as-child>
-                        <Link :href="dashboard()">
+                        <Link :href="route('training-sessions')">
                             <AppLogo />
                         </Link>
                     </SidebarMenuButton>

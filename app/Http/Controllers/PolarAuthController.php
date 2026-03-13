@@ -43,21 +43,21 @@ class PolarAuthController extends Controller
                 default => self::GENERIC_ERROR_MESSAGE,
             };
 
-            return redirect()->route('account.settings')
+            return redirect()->route('polar-accounts')
                 ->with('error', $error_message);
         }
 
         // Checking for missing or invalid state.
         $state = $request->state;
         if (! $state || $state !== $request->session()->get('polar_oauth_state')) {
-            return redirect()->route('account.settings')
+            return redirect()->route('polar-accounts')
                 ->with('error', self::GENERIC_ERROR_MESSAGE);
         }
 
         // Handling wrong users.
         $decryptedState = decrypt($state);
         if (! $decryptedState['user_id'] || $decryptedState['user_id'] !== Auth::user()->id) {
-            return redirect()->route('account.settings')
+            return redirect()->route('polar-accounts')
                 ->with('error', self::GENERIC_ERROR_MESSAGE);
         }
 
@@ -81,22 +81,22 @@ class PolarAuthController extends Controller
             ]);
 
             // At this point the registration should be successful.
-            return redirect()->route('account.settings')
+            return redirect()->route('polar-accounts')
                 ->with('success', 'Your Polar account has been linked.');
         } catch (PolarApiException $e) {
             Log::error('Polar API error', ['message' => $e->getMessage()]);
 
-            return redirect()->route('account.settings')
+            return redirect()->route('polar-accounts')
                 ->with('error', self::GENERIC_ERROR_MESSAGE);
         } catch (PolarAuthException $e) {
             Log::error('Polar auth error', ['message' => $e->getMessage()]);
 
-            return redirect()->route('account.settings')
+            return redirect()->route('polar-accounts')
                 ->with('error', self::GENERIC_ERROR_MESSAGE);
         } catch (\Throwable $th) {
             Log::error('Unexpected error', ['message' => $th->getMessage()]);
 
-            return redirect()->route('account.settings')
+            return redirect()->route('polar-accounts')
                 ->with('error', self::GENERIC_ERROR_MESSAGE);
         }
     }

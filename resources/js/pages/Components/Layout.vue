@@ -16,7 +16,7 @@ const props = defineProps<{
         </Link>
       </h1>
       
-      <Link :href="route('account.settings')">
+      <Link :href="route('polar-accounts')">
         Account settings
       </Link>
     </header>
