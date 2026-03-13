@@ -35,8 +35,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ]);
     })->name('training-sessions');
 
-    Route::get('/account/settings', [AccountController::class, 'settings'])
-        ->name('account.settings');
+    Route::get('/polar-accounts', [AccountController::class, 'PolarAccounts'])
+        ->name('polar-accounts');
 
     Route::get('/auth/polar/callback', [PolarAuthController::class, 'callback'])
         ->name('auth.polar.callback');
