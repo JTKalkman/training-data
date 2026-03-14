@@ -8,14 +8,14 @@ use App\Support\ChartData;
 use App\Support\MapData;
 use Inertia\Inertia;
 
-class SessionController extends Controller
+class TrainingSessionController extends Controller
 {
     public function show(TrainingSession $session)
     {
         $this->authorize('view', $session);
         $session->load(['sportType', 'trainingSummary', 'heartRateZones']);
 
-        return Inertia::render('Diary/SessionDetail', [
+        return Inertia::render('TrainingSession', [
             'session' => new TrainingSessionResource($session),
         ]);
     }
