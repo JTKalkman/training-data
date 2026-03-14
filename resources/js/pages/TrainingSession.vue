@@ -2,9 +2,9 @@
 import { Head, Link } from '@inertiajs/vue3';
 import { route } from 'ziggy-js';
 import { BreadcrumbItem, TrainingSession } from '@/types';
-import TrainingSessionCharts from './Components/TrainingSessionCharts.vue';
-import TrainingSessionMap from './Components/TrainingSessionMap.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
+import TrainingSessionCharts from '@/components/TrainingSessionCharts.vue';
+import TrainingSessionMap from '@/components/TrainingSessionMap.vue';
 
 const props = defineProps<{
   session: {
