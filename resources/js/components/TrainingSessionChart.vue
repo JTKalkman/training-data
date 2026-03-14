@@ -50,7 +50,7 @@ const crosshairPlugin = {
   id: 'crosshair',
   afterDraw(chart: Chart) {
     const tooltip = chart.tooltip as any; // TODO: A bit ugly for only one property.
-    if (tooltip._active?.length) {
+    if (tooltip && tooltip._active?.length) {
       const x = tooltip._active[0].element.x;
       const ctx = chart.ctx;
       const topY = chart.scales.y.top;
