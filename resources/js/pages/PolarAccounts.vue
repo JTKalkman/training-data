@@ -33,7 +33,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 
       <div class="p-4 relative flex-1 rounded-xl border border-sidebar-border/70 md:min-h-min dark:border-sidebar-border mb-6">
         <div class="mb-3 flex justify-start">
-          <PolarLogo class="h-4 w-auto" />
+          <PolarLogo :class="'h-4 w-auto'" />
         </div>
         <p class="">
           Connect your Polar account to automatically sync your training sessions. Once linked, 
