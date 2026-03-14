@@ -16,7 +16,7 @@ class TrainingSessionController extends Controller
         $session->load(['sportType', 'trainingSummary', 'heartRateZones']);
 
         return Inertia::render('TrainingSession', [
-            'session' => new TrainingSessionResource($session),
+            'TrainingSession' => new TrainingSessionResource($session),
         ]);
     }
 
