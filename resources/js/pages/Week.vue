@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { Head, Link } from '@inertiajs/vue3';
-import Layout from './Components/Layout.vue';
 import { computed } from 'vue';
 import { route } from 'ziggy-js';
 import { BreadcrumbItem, TrainingSession, WeekNavigation } from '@/types';
