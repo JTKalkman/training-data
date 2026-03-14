@@ -15,7 +15,10 @@ const props = defineProps<{
 const breadcrumbs: BreadcrumbItem[] = [
   {
     title: 'Training sessions',
-    href: route('training-sessions'),
+    href: route('training-sessions.week', { year: props.session.data.year, week: props.session.data.week }),
+  },
+  {
+    title: `${props.session.data.sport_type.label} - ${ props.session.data.started_at_human }`
   },
 ];
 
@@ -27,17 +30,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 
   <AppLayout :breadcrumbs="breadcrumbs">
     <div class="p-4">
-  
-      <div class="flex flex-col px-4 mb-6">
-        <Link :href="route('training-sessions.week', { year: session.data.year, week: session.data.week })">← Back</Link>
-        <div class="flex justify-center">
-          <h1 class="text-xl font-bold mb-4">
-            {{ session.data.sport_type.label }} - 
-            {{ session.data.started_at_human }}
-          </h1>
-        </div>
-      </div>
-  
+
       <div class="mb-6 text-center pt-10 pb-10">
         <TrainingSessionCharts :sessionId="session.data.id" />
       </div>
