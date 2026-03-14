@@ -42,7 +42,7 @@ class WeekOverviewController extends Controller
             ],
         ];
 
-        return Inertia::render('Diary/Week', [
+        return Inertia::render('Week', [
             'trainingSessions' => TrainingSessionResource::collection($trainingSessions),
             'year' => $year,
             'week' => $week,

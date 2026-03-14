@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { Link } from '@inertiajs/vue3';
-import Layout from './../Components/Layout.vue';
+import Layout from './Components/Layout.vue';
 import { route } from 'ziggy-js';
 import { TrainingSession } from '@/types';
-import TrainingSessionCharts from '../Components/TrainingSessionCharts.vue';
-import TrainingSessionMap from '../Components/TrainingSessionMap.vue';
+import TrainingSessionCharts from './Components/TrainingSessionCharts.vue';
+import TrainingSessionMap from './Components/TrainingSessionMap.vue';
 
 defineOptions({ layout: Layout })
 
