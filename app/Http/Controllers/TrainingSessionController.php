@@ -8,7 +8,7 @@ use App\Support\ChartData;
 use App\Support\MapData;
 use Inertia\Inertia;
 
-class SessionController extends Controller
+class TrainingSessionController extends Controller
 {
     public function show(TrainingSession $session)
     {

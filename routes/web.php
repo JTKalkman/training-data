@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\PolarAuthController;
-use App\Http\Controllers\SessionController;
+use App\Http\Controllers\TrainingSessionController;
 use App\Http\Controllers\WeekOverviewController;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Route;
@@ -13,13 +13,13 @@ Route::get('/', function () {
 })->middleware('auth')->name('home');
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/training-sessions/{session}/sample-data', [SessionController::class, 'sampleData'])
+    Route::get('/training-sessions/{session}/sample-data', [TrainingSessionController::class, 'sampleData'])
         ->name('training-sessions.sample-data');
 
-    Route::get('/training-sessions/{session}/route-data', [SessionController::class, 'routeData'])
+    Route::get('/training-sessions/{session}/route-data', [TrainingSessionController::class, 'routeData'])
         ->name('training-sessions.route-data');
 
-    Route::get('/training-sessions/{session}', [SessionController::class, 'show'])
+    Route::get('/training-sessions/{session}', [TrainingSessionController::class, 'show'])
         ->name('training-sessions.session');
 
     Route::get('/training-sessions/{year}/week/{week}', [WeekOverviewController::class, 'show'])
