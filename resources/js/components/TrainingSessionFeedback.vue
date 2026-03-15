@@ -1,10 +1,15 @@
 <script setup lang="ts">
+import { cn } from '@/lib/utils';
 import { Annoyed, Frown, Laugh, Meh, Smile } from 'lucide-vue-next';
+import { HTMLAttributes } from 'vue';
 
+const props = defineProps<{
+  class?: HTMLAttributes["class"];
+}>()
 </script>
 
 <template>
-  <div class="border rounded-xl p-4 lg:w-1/3 xl:w-1/2">
+  <div :class="cn('border rounded-xl p-4', props.class)">
     <div class="flex flex-col sm:flex-row sm:justify-between lg:flex-col xl:flex-row">
       <h3 class="font-medium mb-3">Feedback</h3>
 

@@ -1,24 +1,26 @@
 <script setup lang="ts">
 import { Head, Link } from '@inertiajs/vue3';
 import { route } from 'ziggy-js';
-import { BreadcrumbItem, TrainingSession } from '@/types';
+import { BreadcrumbItem, TrainingSession as TrainingSessionData } from '@/types';
 import AppLayout from '@/layouts/AppLayout.vue';
 import TrainingSessionCharts from '@/components/TrainingSessionCharts.vue';
 import TrainingSessionMap from '@/components/TrainingSessionMap.vue';
+import TrainingSessionFeedback from '@/components/TrainingSessionFeedback.vue';
+import TrainingSessionSummary from '@/components/TrainingSessionSummary.vue';
 
 const props = defineProps<{
-  session: {
-    data: TrainingSession;
+  TrainingSession: {
+    data: TrainingSessionData;
   };
 }>()
 
 const breadcrumbs: BreadcrumbItem[] = [
   {
     title: 'Training sessions',
-    href: route('training-sessions.week', { year: props.session.data.year, week: props.session.data.week }),
+    href: route('training-sessions.week', { year: props.TrainingSession.data.year, week: props.TrainingSession.data.week }),
   },
   {
-    title: `${props.session.data.sport_type.label} - ${ props.session.data.started_at_human }`
+    title: `${props.TrainingSession.data.sportType.label}`
   },
 ];
 
@@ -26,23 +28,45 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 <template>
 
-  <Head title="Training sessions" />
+  <Head :title="props.TrainingSession.data.sportType.label" />
 
   <AppLayout :breadcrumbs="breadcrumbs">
+
+    <div class="flex justify-between p-4">
+      <span>prev</span>
+      <div>
+        {{props.TrainingSession.data.startedAtHuman}}
+      </div>
+      <span>next</span>
+    </div>
+
+    <div class="p-4 flex flex-col lg:flex-row lg:space-x-4">
+
+      <TrainingSessionSummary 
+        :class="'lg:mb-0 lg:w-2/3 xl:w-1/2'"
+        :trainingSession="TrainingSession.data"
+      />
+
+      <TrainingSessionFeedback
+        :class="'lg:w-1/3 xl:w-1/2'"
+      />
+
+    </div>
+
     <div class="p-4">
 
       <div class="mb-6 text-center pt-10 pb-10">
-        <TrainingSessionCharts :sessionId="session.data.id" />
+        <TrainingSessionCharts :sessionId="TrainingSession.data.id" />
       </div>
   
-      <div v-if="session.data.training_summary?.has_route" class="mb-6">
-        <TrainingSessionMap :sessionId="session.data.id" />
+      <div v-if="TrainingSession.data.trainingSummary?.hasRoute" class="mb-6">
+        <TrainingSessionMap :sessionId="TrainingSession.data.id" />
       </div>
       
-      <div v-if="session.data.heart_rate_zones.length > 0">
+      <div v-if="TrainingSession.data.heartRateZones.length > 0">
         <ul class="flex space-x-8 mb-6 justify-center">
           <li 
-            v-for="zone in session.data.heart_rate_zones" 
+            v-for="zone in TrainingSession.data.heartRateZones" 
             :key="zone.id"
             class="flex space-x-2"
           >
@@ -61,20 +85,20 @@ const breadcrumbs: BreadcrumbItem[] = [
         </ul>
       </div>
   
-      <div v-if="session.data.training_summary" class="flex gap-4 justify-center mb-4">
+      <div v-if="TrainingSession.data.trainingSummary" class="flex gap-4 justify-center mb-4">
         <span>
-          HR min: {{ session.data.training_summary.min_heart_rate }}
+          HR min: {{ TrainingSession.data.trainingSummary.minHeartRate }}
         </span>
         <span>
-          HR avg: {{ session.data.training_summary.avg_heart_rate }}
+          HR avg: {{ TrainingSession.data.trainingSummary.avgHeartRate }}
         </span>
         <span>
-          HR max: {{ session.data.training_summary.max_heart_rate }}
+          HR max: {{ TrainingSession.data.trainingSummary.maxHeartRate }}
         </span>
       </div>
   
       <div class="text-center">
-        Duration: {{ session.data.duration_human }}
+        Duration: {{ TrainingSession.data.durationHuman }}
       </div>
   
     </div>

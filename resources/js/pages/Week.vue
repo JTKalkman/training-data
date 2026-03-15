@@ -48,12 +48,12 @@ const breadcrumbs: BreadcrumbItem[] = [
   
             <div>
               <Link :href="route('training-sessions.session', { session: session.id })" class="underline">
-                {{ session.sport_type.label }} — {{ session.started_at_human }}
+                {{ session.sportType.label }} — {{ session.startedAtHuman }}
               </Link>
             </div>
   
-            <div v-if="session.duration_human">
-              {{ session.duration_human }}
+            <div v-if="session.durationHuman">
+              {{ session.durationHuman }}
             </div>
   
           </li>
