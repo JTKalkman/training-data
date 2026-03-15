@@ -32,7 +32,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 
   <AppLayout :breadcrumbs="breadcrumbs">
 
-    <div class="flex justify-between p-4">
+    <div class="flex justify-between p-4 mb-4">
       <span>prev</span>
       <div>
         {{props.TrainingSession.data.startedAtHuman}}
@@ -40,7 +40,7 @@ const breadcrumbs: BreadcrumbItem[] = [
       <span>next</span>
     </div>
 
-    <div class="p-4 flex flex-col lg:flex-row lg:space-x-4">
+    <div class="flex flex-col lg:flex-row lg:space-x-4 mb-4 px-4">
 
       <TrainingSessionSummary 
         :class="'lg:mb-0 lg:w-2/3 xl:w-1/2'"
@@ -53,17 +53,17 @@ const breadcrumbs: BreadcrumbItem[] = [
 
     </div>
 
+    <div v-if="TrainingSession.data.trainingSummary?.hasRoute" class="mb-4 px-4">
+      <TrainingSessionMap :sessionId="TrainingSession.data.id" />
+    </div>
+
     <div class="p-4">
 
       <div class="mb-6 text-center pt-10 pb-10">
         <TrainingSessionCharts :sessionId="TrainingSession.data.id" />
       </div>
-  
-      <div v-if="TrainingSession.data.trainingSummary?.hasRoute" class="mb-6">
-        <TrainingSessionMap :sessionId="TrainingSession.data.id" />
-      </div>
       
-      <div v-if="TrainingSession.data.heartRateZones.length > 0">
+      <!-- <div v-if="TrainingSession.data.heartRateZones.length > 0">
         <ul class="flex space-x-8 mb-6 justify-center">
           <li 
             v-for="zone in TrainingSession.data.heartRateZones" 
@@ -83,24 +83,8 @@ const breadcrumbs: BreadcrumbItem[] = [
             <span class="text-sm">{{ zone.min_bpm }} - {{ zone.max_bpm }}</span>
           </li>
         </ul>
-      </div>
-  
-      <div v-if="TrainingSession.data.trainingSummary" class="flex gap-4 justify-center mb-4">
-        <span>
-          HR min: {{ TrainingSession.data.trainingSummary.minHeartRate }}
-        </span>
-        <span>
-          HR avg: {{ TrainingSession.data.trainingSummary.avgHeartRate }}
-        </span>
-        <span>
-          HR max: {{ TrainingSession.data.trainingSummary.maxHeartRate }}
-        </span>
-      </div>
-  
-      <div class="text-center">
-        Duration: {{ TrainingSession.data.durationHuman }}
-      </div>
-  
+      </div> -->
+
     </div>
   </AppLayout>
 
