@@ -24,12 +24,7 @@ const props = defineProps<{
 
     <div>
       <p class="overflow-y-scroll max-h-30">
-        Enim ipsum sapiente tempore ab beatae et similique voluptatem. Mollitia 
-        iusto beatae autem expedita et eligendi libero. Deserunt iure ea beatae 
-        autem voluptas dolorum.
-
-        Ullam est dolor sit quas sint. Doloribus voluptate non est animi tenetur 
-        eos. Officia omnis cupiditate libero incidunt molestiae iusto vero quia.
+        <span class="text-xs text-gray-400">Additional notes...</span>
       </p>
     </div>
   </div>
