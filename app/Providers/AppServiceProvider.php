@@ -5,6 +5,7 @@ namespace App\Providers;
 use Carbon\CarbonImmutable;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\RateLimiter;
@@ -33,7 +34,19 @@ class AppServiceProvider extends ServiceProvider
                 ? $request->user()->id
                 : $request->ip();
 
-            return Limit::perMinute(60)->by($key);
+            if (Cache::has('blocked_' . $key)) {
+                return response()->json(['message' => 'Too many requests'], 429);
+            }
+
+            return [
+                Limit::perMinute(6)->by($key),
+                Limit::perMinutes(3, 180) // Too many requests for 3 minutes.
+                    ->by($key)
+                    ->response(function () use ($key) {
+                        Cache::put('blocked_' . $key, true, now()->addMinutes(15)); // Block for 15 minutes.
+                        return response()->json(['message' => 'Too many requests'], 429);
+                    })
+            ];
         });
     }
 
