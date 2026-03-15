@@ -48,6 +48,22 @@ class AppServiceProvider extends ServiceProvider
                     })
             ];
         });
+
+        // Max 3 accounts per IP address.
+        RateLimiter::for('register', function (Request $request) {
+            $key = $request->ip();
+
+            if (Cache::has('blocked_register_' . $key)) {
+                return response()->json(['message' => 'Too many requests'], 429);
+            }
+
+            return Limit::perDay(3)
+                ->by($key)
+                ->response(function () use ($key) {
+                    Cache::put('blocked_register_' . $key, true, now()->addDay());
+                    return response()->json(['message' => 'Too many requests'], 429);
+                });
+        });
     }
 
     /**
