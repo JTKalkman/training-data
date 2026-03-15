@@ -14,15 +14,19 @@ let mapInstance: L.Map;
 const createMap = () => {
   const coordinates = props.data.map(point => [point.lat, point.lng]);
 
-  mapInstance = L.map(mapContainer.value!).setView([coordinates[0][0], coordinates[0][1]], 13);
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(mapInstance);
-  const polyline = L.polyline(coordinates).addTo(mapInstance);
+  mapInstance = L
+    .map(mapContainer.value!, { scrollWheelZoom: false })
+    .setView([coordinates[0][0], coordinates[0][1]], 13);
+  L
+    .tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png')
+    .addTo(mapInstance);
+  const polyline = L
+    .polyline(coordinates)
+    .addTo(mapInstance);
   mapInstance.fitBounds(polyline.getBounds());
 }
 
-onMounted(() => {
-  createMap();
-})
+onMounted(() => createMap())
 </script>
 
 <template>
