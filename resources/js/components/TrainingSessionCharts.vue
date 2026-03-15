@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { useSampleData } from '@/composables/useSampleData';
 import { computed, onMounted, ref } from 'vue';
-import Spinner from './Spinner.vue';
 import TrainingSessionChart from './TrainingSessionChart.vue';
 import { SampleDataPoint } from '@/types/sample-data-point';
 import { HoverPosition } from '@/types';
+import Spinner from './ui/spinner/Spinner.vue';
 
 const props = defineProps<{
   sessionId: string;
