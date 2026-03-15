@@ -49,7 +49,7 @@ class AppServiceProvider extends ServiceProvider
             ];
         });
 
-        // Max 3 accounts per IP address.
+        // Max 3 accounts per IP address per day.
         RateLimiter::for('register', function (Request $request) {
             $key = $request->ip();
 
