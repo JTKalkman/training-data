@@ -49,10 +49,10 @@ const chartData = computed(() => {
 const chartHoverPosition = ref<HoverPosition | null>(null);
 const hoverSource = ref<string | null>(null);
 
-// const handleChartHover = (position: HoverPosition | null, sourceField: string | null) => {
-//   chartHoverPosition.value = position;
-//   hoverSource.value = sourceField;
-// }
+const handleChartHover = (position: HoverPosition | null, sourceField: string | null) => {
+  chartHoverPosition.value = position;
+  hoverSource.value = sourceField;
+}
 
 onMounted(() => {
   fetch();
@@ -77,8 +77,8 @@ onMounted(() => {
       :data="chartData[field]"
       :chartHoverPosition="chartHoverPosition"
       :hoverSource="hoverSource"
+      @hover="handleChartHover"
       />
-      <!-- @hover="handleChartHover" -->
   </div>
   
 </template> 

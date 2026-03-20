@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useIsMobile } from '@/composables/useIsMobile';
 import { HoverPosition } from '@/types';
 import { ChartDataPoint } from '@/types/chart-data-point';
 import { 
@@ -14,7 +15,7 @@ const props = defineProps<{
   hoverSource: string | null;
 }>();
 
-// const emit = defineEmits(['hover']);
+const emit = defineEmits(['hover']);
 
 const chartCanvas = ref<HTMLCanvasElement | null>(null);
 
@@ -75,6 +76,7 @@ declare module 'chart.js' {
 }
 
 const drawChart = () => {
+  const isMobile = useIsMobile();
   const labels = props.data.map(d => d.x)
   const chartData = props.data.map(d => d.y)
 
@@ -105,13 +107,14 @@ const drawChart = () => {
         intersect: false,
         mode: 'index',
       },
-      // onHover: (event, activeElements) => {
-      //   if (activeElements.length > 0) {
-      //     emit('hover', { index: activeElements[0].index, x: event.x, }, props.field);
-      //   } else {
-      //     emit('hover', null, props.field)
-      //   }
-      // },
+      events: isMobile ? ['click'] : ['mousemove', 'mouseout', 'click', 'touchstart', 'touchmove'],
+      onHover: (event, activeElements) => {
+        if (activeElements.length > 0) {
+          emit('hover', { index: activeElements[0].index, x: event.x, }, props.field);
+        } else {
+          emit('hover', null, props.field)
+        }
+      },
       plugins: {
         tooltip: {
           position: 'positionTooltip'
@@ -141,8 +144,8 @@ onMounted(() => {
     <div style="width:100%; height:200px;" class="bg-gray-100">
       <canvas 
         ref="chartCanvas" 
-        ></canvas>
-        <!-- @mouseleave="emit('hover', null, props.field)" -->
+        @mouseleave="emit('hover', null, props.field)"
+      ></canvas>
     </div>
   </div>
 </template>
