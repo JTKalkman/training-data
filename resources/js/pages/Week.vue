@@ -4,6 +4,9 @@ import { computed } from 'vue';
 import { route } from 'ziggy-js';
 import { BreadcrumbItem, TrainingSession, WeekNavigation } from '@/types';
 import AppLayout from '@/layouts/AppLayout.vue';
+import { Navigation } from 'lucide-vue-next';
+import NavigationPrevious from '@/components/ui/navigation-menu/NavigationPrevious.vue';
+import NavigationNext from '@/components/ui/navigation-menu/NavigationNext.vue';
 
 const props = defineProps<{
   trainingSessions?: {
@@ -30,12 +33,26 @@ const breadcrumbs: BreadcrumbItem[] = [
 
   <AppLayout :breadcrumbs="breadcrumbs">
     <div class="p-4">
-      <div class="flex justify-between px-4">
-        <Link :href="navigation.prev.url">Previous</Link>
-        <h1 class="text-xl font-bold mb-4">
+      <div class="flex justify-between mb-4">
+
+        <div>
+          <NavigationPrevious
+            v-if="navigation.prev.url"
+            :url="navigation.prev.url"
+          />
+        </div>
+
+        <h1 class="font-medium mb-4">
           Week {{ week }} - {{ year }}
         </h1>
-        <Link :href="navigation.next.url">Next</Link>
+
+        <div>
+          <NavigationNext
+            v-if="navigation.next.url"
+            :url="navigation.next.url"
+          />
+        </div>
+
       </div>
   
       <div v-if="!hasSessions">
