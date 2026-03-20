@@ -17,7 +17,7 @@ class TrainingSessionResource extends JsonResource
         return [
             'id' => $this->id,
             'startedAt' => $this->started_at->toIso8601String(),
-            'startedAtHuman' => $this->started_at->format('D M d, Y H:i'),
+            'startedAtHuman' => $this->started_at->format('j F H:i'),
             'duration' => $this->duration_seconds,
             'durationHuman' => Duration::human($this->duration_seconds),
 
