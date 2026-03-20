@@ -14,7 +14,7 @@ const props = defineProps<{
   hoverSource: string | null;
 }>();
 
-const emit = defineEmits(['hover']);
+// const emit = defineEmits(['hover']);
 
 const chartCanvas = ref<HTMLCanvasElement | null>(null);
 
@@ -105,13 +105,13 @@ const drawChart = () => {
         intersect: false,
         mode: 'index',
       },
-      onHover: (event, activeElements) => {
-        if (activeElements.length > 0) {
-          emit('hover', { index: activeElements[0].index, x: event.x, }, props.field);
-        } else {
-          emit('hover', null, props.field)
-        }
-      },
+      // onHover: (event, activeElements) => {
+      //   if (activeElements.length > 0) {
+      //     emit('hover', { index: activeElements[0].index, x: event.x, }, props.field);
+      //   } else {
+      //     emit('hover', null, props.field)
+      //   }
+      // },
       plugins: {
         tooltip: {
           position: 'positionTooltip'
@@ -139,7 +139,10 @@ onMounted(() => {
 <template>
   <div style="width:100%; height:200px;">
     <div style="width:100%; height:200px;" class="bg-gray-100">
-      <canvas ref="chartCanvas" @mouseleave="emit('hover', null, props.field)"></canvas>
+      <canvas 
+        ref="chartCanvas" 
+        ></canvas>
+        <!-- @mouseleave="emit('hover', null, props.field)" -->
     </div>
   </div>
 </template>
