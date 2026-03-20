@@ -22,9 +22,11 @@ class TrainingSessionFactory extends Factory
             'user_id' => User::factory(),
             'sport_type_id' => SportType::factory(),
             'started_at' => $this->faker->dateTimeBetween('-1 year', 'now'),
+            'utc_offset' => $this->faker->numberBetween(-7200, 10800), // UTC-2 to UTC+3
             'duration_seconds' => $this->faker->numberBetween(1800, 14400),
-            'source' => 'test',
-            // TODO Update source here.
+            'data_source_id' => null,
+            'external_id' => $this->faker->uuid(),
+            'device_id' => null,
         ];
     }
 }
