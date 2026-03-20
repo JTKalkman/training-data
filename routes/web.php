@@ -45,8 +45,4 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->name('auth.polar.redirect');
 });
 
-Route::get('dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
-
 require __DIR__.'/settings.php';
