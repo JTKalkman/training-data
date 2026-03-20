@@ -35,11 +35,11 @@ const breadcrumbs: BreadcrumbItem[] = [
   <AppLayout :breadcrumbs="breadcrumbs">
 
     <div class="flex justify-between items-center p-4 mb-4">
-      <div>
+      <div class="w-28">
         <Link 
           v-if="props.navigation.prev.url" 
           :href="props.navigation.prev.url" 
-          class="text-gray-500 dark:text-gray-300 hover:text-foreground transition-colors text-sm flex justify-start items-center px-2 py-1 w-28"
+          class="text-gray-500 dark:text-gray-300 hover:text-foreground transition-colors text-sm flex justify-start items-center px-2 py-1 w-full"
         >
           <ChevronLeft class="h-4" />
           <span>Previous</span>
@@ -51,11 +51,11 @@ const breadcrumbs: BreadcrumbItem[] = [
           {{props.trainingSession.data.startedAtHuman}}
         </p>
       </div>
-      <div>
+      <div class="w-28">
         <Link 
           v-if="props.navigation.next.url" 
           :href="props.navigation.next.url" 
-          class="text-gray-500 dark:text-gray-300 hover:text-foreground transition-colors text-sm flex justify-end items-center px-2 py-1 w-28 text-right"
+          class="text-gray-500 dark:text-gray-300 hover:text-foreground transition-colors text-sm flex justify-end items-center px-2 py-1 text-right w-full"
         >
           <span>Next</span>
           <ChevronRight class="h-4" />
