@@ -60,23 +60,25 @@ onMounted(() => {
 </script>
 
 <template>
-  <div v-if="loading" class="flex justify-center bg-gray-400 pt-10 pb-10">
-    <Spinner />
-  </div>
+  <div class="border rounded-xl p-4">
+    <div v-if="loading" class="flex justify-center bg-gray-400 pt-10 pb-10">
+      <Spinner />
+    </div>
+    
+    <div v-if="error">
+      <p class="text-center text-red-500 text-sm">
+        {{ error }}
+      </p>
+    </div>
   
-  <div v-if="error">
-    <p class="text-center text-red-500 text-sm">
-      {{ error }}
-    </p>
+    <TrainingSessionChart 
+      v-for="field in availableFields"
+      :field="field"
+      :data="chartData[field]"
+      :chartHoverPosition="chartHoverPosition"
+      :hoverSource="hoverSource"
+      @hover="handleChartHover"
+    />
   </div>
-
-  <TrainingSessionChart 
-    v-for="field in availableFields"
-    :field="field"
-    :data="chartData[field]"
-    :chartHoverPosition="chartHoverPosition"
-    :hoverSource="hoverSource"
-    @hover="handleChartHover"
-  />
   
 </template> 

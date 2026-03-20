@@ -80,34 +80,8 @@ const breadcrumbs: BreadcrumbItem[] = [
       <TrainingSessionMap :sessionId="trainingSession.data.id" />
     </div>
 
-    <div class="p-4">
-
-      <div class="mb-6 text-center pt-10 pb-10">
-        <TrainingSessionCharts :sessionId="trainingSession.data.id" />
-      </div>
-      
-      <!-- <div v-if="TrainingSession.data.heartRateZones.length > 0">
-        <ul class="flex space-x-8 mb-6 justify-center">
-          <li 
-            v-for="zone in TrainingSession.data.heartRateZones" 
-            :key="zone.id"
-            class="flex space-x-2"
-          >
-            <span class="text-xs font-bold rounded px-2 py-1"
-            :class="{
-              ' bg-blue-200 text-blue-600': zone.color === 'blue',
-              ' bg-green-200 text-green-600': zone.color === 'green',
-              ' bg-yellow-200 text-yellow-600': zone.color === 'yellow',
-              ' bg-orange-200 text-orange-600': zone.color === 'orange',
-              ' bg-red-200 text-red-600': zone.color === 'red',
-            }">
-              {{ zone.name }}
-            </span>
-            <span class="text-sm">{{ zone.min_bpm }} - {{ zone.max_bpm }}</span>
-          </li>
-        </ul>
-      </div> -->
-
+    <div class="px-4 mb-16">
+      <TrainingSessionCharts :sessionId="trainingSession.data.id" />
     </div>
   </AppLayout>
 
