@@ -14,9 +14,21 @@ class TrainingSessionController extends Controller
     {
         $this->authorize('view', $session);
         $session->load(['sportType', 'trainingSummary', 'heartRateZones']);
+        $previousSession = $session->previousSession();
+        $nextSession = $session->nextSession();
 
         return Inertia::render('TrainingSession', [
-            'TrainingSession' => new TrainingSessionResource($session),
+            'trainingSession' => new TrainingSessionResource($session),
+            'navigation' => [
+                'prev' => [
+                    'id' => $previousSession?->id,
+                    'url' => $previousSession ? route('training-sessions.session', $previousSession) : null,
+                ],
+                'next' => [
+                    'id' => $nextSession?->id,
+                    'url' => $nextSession ? route('training-sessions.session', $nextSession) : null,
+                ],
+            ],
         ]);
     }
 

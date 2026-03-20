@@ -87,4 +87,20 @@ class TrainingSession extends Model
     {
         return $filters->apply($builder);
     }
+
+    public function previousSession(): ?self
+    {
+        return self::where('user_id', $this->user_id)
+            ->where('started_at', '<', $this->started_at)
+            ->orderBy('started_at', 'desc')
+            ->first();
+    }
+
+    public function nextSession(): ?self
+    {
+        return self::where('user_id', $this->user_id)
+            ->where('started_at', '>', $this->started_at)
+            ->orderBy('started_at', 'asc')
+            ->first();
+    }
 }
