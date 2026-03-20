@@ -7,7 +7,6 @@ import TrainingSessionCharts from '@/components/TrainingSessionCharts.vue';
 import TrainingSessionMap from '@/components/TrainingSessionMap.vue';
 import TrainingSessionFeedback from '@/components/TrainingSessionFeedback.vue';
 import TrainingSessionSummary from '@/components/TrainingSessionSummary.vue';
-import { ChevronLeft, ChevronRight } from 'lucide-vue-next';
 import NavigationPrevious from '@/components/ui/navigation-menu/NavigationPrevious.vue';
 import NavigationNext from '@/components/ui/navigation-menu/NavigationNext.vue';
 
