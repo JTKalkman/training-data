@@ -14,3 +14,4 @@ export * from './training-session';
 export * from './training-summary';
 export * from './ui'; 
 export * from './week-navigation';
+export * from './training-session-navigation';

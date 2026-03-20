@@ -4,13 +4,13 @@ import { TrainingSummary } from './training-summary'
 
 export interface TrainingSession {
   id: string;
-  started_at: string;
-  started_at_human: string;
+  startedAt: string;
+  startedAtHuman: string;
   duration: number;
-  duration_human: string;
+  durationHuman: string;
   year: string;
   week: string;
-  sport_type: SportType;
-  training_summary?: TrainingSummary;
-  heart_rate_zones: HeartRateZone[];
+  sportType: SportType;
+  trainingSummary?: TrainingSummary;
+  heartRateZones: HeartRateZone[];
 };

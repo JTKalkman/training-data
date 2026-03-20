@@ -15,10 +15,12 @@ class TrainingSummaryResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'min_heart_rate' => $this->min_heart_rate,
-            'avg_heart_rate' => $this->avg_heart_rate,
-            'max_heart_rate' => $this->max_heart_rate,
-            'has_route' => $this->has_route,
+            'minHeartRate' => $this->min_heart_rate,
+            'avgHeartRate' => $this->avg_heart_rate,
+            'maxHeartRate' => $this->max_heart_rate,
+            'hasRoute' => $this->has_route,
+            'distance' => $this->distance / 1000,
+            'calories' => $this->calories,
         ];
     }
 }
