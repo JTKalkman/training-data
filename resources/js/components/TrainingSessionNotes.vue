@@ -4,6 +4,7 @@ import { router, useForm } from '@inertiajs/vue3';
 import { Check, CheckCheck, X } from 'lucide-vue-next';
 import { computed, HTMLAttributes, onBeforeUnmount, onMounted } from 'vue';
 import { route } from 'ziggy-js';
+import Button from './ui/button/Button.vue';
 
 const props = defineProps<{
   class?: HTMLAttributes["class"];
@@ -52,26 +53,21 @@ onBeforeUnmount(() => removeListener())
       id="notes"
     />
     <div v-if="notesChanged" class="space-x-2 flex justify-end mt-1">
-      <button 
-        class="
-          disabled:pointer-events-none disabled:opacity-50 
-          bg-gray-100 text-primary-background rounded-sm px-2 py-1 transition-all  
-          outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] 
-          hover:brightness-90 dark:text-primary-foreground 
-        "
+      <Button 
+        :variant="'secondary'"
+        :size="'sm'"
         type="button" 
         @click="cancel"
-      ><X class="h-6" /></button>
-      <button 
-        class="
-          disabled:pointer-events-none disabled:opacity-50 
-          bg-primary text-primary-foreground rounded-sm px-2 py-1 transition-all  
-          outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] 
-          hover:brightness-90 dark:text-white
-        " 
+      >
+        <X />
+      </Button>
+      <Button 
         type="submit" 
+        :size="'sm'"
         :disabled="form.processing"
-      ><Check class="h-6" /></button>
+      >
+        <Check />
+      </Button>
     </div>
   </form>
 </template>
