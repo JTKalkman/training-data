@@ -10,10 +10,8 @@ use Inertia\Inertia;
 
 class TrainingSessionController extends Controller
 {
-    public function show(TrainingSession $session)
+    private function renderTrainingSession(TrainingSession $session)
     {
-        $this->authorize('view', $session);
-        $session->load(['sportType', 'trainingSummary', 'heartRateZones']);
         $previousSession = $session->previousSession();
         $nextSession = $session->nextSession();
 
@@ -22,14 +20,35 @@ class TrainingSessionController extends Controller
             'navigation' => [
                 'prev' => [
                     'id' => $previousSession?->id,
-                    'url' => $previousSession ? route('training-sessions.session', $previousSession) : null,
+                    'url' => $previousSession ? route('training-sessions.show', $previousSession) : null,
                 ],
                 'next' => [
                     'id' => $nextSession?->id,
-                    'url' => $nextSession ? route('training-sessions.session', $nextSession) : null,
+                    'url' => $nextSession ? route('training-sessions.show', $nextSession) : null,
                 ],
             ],
         ]);
+    }
+
+    public function show(TrainingSession $session)
+    {
+        $this->authorize('view', $session);
+        $session->load(['sportType', 'trainingSummary', 'heartRateZones']);
+
+        return $this->renderTrainingSession($session);
+    }
+
+    // TODO: Maybe we should add a feature test for this endpoint to make sure the authorization and validation works correctly?
+    public function update(TrainingSession $session)
+    {
+        $this->authorize('update', $session);
+        $data = request()->validate([
+            'rating' => 'nullable|integer|min:1|max:5',
+            'notes' => 'nullable|string|max:1000',
+        ]);
+        $session->update($data);
+
+        return $this->renderTrainingSession($session);
     }
 
     public function sampleData(TrainingSession $session)
