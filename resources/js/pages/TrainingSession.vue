@@ -50,8 +50,8 @@ const breadcrumbs: BreadcrumbItem[] = [
       </div>
       <div class="w-28">
         <NavigationNext
-          v-if="props.navigation.prev.url"
-          :url="props.navigation.prev.url"
+          v-if="props.navigation.next.url"
+          :url="props.navigation.next.url"
         />
       </div>
     </div>
@@ -65,6 +65,9 @@ const breadcrumbs: BreadcrumbItem[] = [
 
       <TrainingSessionFeedback
         :class="'lg:w-1/3 xl:w-1/2'"
+        :trainingSessionId="trainingSession.data.id"
+        :notes="trainingSession.data.notes"
+        :rating="trainingSession.data.rating"
       />
 
     </div>
