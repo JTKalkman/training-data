@@ -1,7 +1,7 @@
 <script lang="ts" setup>
+import type { HTMLAttributes } from 'vue';
 import { cn } from '@/lib/utils';
-import { TrainingSession as TrainingSessionData } from '@/types';
-import { HTMLAttributes } from 'vue';
+import type { TrainingSession as TrainingSessionData } from '@/types';
 
 const props = defineProps<{
   class?: HTMLAttributes["class"];

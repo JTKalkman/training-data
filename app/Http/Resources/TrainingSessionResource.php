@@ -20,6 +20,8 @@ class TrainingSessionResource extends JsonResource
             'startedAtHuman' => $this->started_at->format('j F H:i'),
             'duration' => $this->duration_seconds,
             'durationHuman' => Duration::human($this->duration_seconds),
+            'notes' => $this->notes,
+            'rating' => $this->rating,
 
             'year' => $this->started_at->isoWeekYear,
             'week' => $this->started_at->isoWeek,

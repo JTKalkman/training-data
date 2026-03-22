@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import { Head, Link } from '@inertiajs/vue3';
+import { Head } from '@inertiajs/vue3';
 import { route } from 'ziggy-js';
-import { BreadcrumbItem, TrainingSession as TrainingSessionData, TrainingSessionNavigation } from '@/types';
-import AppLayout from '@/layouts/AppLayout.vue';
 import TrainingSessionCharts from '@/components/TrainingSessionCharts.vue';
-import TrainingSessionMap from '@/components/TrainingSessionMap.vue';
 import TrainingSessionFeedback from '@/components/TrainingSessionFeedback.vue';
+import TrainingSessionMap from '@/components/TrainingSessionMap.vue';
 import TrainingSessionSummary from '@/components/TrainingSessionSummary.vue';
-import NavigationPrevious from '@/components/ui/navigation-menu/NavigationPrevious.vue';
 import NavigationNext from '@/components/ui/navigation-menu/NavigationNext.vue';
+import NavigationPrevious from '@/components/ui/navigation-menu/NavigationPrevious.vue';
+import AppLayout from '@/layouts/AppLayout.vue';
+import type { BreadcrumbItem, TrainingSession as TrainingSessionData, TrainingSessionNavigation } from '@/types';
 
 const props = defineProps<{
   trainingSession: {
@@ -50,8 +50,8 @@ const breadcrumbs: BreadcrumbItem[] = [
       </div>
       <div class="w-28">
         <NavigationNext
-          v-if="props.navigation.prev.url"
-          :url="props.navigation.prev.url"
+          v-if="props.navigation.next.url"
+          :url="props.navigation.next.url"
         />
       </div>
     </div>
@@ -65,6 +65,9 @@ const breadcrumbs: BreadcrumbItem[] = [
 
       <TrainingSessionFeedback
         :class="'lg:w-1/3 xl:w-1/2'"
+        :trainingSessionId="trainingSession.data.id"
+        :notes="trainingSession.data.notes"
+        :rating="trainingSession.data.rating"
       />
 
     </div>

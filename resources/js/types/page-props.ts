@@ -1,5 +1,5 @@
-import { User } from './auth'
-import { Flash } from './flash'
+import type { User } from './auth'
+import type { Flash } from './flash'
 
 export interface PageProps {
   [key: string]: unknown;
