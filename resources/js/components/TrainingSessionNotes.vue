@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { cn } from '@/lib/utils';
-import { Form, router, useForm } from '@inertiajs/vue3';
+import { router, useForm } from '@inertiajs/vue3';
+import { Check, CheckCheck, X } from 'lucide-vue-next';
 import { computed, HTMLAttributes, onBeforeUnmount, onMounted } from 'vue';
 import { route } from 'ziggy-js';
 
@@ -10,7 +11,7 @@ const props = defineProps<{
   notes?: string;
 }>();
 
-const notesChanged = computed(() => form.notes !== props.notes)
+const notesChanged = computed(() => (form.notes ?? '') !== (props.notes ?? ''))
 
 const form = useForm({
   notes: props.notes || null,
@@ -27,19 +28,17 @@ const submit = () => {
   });
 }
 
-onMounted(() => {
-  const removeListener = router.on('before', (event) => {
-    if (form.processing) {
-      event.preventDefault()
-    }
-  })
-
-  onBeforeUnmount(() => removeListener())
+const removeListener = router.on('before', (event) => {
+  if (form.processing) {
+    event.preventDefault()
+  }
 })
+
+onBeforeUnmount(() => removeListener())
 </script>
 
 <template>
-  <Form
+  <form
     @submit.prevent="submit"
     @keydown.esc="cancel"
     :class="cn('flex flex-col space-y-2', props.class)"
@@ -52,9 +51,27 @@ onMounted(() => {
       name="notes"
       id="notes"
     />
-    <div v-if="notesChanged">
-      <button class="bg-primary" type="submit" :disabled="form.processing">Save</button>
-      <button class="bg-gray-500" type="reset" @click="cancel"></button>
+    <div v-if="notesChanged" class="space-x-2 flex justify-end mt-1">
+      <button 
+        class="
+          disabled:pointer-events-none disabled:opacity-50 
+          bg-gray-100 text-primary-background rounded-sm px-2 py-1 transition-all  
+          outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] 
+          hover:brightness-90 dark:text-primary-foreground 
+        "
+        type="button" 
+        @click="cancel"
+      ><X class="h-6" /></button>
+      <button 
+        class="
+          disabled:pointer-events-none disabled:opacity-50 
+          bg-primary text-primary-foreground rounded-sm px-2 py-1 transition-all  
+          outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] 
+          hover:brightness-90 dark:text-white
+        " 
+        type="submit" 
+        :disabled="form.processing"
+      ><Check class="h-6" /></button>
     </div>
-  </Form>
+  </form>
 </template>
