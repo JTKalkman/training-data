@@ -12,6 +12,7 @@ class TrainingSessionController extends Controller
 {
     private function renderTrainingSession(TrainingSession $session)
     {
+        $session->load(['sportType', 'trainingSummary', 'heartRateZones']);
         $previousSession = $session->previousSession();
         $nextSession = $session->nextSession();
 
@@ -33,7 +34,6 @@ class TrainingSessionController extends Controller
     public function show(TrainingSession $session)
     {
         $this->authorize('view', $session);
-        $session->load(['sportType', 'trainingSummary', 'heartRateZones']);
 
         return $this->renderTrainingSession($session);
     }
