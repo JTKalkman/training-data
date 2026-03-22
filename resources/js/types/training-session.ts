@@ -8,6 +8,8 @@ export interface TrainingSession {
   startedAtHuman: string;
   duration: number;
   durationHuman: string;
+  notes?: string;
+  rating?: number;
   year: string;
   week: string;
   sportType: SportType;
