@@ -79,7 +79,7 @@ const breadcrumbs: BreadcrumbItem[] = [
                 </p>
               </div>
 
-              <Link :href="route('training-sessions.session', { session: session.id })" class="after:absolute after:inset-0">
+              <Link :href="route('training-sessions.show', { session: session.id })" class="after:absolute after:inset-0">
                 <span class="sr-only">View details for {{ session.sportType.label }} session on {{ session.startedAtHuman }}</span>
               </Link>
             </div>
