@@ -38,7 +38,6 @@ class TrainingSessionController extends Controller
         return $this->renderTrainingSession($session);
     }
 
-    // TODO: Maybe we should add a feature test for this endpoint to make sure the authorization and validation works correctly?
     public function update(TrainingSession $session)
     {
         $this->authorize('update', $session);
