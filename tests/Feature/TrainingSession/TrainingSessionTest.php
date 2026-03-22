@@ -12,7 +12,7 @@ test('test user cannot view other users session', function () {
         ->create();
 
     $response = $this->actingAs($user2)
-        ->get(route('training-sessions.session', $session));
+        ->get(route('training-sessions.show', $session));
 
     $response->assertStatus(403);
 });
@@ -25,7 +25,7 @@ test('test user can view own session', function () {
         ->create();
 
     $response = $this->actingAs($user)
-        ->get(route('training-sessions.session', $session));
+        ->get(route('training-sessions.show', $session));
 
     $response->assertStatus(200);
 
