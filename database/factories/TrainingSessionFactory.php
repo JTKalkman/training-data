@@ -27,6 +27,8 @@ class TrainingSessionFactory extends Factory
             'data_source_id' => null,
             'external_id' => $this->faker->uuid(),
             'device_id' => null,
+            'notes' => null,
+            'rating' => null,
         ];
     }
 }
