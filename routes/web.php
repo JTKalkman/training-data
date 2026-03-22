@@ -20,7 +20,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->name('training-sessions.route-data');
 
     Route::get('/training-sessions/{session}', [TrainingSessionController::class, 'show'])
-        ->name('training-sessions.session');
+        ->name('training-sessions.show');
+
+    Route::patch('/training-sessions/{session}', [TrainingSessionController::class, 'update'])
+        ->name('training-sessions.update');
 
     Route::get('/training-sessions/{year}/week/{week}', [WeekOverviewController::class, 'show'])
         ->whereNumber('year')
