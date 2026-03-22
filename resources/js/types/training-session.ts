@@ -1,6 +1,6 @@
-import { HeartRateZone } from './heart-rate-zone';
-import { SportType } from './sport-type'
-import { TrainingSummary } from './training-summary'
+import type { HeartRateZone } from './heart-rate-zone';
+import type { SportType } from './sport-type'
+import type { TrainingSummary } from './training-summary'
 
 export interface TrainingSession {
   id: string;

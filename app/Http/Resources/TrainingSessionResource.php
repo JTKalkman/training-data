@@ -20,7 +20,7 @@ class TrainingSessionResource extends JsonResource
             'startedAtHuman' => $this->started_at->format('j F H:i'),
             'duration' => $this->duration_seconds,
             'durationHuman' => Duration::human($this->duration_seconds),
-            'notes' => $this->notes, // TODO: maybe we should not return this by default?
+            'notes' => $this->notes,
             'rating' => $this->rating,
 
             'year' => $this->started_at->isoWeekYear,

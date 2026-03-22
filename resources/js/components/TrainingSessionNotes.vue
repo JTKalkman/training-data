@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { cn } from '@/lib/utils';
 import { router, useForm } from '@inertiajs/vue3';
 import { Check, X } from 'lucide-vue-next';
-import { computed, HTMLAttributes, onBeforeUnmount, onMounted } from 'vue';
+import type { HTMLAttributes} from 'vue';
+import { computed, onBeforeUnmount } from 'vue';
 import { route } from 'ziggy-js';
+import { cn } from '@/lib/utils';
 import Button from './ui/button/Button.vue';
 import TextArea from './ui/text-area/TextArea.vue';
 
