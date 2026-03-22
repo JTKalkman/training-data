@@ -27,6 +27,8 @@ class TrainingSession extends Model
         'data_source_id',
         'external_id',
         'device_id',
+        'notes',
+        'rating',
     ];
 
     protected $casts = [
