@@ -25,6 +25,7 @@ const submit = () => {
   form.patch(route('training-sessions.update', props.trainingSessionId), {
     only: ['trainingSession'],
     preserveState: true,
+    preserveScroll: true,
   });
 }
 
