@@ -43,7 +43,11 @@ class TrainingSessionController extends Controller
         $this->authorize('update', $session);
         $data = request()->validate([
             'rating' => 'nullable|integer|min:1|max:5',
-            'notes' => 'nullable|string|max:1000',
+            'notes' => ['nullable', 'string', 'max:1000', function($attr, $value, $fail) {
+                if ($value !== strip_tags($value)) {
+                    $fail('HTML is not allowed.');
+                }
+            }],
         ]);
         $session->update($data);
 
