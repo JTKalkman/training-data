@@ -5,6 +5,8 @@ import type { HeartRateZone, HoverPosition } from '@/types';
 import type { SampleDataPoint } from '@/types/sample-data-point';
 import TrainingSessionChart from './TrainingSessionChart.vue';
 import Spinner from './ui/spinner/Spinner.vue';
+import { usePace } from '@/composables/usePace';
+import { reverse } from 'dns';
 
 const props = defineProps<{
   sessionId: string;
@@ -12,6 +14,7 @@ const props = defineProps<{
 }>();
 
 const { data, loading, error, fetch } = useSampleData(props.sessionId);
+const { formatPace } = usePace();
 
 const fields = ['heart_rate', 'speed', 'cadence', 'altitude', 'pace'] as const;
 const availableFields = computed(() => {
@@ -31,7 +34,8 @@ const chartData = computed(() => {
       min: null,
       max: null,
       zones: [],
-    }
+    },
+    reverse: false,
   }
 
   const speed = {
@@ -41,7 +45,8 @@ const chartData = computed(() => {
       min: null,
       max: null,
       zones: [],
-    }
+    },
+    reverse: false,
   }
 
   const pace = {
@@ -51,7 +56,8 @@ const chartData = computed(() => {
       min: null,
       max: null,
       zones: [],
-    }
+    },
+    reverse: true,
   }
 
   const altitude = {
@@ -61,7 +67,8 @@ const chartData = computed(() => {
       min: null,
       max: null,
       zones: [],
-    }
+    },
+    reverse: false,
   }
 
   const cadence = {
@@ -71,7 +78,8 @@ const chartData = computed(() => {
       min: null,
       max: null,
       zones: [],
-    }
+    },
+    reverse: false,
   }
 
   if (data.value?.length) {
@@ -103,9 +111,9 @@ const chartData = computed(() => {
   }
 
   if (pace.samples) {
-    const values = speed.samples.map(s => s.y);
-    pace.metaData.min = Math.floor(values.reduce((a, b) => Math.min(a, b), Infinity));
-    pace.metaData.max = Math.ceil(values.reduce((a, b) => Math.max(a, b), -Infinity));
+    const values = pace.samples.map(s => s.y);
+    pace.metaData.min = formatPace(Math.floor(values.reduce((a, b) => Math.min(a, b), Infinity)));
+    pace.metaData.max = formatPace(Math.ceil(values.reduce((a, b) => Math.max(a, b), -Infinity)));
   }
 
   if (altitude.samples) {
@@ -152,7 +160,7 @@ onMounted(() => {
       <div class="mb-2">
         <div v-for="field in availableFields" class="flex flex-col mb-4">
 
-          <p class="mb-2">{{ chartData[field].label }}</p>
+          <p class="mb-2 text-sm font-medium">{{ chartData[field].label }}</p>
 
           <div class="flex">
             <div class="hidden lg:flex w-16 flex-col justify-between text-sm text-gray-500 dark:text-gray-300">
@@ -166,6 +174,7 @@ onMounted(() => {
                 :data="chartData[field].samples"
                 :chartHoverPosition="chartHoverPosition"
                 :hoverSource="hoverSource"
+                :reverse="chartData[field].reverse"
                 @hover="handleChartHover"
               />
             </div>

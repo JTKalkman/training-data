@@ -15,6 +15,7 @@ const props = defineProps<{
   data: Array<ChartDataPoint>;
   chartHoverPosition: HoverPosition | null;
   hoverSource: string | null;
+  reverse: boolean;
 }>();
 
 const emit = defineEmits(['hover']);
@@ -41,7 +42,7 @@ const showTooltip = (position: HoverPosition) => {
     }], 
     { x: position.x, y: 0 }
   );
-  chartInstance.update();
+  chartInstance.update('none');
 }
 
 const destroyTooltip = () => {
@@ -104,7 +105,37 @@ const drawChart = () => {
       maintainAspectRatio: false,
       animation: false,
       normalized: true,
-      scales: { x: { display: false }, y: { display: false } },
+      layout: {
+        padding: {
+          left: 0,
+          bottom: 0,
+        }
+      },
+      scales: {
+        x: {
+          display: true,
+          ticks: {
+            display: false,
+          },
+          grid: {
+            display: false
+          },
+          border: {
+            display: false,
+          }
+        },
+        y: {
+          display: true,
+          reverse: props.reverse,
+          ticks: {
+            display: false,
+            padding: 0,
+          },
+          border: {
+            display: false,
+          }
+        }
+      },
       interaction: {
         intersect: false,
         mode: 'index',
@@ -142,12 +173,11 @@ onMounted(() => {
 </script>
 
 <template>
-  <div style="width:100%; height:200px;">
-    <div style="width:100%; height:200px;" class="">
-      <canvas 
-        ref="chartCanvas" 
-        @mouseleave="emit('hover', null, props.field)"
-      ></canvas>
-    </div>
+  <div class="w-full h-28">
+    <canvas 
+      ref="chartCanvas" 
+      @mouseleave="emit('hover', null, props.field)"
+      class=""
+    ></canvas>
   </div>
 </template>
