@@ -1,12 +1,14 @@
 <script setup lang="ts">
-import { useIsMobile } from '@/composables/useIsMobile';
-import { HoverPosition } from '@/types';
-import { ChartDataPoint } from '@/types/chart-data-point';
+import type { TooltipPositionerFunction, ChartType 
+} from 'chart.js';
 import { 
   Chart, CategoryScale, LinearScale, LineController, PointElement, 
-  LineElement, Tooltip, TooltipPositionerFunction, ChartType 
+  LineElement, Tooltip 
 } from 'chart.js';
 import { onMounted, ref, watch } from 'vue';
+import { useIsMobile } from '@/composables/useIsMobile';
+import type { HoverPosition } from '@/types';
+import type { ChartDataPoint } from '@/types/chart-data-point';
 
 const props = defineProps<{
   field: string;
@@ -141,7 +143,7 @@ onMounted(() => {
 
 <template>
   <div style="width:100%; height:200px;">
-    <div style="width:100%; height:200px;" class="bg-gray-100">
+    <div style="width:100%; height:200px;" class="">
       <canvas 
         ref="chartCanvas" 
         @mouseleave="emit('hover', null, props.field)"
