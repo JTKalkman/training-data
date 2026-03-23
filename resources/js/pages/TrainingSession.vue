@@ -77,7 +77,10 @@ const breadcrumbs: BreadcrumbItem[] = [
     </div>
 
     <div class="px-4 mb-16">
-      <TrainingSessionCharts :sessionId="trainingSession.data.id" />
+      <TrainingSessionCharts 
+        :sessionId="trainingSession.data.id" 
+        :heartRateZones="trainingSession.data.heartRateZones"
+      />
     </div>
   </AppLayout>
 
