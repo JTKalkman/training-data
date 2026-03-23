@@ -62,6 +62,10 @@ onBeforeUnmount(() => removeListener())
       v-on:update:modelValue="handleChange"
     />
 
+    <p v-if="form.errors.notes" class="text-red-500 text-sm text-right mb-0 mt-0">
+      {{ form.errors.notes }}
+    </p>
+
     <div v-if="notesChanged" class="space-x-2 flex justify-end mt-1">
       <Button 
         :variant="'secondary'"
