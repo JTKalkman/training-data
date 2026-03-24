@@ -122,7 +122,8 @@ const drawChart = () => {
           },
           border: {
             display: false,
-          }
+          },
+          position: 'top',
         },
         y: {
           display: true,
@@ -133,7 +134,8 @@ const drawChart = () => {
           },
           border: {
             display: false,
-          }
+          },
+          position: 'right'
         }
       },
       interaction: {
