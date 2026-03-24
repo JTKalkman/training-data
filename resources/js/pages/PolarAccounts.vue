@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import Button from '@/components/ui/button/Button.vue';
-import PolarLogo from '@/components/ui/icons/PolarLogo.vue';
-import AppLayout from '@/layouts/AppLayout.vue';
-import { BreadcrumbItem, PageProps, PolarProfile } from '@/types';
 import { Head, usePage } from '@inertiajs/vue3';
 import { computed } from 'vue';
 import { route } from 'ziggy-js';
+import Button from '@/components/ui/button/Button.vue';
+import PolarLogo from '@/components/ui/icons/PolarLogo.vue';
+import AppLayout from '@/layouts/AppLayout.vue';
+import type { BreadcrumbItem, PageProps, PolarProfile } from '@/types';
 
 const props = defineProps<{
   polarProfiles: {
@@ -41,7 +41,7 @@ const breadcrumbs: BreadcrumbItem[] = [
         </p>
       </div>
 
-      <ul v-if="polarProfiles.data.length > 0" class="mb-6 space-y-4">
+      <ul v-if="props.polarProfiles.data.length > 0" class="mb-6 space-y-4">
         <li
           class="px-4 py-2 relative flex-1 rounded-xl border border-sidebar-border/70 md:min-h-min dark:border-sidebar-border" 
           v-for="profile in polarProfiles.data" 

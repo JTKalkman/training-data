@@ -7,4 +7,5 @@ export interface SampleDataPoint {
   altitude?: number;
   distance?: number;
   pace?: number;
+  [key: string]: unknown; // index signature
 };

@@ -1,5 +1,7 @@
 export * from './auth';
 export * from './chart-data-point';
+export * from './chart-data-set';
+export * from './chart-data';
 export * from './flash';
 export * from './heart-rate-data-point';
 export * from './heart-rate-zone';

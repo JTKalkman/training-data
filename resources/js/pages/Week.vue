@@ -2,11 +2,10 @@
 import { Head, Link } from '@inertiajs/vue3';
 import { computed } from 'vue';
 import { route } from 'ziggy-js';
-import { BreadcrumbItem, TrainingSession, WeekNavigation } from '@/types';
-import AppLayout from '@/layouts/AppLayout.vue';
-import { Navigation } from 'lucide-vue-next';
-import NavigationPrevious from '@/components/ui/navigation-menu/NavigationPrevious.vue';
 import NavigationNext from '@/components/ui/navigation-menu/NavigationNext.vue';
+import NavigationPrevious from '@/components/ui/navigation-menu/NavigationPrevious.vue';
+import AppLayout from '@/layouts/AppLayout.vue';
+import type { BreadcrumbItem, TrainingSession, WeekNavigation } from '@/types';
 
 const props = defineProps<{
   trainingSessions?: {

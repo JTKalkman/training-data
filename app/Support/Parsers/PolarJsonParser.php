@@ -148,10 +148,18 @@ class PolarJsonParser implements ParserInterface
     protected function calculatePace(string $speedData): string
     {
         $speeds = explode(',', $speedData);
+
         $paces = array_map(function ($speed) {
+            $pace = 1200;
+            if (! is_numeric($speed)) return $pace;
             $speed = (float) $speed;
 
-            return $speed > 0 ? round(1000 / $speed) : 0;
+            if ($speed > 0) {
+                $pace = round((60 / $speed) * 60);
+                if ($pace > 1200) $pace = 1200;
+            }
+
+            return $pace;
         }, $speeds);
 
         return implode(',', $paces);

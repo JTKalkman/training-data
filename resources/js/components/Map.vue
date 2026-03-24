@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { RouteDataPoint } from '@/types';
-import { onMounted, ref } from 'vue';
 import * as L from 'leaflet';
+import { onMounted, ref } from 'vue';
+import type { RouteDataPoint } from '@/types';
 import 'leaflet/dist/leaflet.css';
 
 const props = defineProps<{

@@ -1,7 +1,7 @@
-import { SampleDataPoint } from '@/types/sample-data-point';
 import axios from 'axios';
 import { ref } from 'vue';
 import { route } from 'ziggy-js';
+import type { SampleDataPoint } from '@/types/sample-data-point';
 
 export function useSampleData(sessionId: string) {
   const data = ref<SampleDataPoint[] | null>(null);

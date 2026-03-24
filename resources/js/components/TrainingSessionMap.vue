@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { useRouteData } from '@/composables/useMapData';
 import { onMounted } from 'vue';
+import { useRouteData } from '@/composables/useMapData';
 import Map from './Map.vue';
 import Spinner from './ui/spinner/Spinner.vue';
 
@@ -16,7 +16,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="border rounded-xl p-4">
+  <div class="border rounded-xl">
 
     <div v-if="loading" class="flex justify-center pt-10 pb-10">
       <Spinner />

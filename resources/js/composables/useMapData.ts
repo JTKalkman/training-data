@@ -1,7 +1,7 @@
-import { RouteDataPoint } from '@/types';
 import axios from 'axios';
 import { ref } from 'vue';
 import { route } from 'ziggy-js';
+import type { RouteDataPoint } from '@/types';
 
 export function useRouteData(sessionId: string) {
   const data = ref<RouteDataPoint[] | null>(null);
