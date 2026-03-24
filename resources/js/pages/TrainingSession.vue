@@ -27,8 +27,6 @@ const breadcrumbs: BreadcrumbItem[] = [
   },
 ];
 
-console.log(props.trainingSession.data.sportType.name)
-
 const fields = [
   'heart_rate', 
   (props.trainingSession.data.sportType.name === 'running' ? 'pace' : 'speed'), 
