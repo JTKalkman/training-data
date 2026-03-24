@@ -2,7 +2,7 @@
 import { computed, onMounted, ref } from 'vue';
 import { usePace } from '@/composables/usePace';
 import { useSampleData } from '@/composables/useSampleData';
-import type { ChartData, ChartDataPoint, ChartDataSet, HeartRateZone, HoverPosition } from '@/types';
+import type { ChartData, ChartDataSet, HeartRateZone, HoverPosition } from '@/types';
 import type { SampleDataPoint } from '@/types/sample-data-point';
 import TrainingSessionChart from './TrainingSessionChart.vue';
 import Spinner from './ui/spinner/Spinner.vue';
@@ -40,7 +40,7 @@ const chartData = computed<ChartData>(() => {
     },
     speed: <ChartDataSet>{
       label: 'Speed (km/h)',
-      samples: [] as ChartDataPoint[],
+      samples: [],
       metaData: {
         min: null,
         max: null,
@@ -49,7 +49,7 @@ const chartData = computed<ChartData>(() => {
     },
     pace: <ChartDataSet>{
       label: 'Pace (min/km)',
-      samples: [] as ChartDataPoint[],
+      samples: [],
       metaData: {
         min: null,
         max: null,
@@ -58,7 +58,7 @@ const chartData = computed<ChartData>(() => {
     },
     altitude: <ChartDataSet>{
       label: 'Altitude (m)',
-      samples: [] as ChartDataPoint[],
+      samples: [],
       metaData: {
         min: null,
         max: null,
@@ -67,7 +67,7 @@ const chartData = computed<ChartData>(() => {
     },
     cadence: <ChartDataSet>{
       label: 'Cadence (steps/min)',
-      samples: [] as ChartDataPoint[],
+      samples: [],
       metaData: {
         min: null,
         max: null,
