@@ -112,8 +112,8 @@ const chartData = computed(() => {
 
   if (pace.samples) {
     const values = pace.samples.map(s => s.y);
-    pace.metaData.min = formatPace(Math.floor(values.reduce((a, b) => Math.min(a, b), Infinity)));
-    pace.metaData.max = formatPace(Math.ceil(values.reduce((a, b) => Math.max(a, b), -Infinity)));
+    pace.metaData.max = formatPace(Math.floor(values.reduce((a, b) => Math.min(a, b), Infinity)));
+    pace.metaData.min = formatPace(Math.ceil(values.reduce((a, b) => Math.max(a, b), -Infinity)));
   }
 
   if (altitude.samples) {
@@ -145,7 +145,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="border rounded-xl p-4">
+  <div class="border rounded-xl p-4 bg-white dark:bg-sidebar-accent">
     <div v-if="loading" class="flex justify-center bg-gray-400 pt-10 pb-10">
       <Spinner />
     </div>
@@ -156,7 +156,7 @@ onMounted(() => {
       </p>
     </div>
 
-    <div class="mb-2 bg-white dark:bg-sidebar-accent border rounded-xl p-4">
+    <div class="mb-2">
       <div class="mb-2">
         <div v-for="field in availableFields" class="flex flex-col mb-4">
 
