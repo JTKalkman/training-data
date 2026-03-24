@@ -158,7 +158,7 @@ onMounted(() => {
           class="flex flex-col mb-4"
         >
 
-          <p class="mb-2 text-sm font-medium">{{ chartData.datasets.label }}</p>
+          <p class="mb-2 text-sm font-medium">{{ chartData.datasets[field].label }}</p>
 
           <div class="flex">
             <div class="hidden lg:flex w-16 flex-col justify-between text-sm text-gray-500 dark:text-gray-300">
