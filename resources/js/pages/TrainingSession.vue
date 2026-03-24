@@ -27,6 +27,15 @@ const breadcrumbs: BreadcrumbItem[] = [
   },
 ];
 
+console.log(props.trainingSession.data.sportType.name)
+
+const fields = [
+  'heart_rate', 
+  (props.trainingSession.data.sportType.name === 'running' ? 'pace' : 'speed'), 
+  'cadence', 
+  'altitude'
+];
+
 </script>
 
 <template>
@@ -80,6 +89,7 @@ const breadcrumbs: BreadcrumbItem[] = [
       <TrainingSessionCharts 
         :sessionId="trainingSession.data.id" 
         :heartRateZones="trainingSession.data.heartRateZones"
+        :fields="fields"
       />
     </div>
   </AppLayout>

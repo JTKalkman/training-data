@@ -6,17 +6,19 @@ import type { SampleDataPoint } from '@/types/sample-data-point';
 import TrainingSessionChart from './TrainingSessionChart.vue';
 import Spinner from './ui/spinner/Spinner.vue';
 import { usePace } from '@/composables/usePace';
-import { reverse } from 'dns';
 
 const props = defineProps<{
   sessionId: string;
   heartRateZones: HeartRateZone[];
+  fields?: string[];
 }>();
 
 const { data, loading, error, fetch } = useSampleData(props.sessionId);
 const { formatPace } = usePace();
 
-const fields = ['heart_rate', 'speed', 'cadence', 'altitude', 'pace'] as const;
+const allFields = ['heart_rate', 'speed', 'pace', 'cadence', 'altitude'] as const;
+const fields = props.fields ?? allFields;
+
 const availableFields = computed(() => {
   if (!data.value?.length) return [];
 
