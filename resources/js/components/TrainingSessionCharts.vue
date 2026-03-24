@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue';
+import { usePace } from '@/composables/usePace';
 import { useSampleData } from '@/composables/useSampleData';
 import type { HeartRateZone, HoverPosition } from '@/types';
 import type { SampleDataPoint } from '@/types/sample-data-point';
 import TrainingSessionChart from './TrainingSessionChart.vue';
 import Spinner from './ui/spinner/Spinner.vue';
-import { usePace } from '@/composables/usePace';
 
 const props = defineProps<{
   sessionId: string;
@@ -160,7 +160,11 @@ onMounted(() => {
 
     <div class="mb-2">
       <div class="mb-2">
-        <div v-for="field in availableFields" class="flex flex-col mb-4">
+        <div 
+          v-for="field in availableFields"
+          :key="field" 
+          class="flex flex-col mb-4"
+        >
 
           <p class="mb-2 text-sm font-medium">{{ chartData[field].label }}</p>
 
