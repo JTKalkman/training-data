@@ -11,8 +11,8 @@ This demo project focuses on:
 - Visualizing training sessions and heart rate zones
 
 Out of scope for this demo:
-- GPS / route tracking (maps are parsed and stored but not yet displayed)
-- Cadence, power, distance, speed, altitude metrics (parsed and stored but not yet displayed in frontend)
+- GPS / route tracking
+- Cadence, power, distance, speed, altitude metrics
 - Training feedback forms (planned for future)
 - Multi-user features beyond basic authentication
 - Real-time automatic syncing (planned for future)
@@ -83,12 +83,22 @@ Raw per-second heart rate samples are stored as JSON files rather than relationa
     - Duration labels, HR values, optional zones
     - Controller remains slim (sampleData endpoint just fetches transformed data)
 
+### Map Data Downsampling
+
+- Map route/GPS data is downsampled using the **Visvalingam-Whyatt algorithm**
+- Implementation: `VisvalingamSimplifier` class
+- Why downsampling?
+    - GPS traces can contain thousands of redundant coordinate points
+    - Reduces frontend memory footprint and improves map rendering performance
+    - Algorithm preserves perceptually important points while removing noise
+- Algorithm approach:
+    - Iteratively removes points with the smallest triangulated area
+    - Continues until reaching target sample ratio (default: 20% of original)
+    - Maintains visual accuracy of route trace on the map
+
 ## Known Limitations / Future Improvements
 
 - Multi-user support limited to demo login
-- Chart: no zooming or downsampling (full dataset shown)
-- File path caching not compatible with S3 / cloud storage
-- Feedback form / session notes → conceptually planned, not implemented
 - Timezones: uses server timezone, no per-user timezone handling
 
 ## Testing
