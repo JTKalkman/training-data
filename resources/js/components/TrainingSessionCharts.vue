@@ -2,10 +2,11 @@
 import { computed, onMounted, onUnmounted, ref } from 'vue';
 import { usePace } from '@/composables/usePace';
 import { useSampleData } from '@/composables/useSampleData';
-import type { ChartData, ChartDataSet, HeartRateZone, HoverPosition } from '@/types';
+import type { ChartData, ChartDataSet, HeartRateZone, HoverPosition, Zone } from '@/types';
 import type { SampleDataPoint } from '@/types/sample-data-point';
 import TrainingSessionChart from './TrainingSessionChart.vue';
 import Spinner from './ui/spinner/Spinner.vue';
+import { heartRateZoneColor } from '@/utils/heartRateZoneColors';
 
 const props = defineProps<{
   sessionId: string;
@@ -109,8 +110,23 @@ const chartData = computed<ChartData>(() => {
     let yMax = values.reduce((a, b) => Math.max(a, b), -Infinity);
 
     if (props.heartRateZones?.length > 0) {
-      yMin = Math.min(yMin, ...props.heartRateZones.map(z => z.min_bpm));
-      yMax = Math.max(yMax, ...props.heartRateZones.map(z => z.max_bpm));
+      let zones: Zone[] = props.heartRateZones.map((zone) => {
+        return <Zone>{
+          min: zone.min_bpm,
+          max: zone.max_bpm,
+          color: heartRateZoneColor(zone.color ?? ''),
+        }
+      });
+
+      zones = zones.sort((a: Zone, b: Zone) => a.max - b.max);
+
+      yMin = Math.min(yMin, zones[0].min, ...props.heartRateZones.map(z => z.min_bpm));
+      yMax = Math.max(yMax, zones[zones.length - 1].max, ...props.heartRateZones.map(z => z.max_bpm));
+
+      zones[0].min = Math.min(yMin, zones[0].min)
+      zones[zones.length - 1].max = Math.max(yMax, zones[zones.length - 1].max)
+
+      datasets.heart_rate.zones = zones;
     }
 
     datasets.heart_rate.metaData.yMin = yMin;
@@ -291,8 +307,10 @@ onMounted(() => {
                 :reverse="chartData.datasets[field].reverse"
                 :yMin="chartData.datasets[field].metaData.yMin"
                 :yMax="chartData.datasets[field].metaData.yMax"
+                :zones="chartData.datasets[field].zones ?? []"
                 @hover="handleChartHover"
-              />
+                />
+                <!-- :zones="chartData.datasets[field].metaData." -->
             </div>
 
             <!-- <div class="hidden lg:flex w-16">

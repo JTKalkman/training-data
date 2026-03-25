@@ -1,14 +1,15 @@
 <script setup lang="ts">
-import type { TooltipPositionerFunction, ChartType 
+import type { TooltipPositionerFunction, ChartType, Plugin 
 } from 'chart.js';
 import { 
   Chart, CategoryScale, LinearScale, LineController, PointElement, 
   LineElement, Tooltip 
 } from 'chart.js';
-import { onMounted, ref, watch } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 import { useIsMobile } from '@/composables/useIsMobile';
-import type { HoverPosition } from '@/types';
+import type { HoverPosition, Zone } from '@/types';
 import type { ChartDataPoint } from '@/types/chart-data-point';
+import { createZonesPlugin } from '@/composables/useHeartRateZonesPlugin';
 
 const props = defineProps<{
   field: string;
@@ -18,14 +19,22 @@ const props = defineProps<{
   reverse: boolean;
   yMin?: number | null;
   yMax?: number | null;
-  // zones?: Zone[];
+  zones?: Zone[];
 }>();
 
-const emit = defineEmits(['hover']);
-
+const emit = defineEmits(['hover'])
 const chartCanvas = ref<HTMLCanvasElement | null>(null);
-
 let chartInstance: Chart;
+
+const plugins = computed(() => {
+  const pluginList: Plugin<'line'>[] = [crosshairPlugin];
+
+  if (props.zones?.length) {
+    pluginList.unshift(createZonesPlugin(props.zones));
+  }
+
+  return pluginList;
+});
 
 watch(() => props.chartHoverPosition, (position) => {
   if (props.hoverSource === props.field) return;
@@ -97,10 +106,10 @@ const drawChart = () => {
   };
 
   const yScales = {
-    display: true,
+    display: false,
     reverse: props.reverse,
     ticks: {
-      // display: false,
+      display: false,
       padding: 0,
     },
     border: {
@@ -165,7 +174,7 @@ const drawChart = () => {
         }
       }
     },
-    plugins: [crosshairPlugin]
+    plugins: plugins.value
   })
 }
 
