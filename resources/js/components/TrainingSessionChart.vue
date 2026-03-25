@@ -16,6 +16,9 @@ const props = defineProps<{
   chartHoverPosition: HoverPosition | null;
   hoverSource: string | null;
   reverse: boolean;
+  yMin?: number | null;
+  yMax?: number | null;
+  // zones?: Zone[];
 }>();
 
 const emit = defineEmits(['hover']);
@@ -79,6 +82,41 @@ const drawChart = () => {
 
   Chart.register(CategoryScale, LinearScale, LineController, PointElement, LineElement, Tooltip)
 
+  const xScales = {
+    display: true,
+    ticks: {
+      display: false,
+    },
+    grid: {
+      display: false
+    },
+    border: {
+      display: false,
+    },
+    position: 'top',
+  };
+
+  const yScales = {
+    display: true,
+    reverse: props.reverse,
+    ticks: {
+      // display: false,
+      padding: 0,
+    },
+    border: {
+      display: false,
+    },
+    position: 'right',
+  };
+
+  if (props.yMin !== null) {
+    yScales.min = props.yMin;
+  }
+
+  if (props.yMax !== null) {
+    yScales.max = props.yMax;
+  }
+
   chartInstance = new Chart(chartCanvas.value!, {
     type: 'line',
     data: {
@@ -106,31 +144,8 @@ const drawChart = () => {
         }
       },
       scales: {
-        x: {
-          display: true,
-          ticks: {
-            display: false,
-          },
-          grid: {
-            display: false
-          },
-          border: {
-            display: false,
-          },
-          position: 'top',
-        },
-        y: {
-          display: true,
-          reverse: props.reverse,
-          ticks: {
-            display: false,
-            padding: 0,
-          },
-          border: {
-            display: false,
-          },
-          position: 'right'
-        }
+        x: xScales,
+        y: yScales,
       },
       interaction: {
         intersect: false,
@@ -164,7 +179,6 @@ onMounted(() => {
     <canvas 
       ref="chartCanvas" 
       @mouseleave="emit('hover', null, props.field)"
-      class=""
     ></canvas>
   </div>
 </template>
