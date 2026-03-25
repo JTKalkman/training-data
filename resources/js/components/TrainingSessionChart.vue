@@ -72,12 +72,6 @@ const crosshairPlugin = {
   }
 };
 
-declare module 'chart.js' {
-  interface TooltipPositionerMap {
-    positionTooltip: TooltipPositionerFunction<ChartType>;
-  }
-}
-
 const drawChart = () => {
   const isMobile = useIsMobile();
   const labels = props.data.map(d => d.x)
@@ -152,21 +146,12 @@ const drawChart = () => {
       },
       plugins: {
         tooltip: {
-          position: 'positionTooltip'
+          enabled: false,
         }
       }
     },
     plugins: [crosshairPlugin]
   })
-
-  Tooltip.positioners.positionTooltip = (elements, eventPosition) => {
-    return {
-      x: eventPosition.x,
-      y: chartInstance.chartArea.height / 2,
-      xAlign: 'center',
-      yAlign: 'bottom',
-    };
-  };
 }
 
 onMounted(() => {
