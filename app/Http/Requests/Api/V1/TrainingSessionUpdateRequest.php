@@ -7,6 +7,12 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class TrainingSessionUpdateRequest extends FormRequest
 {
+    protected function prepareForValidation(): void
+    {
+        $this->merge([
+            'ratingString' => $this->ratingString === '' ? null : $this->ratingString,
+        ]);
+    }
     /**
      * Get the validation rules that apply to the request.
      *
