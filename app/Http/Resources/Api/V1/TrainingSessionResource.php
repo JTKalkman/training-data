@@ -10,6 +10,14 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class TrainingSessionResource extends JsonResource
 {
+    protected $ratingMap = [
+        1 => 'Horrible',
+        2 => 'Poor',
+        3 => 'OK',
+        4 => 'Great',
+        5 => 'Excellent',
+    ];
+
     /**
      * Transform the resource into an array.
      *
@@ -27,6 +35,9 @@ class TrainingSessionResource extends JsonResource
             'utcOffset' => $this->utc_offset,
             'durationSeconds' => $this->duration_seconds,
             'durationIso' => Duration::toIso($this->duration_seconds),
+            'rating' => $this->rating,
+            'ratingString' => $this->ratingMap[$this->rating] ?? '',
+            'notes' => $this->notes,
             'device' => $this->whenLoaded('device', function () {
                 return DeviceResource::make($this->device);
             }),
