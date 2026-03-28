@@ -29,7 +29,7 @@ class TrainingSessionResource extends JsonResource
             'durationSeconds' => $this->duration_seconds,
             'durationIso' => Duration::toIso($this->duration_seconds),
             'rating' => $this->rating,
-            'ratingString' => TrainingSession::RATING_MAP[$this->rating] ?? '',
+            'ratingLabel' => TrainingSession::RATING_MAP[$this->rating] ?? '',
             'notes' => $this->notes,
             'device' => $this->whenLoaded('device', function () {
                 return DeviceResource::make($this->device);

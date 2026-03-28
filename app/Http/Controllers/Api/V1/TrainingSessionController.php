@@ -87,9 +87,9 @@ class TrainingSessionController extends Controller
             $data['rating'] = (int) $request->rating;
         }
 
-        if ($request->has('ratingString')) {
+        if ($request->has('ratingLabel')) {
             $map = array_flip(TrainingSession::RATING_MAP);
-            $data['rating'] = $map[$request->ratingString] ?? null;
+            $data['rating'] = $map[$request->ratingLabel] ?? null;
         }
 
         if ($request->has('notes')) {

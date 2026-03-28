@@ -10,7 +10,7 @@ class TrainingSessionUpdateRequest extends FormRequest
     protected function prepareForValidation(): void
     {
         $this->merge([
-            'ratingString' => $this->ratingString === '' ? null : $this->ratingString,
+            'ratingLabel' => $this->ratingLabel === '' ? null : $this->ratingLabel,
         ]);
     }
     /**
@@ -25,9 +25,9 @@ class TrainingSessionUpdateRequest extends FormRequest
                 'nullable', 
                 'integer', 
                 'in:' . implode(',', array_keys(TrainingSession::RATING_MAP)), 
-                'prohibits:ratingString'
+                'prohibits:ratingLabel'
             ],
-            'ratingString' => [
+            'ratingLabel' => [
                 'nullable', 
                 'string', 
                 'in:' . implode(',', TrainingSession::RATING_MAP), 
