@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Filters\Api\V1\TrainingSessionFilter;
+use App\Http\Requests\Api\V1\TrainingSessionUpdateRequest;
 use App\Http\Resources\Api\V1\TrainingSessionResource;
 use App\Models\TrainingSession;
 use App\Support\DTO\Api\V1\PaginationMeta;
@@ -74,5 +75,35 @@ class TrainingSessionController extends Controller
         }
 
         return $this->error('Not found', [], 404);
+    }
+
+    public function update(TrainingSession $trainingSession, TrainingSessionUpdateRequest $request) //: JsonResponse|Response
+    {
+        $this->authorize('update', $trainingSession);
+
+        $data = [];
+
+        if ($request->rating) {
+            $data['rating'] = (int) $request->rating;
+        }
+
+        if ($request->ratingString) {
+            $map = array_flip(TrainingSession::RATING_MAP);
+            $data['rating'] = $map[$request->ratingString] ?? null;
+        }
+
+        if ($request->notes) {
+            $data['notes'] = $request->notes;
+        }
+
+        $trainingSession->update($data);
+
+        $resource = new TrainingSessionResource($trainingSession);
+
+        return $this->success(
+            'Training session updated',
+            $resource->resolve(),
+            200
+        );
     }
 }
