@@ -10,12 +10,13 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class TrainingSessionResource extends JsonResource
 {
+    // TODO: Move to reusable mapper class.
     protected $ratingMap = [
-        1 => 'Horrible',
-        2 => 'Poor',
-        3 => 'OK',
-        4 => 'Great',
-        5 => 'Excellent',
+        1 => 'horrible',
+        2 => 'poor',
+        3 => 'ok',
+        4 => 'great',
+        5 => 'excellent',
     ];
 
     /**
