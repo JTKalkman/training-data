@@ -2,11 +2,10 @@
 import { computed, onMounted, onUnmounted, ref } from 'vue';
 import { usePace } from '@/composables/usePace';
 import { useSampleData } from '@/composables/useSampleData';
-import type { ChartData, ChartDataSet, HeartRateZone, HoverPosition, Zone } from '@/types';
+import type { ChartData, ChartDataSet, HeartRateZone, HoverPosition } from '@/types';
 import type { SampleDataPoint } from '@/types/sample-data-point';
 import TrainingSessionChart from './TrainingSessionChart.vue';
 import Spinner from './ui/spinner/Spinner.vue';
-import { heartRateZoneColor } from '@/utils/heartRateZoneColors';
 
 const props = defineProps<{
   sessionId: string;
@@ -34,10 +33,8 @@ const chartData = computed<ChartData>(() => {
       label: 'Heart reate (bpm)',
       samples: [],
       metaData: {
-        yMin: null,
-        yMax: null,
-        yMinLabel: null,
-        yMaxLabel: null,
+        min: null,
+        max: null,
       },
       reverse: false,
     },
@@ -45,10 +42,8 @@ const chartData = computed<ChartData>(() => {
       label: 'Speed (km/h)',
       samples: [],
       metaData: {
-        yMin: null,
-        yMax: null,
-        yMinLabel: null,
-        yMaxLabel: null,
+        min: null,
+        max: null,
       },
       reverse: false,
     },
@@ -56,10 +51,8 @@ const chartData = computed<ChartData>(() => {
       label: 'Pace (min/km)',
       samples: [],
       metaData: {
-        yMin: null,
-        yMax: null,
-        yMinLabel: null,
-        yMaxLabel: null,
+        min: null,
+        max: null,
       },
       reverse: true,
     },
@@ -67,10 +60,8 @@ const chartData = computed<ChartData>(() => {
       label: 'Altitude (m)',
       samples: [],
       metaData: {
-        yMin: null,
-        yMax: null,
-        yMinLabel: null,
-        yMaxLabel: null,
+        min: null,
+        max: null,
       },
       reverse: false,
     },
@@ -78,10 +69,8 @@ const chartData = computed<ChartData>(() => {
       label: 'Cadence (steps/min)',
       samples: [],
       metaData: {
-        yMin: null,
-        yMax: null,
-        yMinLabel: null,
-        yMaxLabel: null,
+        min: null,
+        max: null,
       },
       reverse: false,
     },
@@ -105,66 +94,32 @@ const chartData = computed<ChartData>(() => {
 
   if (datasets.heart_rate.samples) {
     const values = datasets.heart_rate.samples.map(s => s.y);
-
-    let yMin = values.reduce((a, b) => Math.min(a, b), Infinity);
-    let yMax = values.reduce((a, b) => Math.max(a, b), -Infinity);
-
-    if (props.heartRateZones?.length > 0) {
-      let zones: Zone[] = props.heartRateZones.map((zone) => {
-        return <Zone>{
-          min: zone.min_bpm,
-          max: zone.max_bpm,
-          color: heartRateZoneColor(zone.color ?? ''),
-        }
-      });
-
-      zones = zones.sort((a: Zone, b: Zone) => a.max - b.max);
-
-      yMin = Math.min(yMin, zones[0].min, ...props.heartRateZones.map(z => z.min_bpm));
-      yMax = Math.max(yMax, zones[zones.length - 1].max, ...props.heartRateZones.map(z => z.max_bpm));
-
-      zones[0].min = Math.min(yMin, zones[0].min)
-      zones[zones.length - 1].max = Math.max(yMax, zones[zones.length - 1].max)
-
-      datasets.heart_rate.zones = zones;
-    }
-
-    datasets.heart_rate.metaData.yMin = yMin;
-    datasets.heart_rate.metaData.yMax = yMax;
-    datasets.heart_rate.metaData.yMinLabel = yMin;
-    datasets.heart_rate.metaData.yMaxLabel = yMax;
+    datasets.heart_rate.metaData.min = values.reduce((a, b) => Math.min(a, b), Infinity);
+    datasets.heart_rate.metaData.max = values.reduce((a, b) => Math.max(a, b), -Infinity);
   }
 
   if (datasets.speed.samples) {
     const values = datasets.speed.samples.map(s => s.y);
-    datasets.speed.metaData.yMin = Math.floor(values.reduce((a, b) => Math.min(a, b), Infinity));
-    datasets.speed.metaData.yMax = Math.ceil(values.reduce((a, b) => Math.max(a, b), -Infinity));
-    datasets.speed.metaData.yMinLabel = datasets.speed.metaData.yMin;
-    datasets.speed.metaData.yMaxLabel = datasets.speed.metaData.yMax;
+    datasets.speed.metaData.min = Math.floor(values.reduce((a, b) => Math.min(a, b), Infinity));
+    datasets.speed.metaData.max = Math.ceil(values.reduce((a, b) => Math.max(a, b), -Infinity));
   }
 
   if (datasets.pace.samples) {
     const values = datasets.pace.samples.map(s => s.y);
-    datasets.pace.metaData.yMax = Math.floor(values.reduce((a, b) => Math.min(a, b), Infinity));
-    datasets.pace.metaData.yMin = Math.ceil(values.reduce((a, b) => Math.max(a, b), -Infinity));
-    datasets.pace.metaData.yMinLabel = formatPace(datasets.pace.metaData.yMin);
-    datasets.pace.metaData.yMaxLabel = formatPace(datasets.pace.metaData.yMax);
+    datasets.pace.metaData.max = formatPace(Math.floor(values.reduce((a, b) => Math.min(a, b), Infinity)));
+    datasets.pace.metaData.min = formatPace(Math.ceil(values.reduce((a, b) => Math.max(a, b), -Infinity)));
   }
 
   if (datasets.altitude.samples) {
     const values = datasets.altitude.samples.map(s => s.y);
-    datasets.altitude.metaData.yMin = Math.floor(values.reduce((a, b) => Math.min(a, b), Infinity));
-    datasets.altitude.metaData.yMax = Math.ceil(values.reduce((a, b) => Math.max(a, b), -Infinity));
-    datasets.altitude.metaData.yMinLabel = datasets.altitude.metaData.yMin;
-    datasets.altitude.metaData.yMaxLabel = datasets.altitude.metaData.yMax;
+    datasets.altitude.metaData.min = Math.floor(values.reduce((a, b) => Math.min(a, b), Infinity));
+    datasets.altitude.metaData.max = Math.ceil(values.reduce((a, b) => Math.max(a, b), -Infinity));
   }
 
   if (datasets.cadence.samples) {
     const values = datasets.cadence.samples.map(s => s.y);
-    datasets.cadence.metaData.yMin = Math.floor(values.reduce((a, b) => Math.min(a, b), Infinity));
-    datasets.cadence.metaData.yMax = Math.ceil(values.reduce((a, b) => Math.max(a, b), -Infinity));
-    datasets.cadence.metaData.yMinLabel = datasets.cadence.metaData.yMin;
-    datasets.cadence.metaData.yMaxLabel = datasets.cadence.metaData.yMax;
+    datasets.cadence.metaData.min = Math.floor(values.reduce((a, b) => Math.min(a, b), Infinity));
+    datasets.cadence.metaData.max = Math.ceil(values.reduce((a, b) => Math.max(a, b), -Infinity));
   }
 
   return { xAxis, datasets };
@@ -230,12 +185,22 @@ onMounted(() => {
 })
 </script>
 
+<style>
+.fade-enter-active, .fade-leave-active {
+    transition: opacity 0.15s ease;
+}
+.fade-enter-from, .fade-leave-to {
+    opacity: 0;
+}
+</style>
+
 <template>
+
   <div class="border rounded-xl p-4 bg-white dark:bg-sidebar-accent">
     <div v-if="loading" class="flex justify-center bg-gray-400 pt-10 pb-10">
       <Spinner />
     </div>
-
+    
     <div v-if="error">
       <p class="text-center text-red-500 text-sm">
         {{ error }}
@@ -245,12 +210,7 @@ onMounted(() => {
     <div class="mb-2 relative" >
       <!-- Tooltip -->
       <div class="relative">
-        <Transition
-          enter-active-class="transition-opacity duration-150 ease"
-          enter-from-class="opacity-0"
-          leave-active-class="transition-opacity duration-150 ease"
-          leave-to-class="opacity-0"
-        >
+        <Transition name="fade">
           <div
             v-if="chartHoverPosition && tooltipData"
             class="absolute w-48 z-10 pointer-events-none bg-white border border-gray-200 rounded-lg shadow-lg px-3 py-2 text-sm text-gray-800"
@@ -294,10 +254,10 @@ onMounted(() => {
 
           <div class="flex">
             <div class="hidden lg:flex w-16 lg:shrink-0 flex-col justify-between text-sm text-gray-500 dark:text-gray-300">
-              <p class="text-nowrap">{{ chartData.datasets[field].metaData.yMaxLabel }}</p>
-              <p class="text-nowrap">{{ chartData.datasets[field].metaData.yMinLabel }}</p>
+              <p class="text-nowrap">{{ chartData.datasets[field].metaData.max }}</p>
+              <p class="text-nowrap">{{ chartData.datasets[field].metaData.min }}</p>
             </div>
-
+      
             <div class="grow flex flex-col border-b-2 border-l-2">
               <TrainingSessionChart
                 :field="field"
@@ -305,14 +265,10 @@ onMounted(() => {
                 :chartHoverPosition="chartHoverPosition"
                 :hoverSource="hoverSource"
                 :reverse="chartData.datasets[field].reverse"
-                :yMin="chartData.datasets[field].metaData.yMin"
-                :yMax="chartData.datasets[field].metaData.yMax"
-                :zones="chartData.datasets[field].zones ?? []"
                 @hover="handleChartHover"
-                />
-                <!-- :zones="chartData.datasets[field].metaData." -->
+              />
             </div>
-
+      
             <!-- <div class="hidden lg:flex w-16">
               <p>zones</p>
             </div> -->
@@ -331,6 +287,7 @@ onMounted(() => {
         </div>
       </div>
     </div>
-
+  
   </div>
+  
 </template> 

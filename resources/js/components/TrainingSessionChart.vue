@@ -1,15 +1,14 @@
 <script setup lang="ts">
-import type { TooltipPositionerFunction, ChartType, Plugin 
+import type { TooltipPositionerFunction, ChartType 
 } from 'chart.js';
 import { 
   Chart, CategoryScale, LinearScale, LineController, PointElement, 
   LineElement, Tooltip 
 } from 'chart.js';
-import { computed, onMounted, ref, watch } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import { useIsMobile } from '@/composables/useIsMobile';
-import type { HoverPosition, Zone } from '@/types';
+import type { HoverPosition } from '@/types';
 import type { ChartDataPoint } from '@/types/chart-data-point';
-import { createZonesPlugin } from '@/composables/useHeartRateZonesPlugin';
 
 const props = defineProps<{
   field: string;
@@ -17,24 +16,13 @@ const props = defineProps<{
   chartHoverPosition: HoverPosition | null;
   hoverSource: string | null;
   reverse: boolean;
-  yMin?: number | null;
-  yMax?: number | null;
-  zones?: Zone[];
 }>();
 
-const emit = defineEmits(['hover'])
+const emit = defineEmits(['hover']);
+
 const chartCanvas = ref<HTMLCanvasElement | null>(null);
+
 let chartInstance: Chart;
-
-const plugins = computed(() => {
-  const pluginList: Plugin<'line'>[] = [crosshairPlugin];
-
-  if (props.zones?.length) {
-    pluginList.unshift(createZonesPlugin(props.zones));
-  }
-
-  return pluginList;
-});
 
 watch(() => props.chartHoverPosition, (position) => {
   if (props.hoverSource === props.field) return;
@@ -91,41 +79,6 @@ const drawChart = () => {
 
   Chart.register(CategoryScale, LinearScale, LineController, PointElement, LineElement, Tooltip)
 
-  const xScales = {
-    display: true,
-    ticks: {
-      display: false,
-    },
-    grid: {
-      display: false
-    },
-    border: {
-      display: false,
-    },
-    position: 'top',
-  };
-
-  const yScales = {
-    display: false,
-    reverse: props.reverse,
-    ticks: {
-      display: false,
-      padding: 0,
-    },
-    border: {
-      display: false,
-    },
-    position: 'right',
-  };
-
-  if (props.yMin !== null) {
-    yScales.min = props.yMin;
-  }
-
-  if (props.yMax !== null) {
-    yScales.max = props.yMax;
-  }
-
   chartInstance = new Chart(chartCanvas.value!, {
     type: 'line',
     data: {
@@ -153,8 +106,31 @@ const drawChart = () => {
         }
       },
       scales: {
-        x: xScales,
-        y: yScales,
+        x: {
+          display: true,
+          ticks: {
+            display: false,
+          },
+          grid: {
+            display: false
+          },
+          border: {
+            display: false,
+          },
+          position: 'top',
+        },
+        y: {
+          display: true,
+          reverse: props.reverse,
+          ticks: {
+            display: false,
+            padding: 0,
+          },
+          border: {
+            display: false,
+          },
+          position: 'right'
+        }
       },
       interaction: {
         intersect: false,
@@ -174,7 +150,7 @@ const drawChart = () => {
         }
       }
     },
-    plugins: plugins.value
+    plugins: [crosshairPlugin]
   })
 }
 
@@ -188,6 +164,7 @@ onMounted(() => {
     <canvas 
       ref="chartCanvas" 
       @mouseleave="emit('hover', null, props.field)"
+      class=""
     ></canvas>
   </div>
 </template>
