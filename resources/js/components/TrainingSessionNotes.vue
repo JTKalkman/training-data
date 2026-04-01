@@ -58,7 +58,7 @@ onBeforeUnmount(() => removeListener())
       :disabled="form.processing"
       name="notes"
       id="notes"
-      class="min-h-10 lg:grow"
+      class="min-h-20 md:min-h-17 lg:grow"
       v-on:update:modelValue="handleChange"
     />
 
