@@ -19,7 +19,7 @@ class TrainingSession extends Model
     use HasUuids;
 
     protected $fillable = [
-        'user_id',
+        'user_id', // Better not to be mass assignable.
         'sport_type_id',
         'started_at',
         'utc_offset',

@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import type { TooltipPositionerFunction, ChartType 
-} from 'chart.js';
 import { 
   Chart, CategoryScale, LinearScale, LineController, PointElement, 
   LineElement, Tooltip 
@@ -10,13 +8,22 @@ import { useIsMobile } from '@/composables/useIsMobile';
 import type { HoverPosition } from '@/types';
 import type { ChartDataPoint } from '@/types/chart-data-point';
 
-const props = defineProps<{
+const props = withDefaults(defineProps<{
   field: string;
   data: Array<ChartDataPoint>;
   chartHoverPosition: HoverPosition | null;
   hoverSource: string | null;
   reverse: boolean;
-}>();
+  yMin?: number | null;
+  yMax?: number | null;
+  zones?: Zone[];
+  lineColor?: string;
+}>(), {
+    reverse: false,
+    zones: () => [],
+    lineColor: 'rgb(99, 102, 241)',   // indigo als default
+    // fillColor: 'rgba(99, 102, 241, 0.1)',
+});
 
 const emit = defineEmits(['hover']);
 
@@ -86,12 +93,12 @@ const drawChart = () => {
       datasets: [{
         label: props.field,
         data: chartData,
-        borderColor: 'gray',
-        borderWidth: 1,
+        borderColor: props.lineColor,
+        borderWidth: 1.5,
         pointRadius: 0,
         pointHoverRadius: 0,
         fill: false,
-        tension: 0,
+        tension: 2,
       }],
     },
     options: {

@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class HeartRateZone extends Model
 {
     protected $fillable = [
-        'training_session_id',
+        'training_session_id', // Better not to be mass assignable.
         'zone_number',
         'name',
         'min_bpm',

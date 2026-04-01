@@ -37,6 +37,7 @@ const chartData = computed<ChartData>(() => {
         max: null,
       },
       reverse: false,
+      lineColor: 'rgba(225, 50, 50, 1)',
     },
     speed: <ChartDataSet>{
       label: 'Speed (km/h)',
@@ -46,6 +47,7 @@ const chartData = computed<ChartData>(() => {
         max: null,
       },
       reverse: false,
+      lineColor: 'rgba(50, 150, 225, 1)',
     },
     pace: <ChartDataSet>{
       label: 'Pace (min/km)',
@@ -55,6 +57,7 @@ const chartData = computed<ChartData>(() => {
         max: null,
       },
       reverse: true,
+      lineColor: 'rgba(50, 150, 225, 1)',
     },
     altitude: <ChartDataSet>{
       label: 'Altitude (m)',
@@ -64,6 +67,7 @@ const chartData = computed<ChartData>(() => {
         max: null,
       },
       reverse: false,
+      lineColor: 'gray'
     },
     cadence: <ChartDataSet>{
       label: 'Cadence (steps/min)',
@@ -73,6 +77,7 @@ const chartData = computed<ChartData>(() => {
         max: null,
       },
       reverse: false,
+      lineColor: 'gray'
     },
   };
 
@@ -265,6 +270,10 @@ onMounted(() => {
                 :chartHoverPosition="chartHoverPosition"
                 :hoverSource="hoverSource"
                 :reverse="chartData.datasets[field].reverse"
+                :yMin="chartData.datasets[field].metaData.yMin"
+                :yMax="chartData.datasets[field].metaData.yMax"
+                :zones="chartData.datasets[field].zones ?? []"
+                :lineColor="chartData.datasets[field].lineColor"
                 @hover="handleChartHover"
               />
             </div>

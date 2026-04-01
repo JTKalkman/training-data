@@ -8,8 +8,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class PolarProfile extends Model
 {
     protected $fillable = [
-        'user_id',
-        'polar_user_id',
+        'user_id', // Better not to be mass assignable.
+        'polar_user_id',  // Better not to be mass assignable.
         'access_token',
         'token_expires_at',
         'first_name',

@@ -8,4 +8,6 @@ export interface ChartDataSet {
     max: string| number | null;
   },
   reverse: boolean;
+  zones?: Zone[];
+  lineColor?: string;
 }
