@@ -21,7 +21,7 @@ class RunningPaceZoneSeeder extends Seeder
         RunningPaceZone::create([
             'zone_number' => 1,
             'name' => 'Recovery',
-            'min_seconds' => 390,
+            'min_seconds' => 450,
             'max_seconds' => 1200,
             'color' => null,
         ]);
@@ -30,7 +30,7 @@ class RunningPaceZoneSeeder extends Seeder
             'zone_number' => 2,
             'name' => 'Easy',
             'min_seconds' => 360,
-            'max_seconds' => 390,
+            'max_seconds' => 450,
             'color' => null,
         ]);
 
@@ -55,7 +55,7 @@ class RunningPaceZoneSeeder extends Seeder
             'name' => 'Repetition',
             'min_seconds' => null,
             'max_seconds' => 255,
-            'color' => null,
+            'color' => 210,
         ]);
     }
 }
