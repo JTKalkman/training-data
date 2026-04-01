@@ -162,6 +162,7 @@ class PolarJsonParser implements ParserInterface
             if ($speed > 0) {
                 $pace = round((60 / $speed) * 60);
                 if ($pace > 1200) $pace = 1200;
+                if ($pace < 210) $pace = 210;
             }
 
             return $pace;
