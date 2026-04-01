@@ -7,8 +7,10 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 /**
- * 
- */
+ * Pace zones based on the Jack Daniels running formula.
+ * Values are stored in seconds per km.
+ * Ranges are approximate for a recreational runner (5K around 25-28 min).
+*/
 class RunningPaceZoneSeeder extends Seeder
 {
     /**
