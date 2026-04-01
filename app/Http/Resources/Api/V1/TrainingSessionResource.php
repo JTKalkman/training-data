@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Api\V1;
 
+use App\Models\TrainingSession;
 use App\Support\Duration;
 use Carbon\Carbon;
 use Carbon\CarbonTimeZone;
@@ -27,6 +28,9 @@ class TrainingSessionResource extends JsonResource
             'utcOffset' => $this->utc_offset,
             'durationSeconds' => $this->duration_seconds,
             'durationIso' => Duration::toIso($this->duration_seconds),
+            'rating' => $this->rating,
+            'ratingLabel' => TrainingSession::RATING_MAP[$this->rating] ?? '',
+            'notes' => $this->notes,
             'device' => $this->whenLoaded('device', function () {
                 return DeviceResource::make($this->device);
             }),

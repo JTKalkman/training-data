@@ -35,6 +35,14 @@ class TrainingSession extends Model
         'started_at' => 'datetime',
     ];
 
+    public const RATING_MAP = [
+        1 => 'horrible',
+        2 => 'poor',
+        3 => 'ok',
+        4 => 'great',
+        5 => 'excellent',
+    ];
+
     public function sportType(): BelongsTo
     {
         return $this->belongsTo(SportType::class);

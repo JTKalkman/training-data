@@ -24,7 +24,7 @@ Route::middleware(['throttle:api'])->group(function () {
         Route::get('/training-sessions/{trainingSession} ', [TrainingSessionController::class, 'show']);
         Route::get('/training-sessions/{trainingSession}/sample-data', [TrainingSessionController::class, 'sampleData']);
         Route::get('/training-sessions/{trainingSession}/route-data', [TrainingSessionController::class, 'routeData']);
-        // Route::patch('/training-sessions/{id} ', []); // TODO: Update or add feedback or notes.
+        Route::patch('/training-sessions/{trainingSession}', [TrainingSessionController::class, 'update']);
 
         Route::get('/sport-types', [SportTypeController::class, 'index']);
 
