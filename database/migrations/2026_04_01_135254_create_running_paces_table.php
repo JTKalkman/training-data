@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->integer('zone_number');
             $table->string('name')->nullable();
-            $table->integer('min_seconds');
-            $table->integer('max_seconds');
+            $table->integer('min_seconds')->nullable();
+            $table->integer('max_seconds')->nullable();
             $table->string('color', 20)->nullable();
             $table->integer('in_zone_seconds')->nullable();
             $table->timestamps();
