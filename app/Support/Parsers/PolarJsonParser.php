@@ -11,6 +11,11 @@ use Carbon\Carbon;
 
 class PolarJsonParser implements ParserInterface
 {
+    protected function isRunning(array $data): bool
+    {
+        return SportTypeMapper::map($data['detailed_sport_info'] ?? '')?->name === 'running';
+    }
+
     public function createDeviceData($data): ParsedDeviceData
     {
         return new ParsedDeviceData([
@@ -167,16 +172,22 @@ class PolarJsonParser implements ParserInterface
 
     public function parse(iterable $data): ParsedSession
     {
+        $isRunning = $this::isRunning($data);
+
         $deviceData = $this->createDeviceData($data);
         $sessionData = $this->createSessionData($data);
         $summaryData = $this->createSummaryData($data);
         $heartRateZones = $this->createHeartRateZones($data);
         $sampleData = $this->createSampleData($data);
 
-        $isRunning = SportTypeMapper::map($data['detailed_sport_info'] ?? '')?->name === 'running';
-
         if ($isRunning && $sampleData->speed && is_string($sampleData->speed)) {
-            $sampleData->addPace($this->calculatePace($sampleData->speed));
+            $paceString = $this->calculatePace($sampleData->speed);
+            $sampleData->addPace($paceString);
+
+            $paces = array_map('intval', explode(',', $paceString));
+            $summaryData->minPace = min($paces);
+            $summaryData->maxPace = max($paces);
+            $summaryData->avgPace = round(array_sum($paces) / count($paces));
         }
 
         $routeData = $this->createRouteData($data);
