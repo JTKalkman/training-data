@@ -12,4 +12,5 @@ export interface ChartDataSet {
   },
   reverse: boolean;
   zones?: Zone[];
+  lineColor?: string;
 }

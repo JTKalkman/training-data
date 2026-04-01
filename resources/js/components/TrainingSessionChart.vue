@@ -11,7 +11,7 @@ import type { HoverPosition, Zone } from '@/types';
 import type { ChartDataPoint } from '@/types/chart-data-point';
 import { createZonesPlugin } from '@/composables/useHeartRateZonesPlugin';
 
-const props = defineProps<{
+const props = withDefaults(defineProps<{
   field: string;
   data: Array<ChartDataPoint>;
   chartHoverPosition: HoverPosition | null;
@@ -20,7 +20,13 @@ const props = defineProps<{
   yMin?: number | null;
   yMax?: number | null;
   zones?: Zone[];
-}>();
+  lineColor?: string;
+}>(), {
+    reverse: false,
+    zones: () => [],
+    lineColor: 'rgb(99, 102, 241)',   // indigo als default
+    // fillColor: 'rgba(99, 102, 241, 0.1)',
+});
 
 const emit = defineEmits(['hover'])
 const chartCanvas = ref<HTMLCanvasElement | null>(null);
@@ -133,12 +139,12 @@ const drawChart = () => {
       datasets: [{
         label: props.field,
         data: chartData,
-        borderColor: 'gray',
-        borderWidth: 1,
+        borderColor: props.lineColor,
+        borderWidth: 1.5,
         pointRadius: 0,
         pointHoverRadius: 0,
         fill: false,
-        tension: 0,
+        tension: 2,
       }],
     },
     options: {
