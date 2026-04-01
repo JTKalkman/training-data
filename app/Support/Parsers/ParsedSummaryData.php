@@ -10,6 +10,12 @@ class ParsedSummaryData
 
     public ?int $maxHeartRate;
 
+    public ?int $minPace;
+
+    public ?int $avgPace;
+
+    public ?int $maxPace;
+
     public ?int $distance;
 
     public ?int $calories;
@@ -23,6 +29,9 @@ class ParsedSummaryData
         $this->minHeartRate = $data['min_heart_rate'];
         $this->avgHeartRate = $data['avg_heart_rate'];
         $this->maxHeartRate = $data['max_heart_rate'];
+        $this->minPace = $data['min_pace'] ?? null;
+        $this->avgPace = $data['avg_pace'] ?? null;
+        $this->maxPace = $data['max_pace'] ?? null;
         $this->distance = $data['distance'];
         $this->calories = $data['calories'];
         $this->hasRoute = $data['has_route'];
