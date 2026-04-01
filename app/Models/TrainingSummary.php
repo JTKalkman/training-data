@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class TrainingSummary extends Model
 {
     protected $fillable = [
-        'training_session_id',
+        'training_session_id', // Better not to be mass assignable.
         'min_heart_rate',
         'avg_heart_rate',
         'max_heart_rate',

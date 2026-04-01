@@ -13,10 +13,10 @@ class Device extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id',
-        'data_source_id',
+        'user_id', // Better not to be mass assignable.
+        'data_source_id', // Better not to be mass assignable.
         'name',
-        'external_id',
+        'external_id', // Better not to be mass assignable.
     ];
 
     public function user(): BelongsTo
