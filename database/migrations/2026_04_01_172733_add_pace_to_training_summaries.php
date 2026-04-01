@@ -24,7 +24,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('training_summaries', function (Blueprint $table) {
-            //
+                    $table->dropColumn(['min_pace_seconds', 'avg_pace_seconds', 'max_pace_seconds']);
         });
     }
 };
