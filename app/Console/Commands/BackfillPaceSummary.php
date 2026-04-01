@@ -22,11 +22,11 @@ class BackfillPaceSummary extends Command
             ->whereHas('trainingSummary')
             ->whereHas('sportType', fn ($q) => $q->where('name', 'running'))
             ->lazy(200)
-            ->each(function (TrainingSession $trainingSessions) use ($progressBar) {
-                $path = $trainingSessions->sampleDataPath();
+            ->each(function (TrainingSession $trainingSession) use ($progressBar) {
+                $path = $trainingSession->sampleDataPath();
 
                 if (! Storage::exists($path)) {
-                    $this->warn("No JSON file for session {$trainingSessions->id}, skipping.");
+                    $this->warn("No JSON file for session {$trainingSession->id}, skipping.");
                     return;
                 }
 
@@ -37,11 +37,11 @@ class BackfillPaceSummary extends Command
                     ->filter(fn ($pace) => $pace > 210 && $pace <= 1200); // Avoids unrealistic samples.
 
                 if ($paceValues->isEmpty()) {
-                    $this->warn("No valid pace data for session {$trainingSessions->id}, skipping.");
+                    $this->warn("No valid pace data for session {$trainingSession->id}, skipping.");
                     return;
                 }
 
-                $trainingSessions->trainingSummary->update([
+                $trainingSession->trainingSummary->update([
                     'min_pace_seconds' => $paceValues->min(),
                     'avg_pace_seconds' => (int) round($paceValues->average()),
                     'max_pace_seconds' => $paceValues->max(),
