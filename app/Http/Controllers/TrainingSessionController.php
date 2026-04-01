@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\RunningPaceZoneResource;
 use App\Http\Resources\TrainingSessionResource;
+use App\Models\RunningPaceZone;
 use App\Models\TrainingSession;
 use App\Support\ChartData;
 use App\Support\MapData;
@@ -15,9 +17,11 @@ class TrainingSessionController extends Controller
         $session->load(['sportType', 'trainingSummary', 'heartRateZones']);
         $previousSession = $session->previousSession();
         $nextSession = $session->nextSession();
+        $runningPaceZones = RunningPaceZone::orderBy('zone_number')->get();
 
         return Inertia::render('TrainingSession', [
             'trainingSession' => new TrainingSessionResource($session),
+            'runningPaceZones' => RunningPaceZoneResource::collection($runningPaceZones),
             'navigation' => [
                 'prev' => [
                     'id' => $previousSession?->id,
