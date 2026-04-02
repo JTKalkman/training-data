@@ -114,8 +114,15 @@ const chartData = computed<ChartData>(() => {
 
   if (datasets.pace.samples) {
     const values = datasets.pace.samples.map(s => s.y);
-    datasets.pace.metaData.max = formatPace(Math.floor(values.reduce((a, b) => Math.min(a, b), Infinity)));
-    datasets.pace.metaData.min = formatPace(Math.ceil(values.reduce((a, b) => Math.max(a, b), -Infinity)));
+
+    const paceSamplesMin = Math.floor(values.reduce((a, b) => Math.min(a, b), Infinity));
+    const paceSamplesMax = Math.ceil(values.reduce((a, b) => Math.max(a, b), -Infinity));
+
+    const paceZoneMin = props.runningPaceZones.reduce((a, b) => Math.min(a, b.minSeconds), Infinity);
+    const paceZoneMax = props.runningPaceZones.reduce((a, b) => Math.max(a, b.maxSeconds), -Infinity);
+
+    datasets.pace.metaData.max = Math.min(paceSamplesMin, paceZoneMin); // Reversed, max is slowest.
+    datasets.pace.metaData.min = Math.max(paceSamplesMax, paceZoneMax); // Reversed, min is fastest.
   }
 
   if (datasets.altitude.samples) {
