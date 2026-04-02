@@ -8,12 +8,13 @@ import TrainingSessionSummary from '@/components/TrainingSessionSummary.vue';
 import NavigationNext from '@/components/ui/navigation-menu/NavigationNext.vue';
 import NavigationPrevious from '@/components/ui/navigation-menu/NavigationPrevious.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
-import type { BreadcrumbItem, TrainingSession as TrainingSessionData, TrainingSessionNavigation } from '@/types';
+import type { BreadcrumbItem, runningPaceZone, TrainingSession as TrainingSessionData, TrainingSessionNavigation } from '@/types';
 
 const props = defineProps<{
   trainingSession: {
     data: TrainingSessionData;
   };
+  runningPaceZones: runningPaceZone[];
   navigation: TrainingSessionNavigation;
 }>()
 
