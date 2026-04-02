@@ -45,6 +45,7 @@ class TrainingSessionController extends Controller
 
         $trainingSession->load(['dataSource', 'device', 'trainingSummary', 'heartRateZones']);
         $data = new TrainingSessionResource($trainingSession);
+        // TODO: Include pace data.
 
         return $this->success(
             'Training session retrieved',
