@@ -95,8 +95,15 @@ const chartData = computed<ChartData>(() => {
 
   if (datasets.heart_rate.samples) {
     const values = datasets.heart_rate.samples.map(s => s.y);
-    datasets.heart_rate.metaData.min = values.reduce((a, b) => Math.min(a, b), Infinity);
-    datasets.heart_rate.metaData.max = values.reduce((a, b) => Math.max(a, b), -Infinity);
+
+    const heartRateSamplesMin = values.reduce((a, b) => Math.min(a, b), Infinity);
+    const heartRateSampleMax = values.reduce((a, b) => Math.max(a, b), -Infinity);
+
+    const heartRateZoneMin = props.heartRateZones.reduce((a, b) => Math.min(a, b.min_bpm), Infinity);
+    const heartRateZoneMax = props.heartRateZones.reduce((a, b) => Math.max(a, b.max_bpm), -Infinity);
+
+    datasets.heart_rate.metaData.min = Math.min(heartRateSamplesMin, heartRateZoneMin);
+    datasets.heart_rate.metaData.max = Math.max(heartRateSampleMax, heartRateZoneMax);
   }
 
   if (datasets.speed.samples) {
