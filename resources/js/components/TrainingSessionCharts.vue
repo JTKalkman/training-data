@@ -2,7 +2,7 @@
 import { computed, onMounted, onUnmounted, ref } from 'vue';
 import { usePace } from '@/composables/usePace';
 import { useSampleData } from '@/composables/useSampleData';
-import type { ChartData, ChartDataSet, HeartRateZone, HoverPosition } from '@/types';
+import type { ChartData, ChartDataSet, HeartRateZone, HoverPosition, RunningPaceZone } from '@/types';
 import type { SampleDataPoint } from '@/types/sample-data-point';
 import TrainingSessionChart from './TrainingSessionChart.vue';
 import Spinner from './ui/spinner/Spinner.vue';
@@ -10,6 +10,7 @@ import Spinner from './ui/spinner/Spinner.vue';
 const props = defineProps<{
   sessionId: string;
   heartRateZones: HeartRateZone[];
+  runningPaceZones: RunningPaceZone[];
   fields?: string[];
 }>();
 
@@ -183,6 +184,7 @@ onMounted(() => {
 
   fetch();
 })
+
 </script>
 
 <style>

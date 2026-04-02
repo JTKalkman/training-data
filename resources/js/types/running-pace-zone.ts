@@ -1,4 +1,4 @@
-export interface runningPaceZone {
+export interface RunningPaceZone {
   zoneNumber: number;
   name: string;
   minSeconds: number;

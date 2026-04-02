@@ -8,13 +8,15 @@ import TrainingSessionSummary from '@/components/TrainingSessionSummary.vue';
 import NavigationNext from '@/components/ui/navigation-menu/NavigationNext.vue';
 import NavigationPrevious from '@/components/ui/navigation-menu/NavigationPrevious.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
-import type { BreadcrumbItem, runningPaceZone, TrainingSession as TrainingSessionData, TrainingSessionNavigation } from '@/types';
+import type { BreadcrumbItem, RunningPaceZone, TrainingSession as TrainingSessionData, TrainingSessionNavigation } from '@/types';
 
 const props = defineProps<{
   trainingSession: {
     data: TrainingSessionData;
   };
-  runningPaceZones: runningPaceZone[];
+  runningPaceZones: {
+    data: RunningPaceZone[]
+  };
   navigation: TrainingSessionNavigation;
 }>()
 
@@ -88,8 +90,9 @@ const fields = [
       <TrainingSessionCharts 
         :sessionId="trainingSession.data.id" 
         :heartRateZones="trainingSession.data.heartRateZones"
+        :runningPaceZones="runningPaceZones.data"
         :fields="fields"
-      />
+        />
     </div>
   </AppLayout>
 
