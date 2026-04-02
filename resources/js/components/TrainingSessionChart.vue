@@ -16,6 +16,8 @@ const props = defineProps<{
   chartHoverPosition: HoverPosition | null;
   hoverSource: string | null;
   reverse: boolean;
+  min: number|null;
+  max: number|null;
 }>();
 
 const emit = defineEmits(['hover']);
@@ -79,7 +81,7 @@ const drawChart = () => {
 
   Chart.register(CategoryScale, LinearScale, LineController, PointElement, LineElement, Tooltip)
 
-  chartInstance = new Chart(chartCanvas.value!, {
+  const config = {
     type: 'line',
     data: {
       labels: labels,
@@ -151,7 +153,17 @@ const drawChart = () => {
       }
     },
     plugins: [crosshairPlugin]
-  })
+  }
+
+  if (props.min !== null) {
+    config.options.scales.y.min = props.min;
+  }
+
+  if (props.max !== null) {
+    config.options.scales.y.max = props.max;
+  }
+
+  chartInstance = new Chart(chartCanvas.value!, config)
 }
 
 onMounted(() => {

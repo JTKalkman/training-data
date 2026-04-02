@@ -294,6 +294,8 @@ onMounted(() => {
                 :chartHoverPosition="chartHoverPosition"
                 :hoverSource="hoverSource"
                 :reverse="chartData.datasets[field].reverse"
+                :min="chartData.datasets[field].metaData.min"
+                :max="chartData.datasets[field].metaData.max"
                 @hover="handleChartHover"
               />
             </div>
