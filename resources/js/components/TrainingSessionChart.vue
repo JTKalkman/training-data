@@ -154,12 +154,10 @@ const drawChart = () => {
     plugins: [crosshairPlugin]
   }
 
-  if (props.min !== null && config?.options?.scales?.y) {
-    config.options.scales.y.min = props.min;
-  }
-
-  if (props.max !== null && config?.options?.scales?.y) {
-    config.options.scales.y.max = props.max;
+  const yScale = config?.options?.scales?.y
+  if (yScale) {
+    if (props.min !== null) yScale.min = props.min
+    if (props.max !== null) yScale.max = props.max
   }
 
   chartInstance = new Chart(chartCanvas.value!, config)
