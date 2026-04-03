@@ -1,9 +1,8 @@
 <script setup lang="ts">
-import type { TooltipPositionerFunction, ChartType 
-} from 'chart.js';
 import { 
   Chart, CategoryScale, LinearScale, LineController, PointElement, 
-  LineElement, Tooltip 
+  LineElement, Tooltip, 
+  ChartConfiguration
 } from 'chart.js';
 import { onMounted, ref, watch } from 'vue';
 import { useIsMobile } from '@/composables/useIsMobile';
@@ -81,7 +80,7 @@ const drawChart = () => {
 
   Chart.register(CategoryScale, LinearScale, LineController, PointElement, LineElement, Tooltip)
 
-  const config = {
+  const config: ChartConfiguration<'line'> = {
     type: 'line',
     data: {
       labels: labels,
@@ -155,11 +154,11 @@ const drawChart = () => {
     plugins: [crosshairPlugin]
   }
 
-  if (props.min !== null) {
+  if (props.min !== null && config?.options?.scales?.y) {
     config.options.scales.y.min = props.min;
   }
 
-  if (props.max !== null) {
+  if (props.max !== null && config?.options?.scales?.y) {
     config.options.scales.y.max = props.max;
   }
 
