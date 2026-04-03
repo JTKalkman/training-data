@@ -1,9 +1,8 @@
 <script setup lang="ts">
-import type { TooltipPositionerFunction, ChartType 
-} from 'chart.js';
 import { 
   Chart, CategoryScale, LinearScale, LineController, PointElement, 
-  LineElement, Tooltip 
+  LineElement, Tooltip, 
+  ChartConfiguration
 } from 'chart.js';
 import { onMounted, ref, watch } from 'vue';
 import { useIsMobile } from '@/composables/useIsMobile';
@@ -16,6 +15,8 @@ const props = defineProps<{
   chartHoverPosition: HoverPosition | null;
   hoverSource: string | null;
   reverse: boolean;
+  min: number|null;
+  max: number|null;
 }>();
 
 const emit = defineEmits(['hover']);
@@ -79,7 +80,7 @@ const drawChart = () => {
 
   Chart.register(CategoryScale, LinearScale, LineController, PointElement, LineElement, Tooltip)
 
-  chartInstance = new Chart(chartCanvas.value!, {
+  const config: ChartConfiguration<'line'> = {
     type: 'line',
     data: {
       labels: labels,
@@ -151,7 +152,15 @@ const drawChart = () => {
       }
     },
     plugins: [crosshairPlugin]
-  })
+  }
+
+  const yScale = config?.options?.scales?.y
+  if (yScale) {
+    if (props.min !== null) yScale.min = props.min
+    if (props.max !== null) yScale.max = props.max
+  }
+
+  chartInstance = new Chart(chartCanvas.value!, config)
 }
 
 onMounted(() => {

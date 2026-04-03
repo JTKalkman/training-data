@@ -4,8 +4,10 @@ export interface ChartDataSet {
   label: string;
   samples: ChartDataPoint[];
   metaData: {
-    min: string| number | null;
-    max: string| number | null;
+    min: number | null;
+    max: number | null;
+    minStr: string | number | null;
+    maxStr: string | number | null;
   },
   reverse: boolean;
 }

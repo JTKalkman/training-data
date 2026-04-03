@@ -2,7 +2,7 @@
 import { computed, onMounted, onUnmounted, ref } from 'vue';
 import { usePace } from '@/composables/usePace';
 import { useSampleData } from '@/composables/useSampleData';
-import type { ChartData, ChartDataSet, HeartRateZone, HoverPosition } from '@/types';
+import type { ChartData, ChartDataSet, HeartRateZone, HoverPosition, RunningPaceZone } from '@/types';
 import type { SampleDataPoint } from '@/types/sample-data-point';
 import TrainingSessionChart from './TrainingSessionChart.vue';
 import Spinner from './ui/spinner/Spinner.vue';
@@ -10,6 +10,7 @@ import Spinner from './ui/spinner/Spinner.vue';
 const props = defineProps<{
   sessionId: string;
   heartRateZones: HeartRateZone[];
+  runningPaceZones: RunningPaceZone[];
   fields?: string[];
 }>();
 
@@ -35,6 +36,8 @@ const chartData = computed<ChartData>(() => {
       metaData: {
         min: null,
         max: null,
+        minStr: null,
+        maxStr: null
       },
       reverse: false,
     },
@@ -44,6 +47,8 @@ const chartData = computed<ChartData>(() => {
       metaData: {
         min: null,
         max: null,
+        minStr: null,
+        maxStr: null
       },
       reverse: false,
     },
@@ -53,6 +58,8 @@ const chartData = computed<ChartData>(() => {
       metaData: {
         min: null,
         max: null,
+        minStr: null,
+        maxStr: null
       },
       reverse: true,
     },
@@ -62,6 +69,8 @@ const chartData = computed<ChartData>(() => {
       metaData: {
         min: null,
         max: null,
+        minStr: null,
+        maxStr: null
       },
       reverse: false,
     },
@@ -71,6 +80,8 @@ const chartData = computed<ChartData>(() => {
       metaData: {
         min: null,
         max: null,
+        minStr: null,
+        maxStr: null
       },
       reverse: false,
     },
@@ -94,32 +105,49 @@ const chartData = computed<ChartData>(() => {
 
   if (datasets.heart_rate.samples) {
     const values = datasets.heart_rate.samples.map(s => s.y);
-    datasets.heart_rate.metaData.min = values.reduce((a, b) => Math.min(a, b), Infinity);
-    datasets.heart_rate.metaData.max = values.reduce((a, b) => Math.max(a, b), -Infinity);
+
+    const heartRateSamplesMin = values.reduce((a, b) => Math.min(a, b), Infinity);
+    const heartRateSampleMax = values.reduce((a, b) => Math.max(a, b), -Infinity);
+
+    const heartRateZoneMin = props.heartRateZones.reduce((a, b) => Math.min(a, b.min_bpm), Infinity);
+    const heartRateZoneMax = props.heartRateZones.reduce((a, b) => Math.max(a, b.max_bpm), -Infinity);
+
+    datasets.heart_rate.metaData.min = datasets.heart_rate.metaData.minStr = Math.min(heartRateSamplesMin, heartRateZoneMin);
+    datasets.heart_rate.metaData.max = datasets.heart_rate.metaData.maxStr = Math.max(heartRateSampleMax, heartRateZoneMax);
   }
 
   if (datasets.speed.samples) {
     const values = datasets.speed.samples.map(s => s.y);
-    datasets.speed.metaData.min = Math.floor(values.reduce((a, b) => Math.min(a, b), Infinity));
-    datasets.speed.metaData.max = Math.ceil(values.reduce((a, b) => Math.max(a, b), -Infinity));
+    datasets.speed.metaData.min = datasets.speed.metaData.minStr = Math.floor(values.reduce((a, b) => Math.min(a, b), Infinity));
+    datasets.speed.metaData.max = datasets.speed.metaData.maxStr = Math.ceil(values.reduce((a, b) => Math.max(a, b), -Infinity));
   }
 
   if (datasets.pace.samples) {
     const values = datasets.pace.samples.map(s => s.y);
-    datasets.pace.metaData.max = formatPace(Math.floor(values.reduce((a, b) => Math.min(a, b), Infinity)));
-    datasets.pace.metaData.min = formatPace(Math.ceil(values.reduce((a, b) => Math.max(a, b), -Infinity)));
+
+    const paceSamplesMin = Math.floor(values.reduce((a, b) => Math.min(a, b), Infinity));
+    const paceSamplesMax = Math.ceil(values.reduce((a, b) => Math.max(a, b), -Infinity));
+
+    const paceZoneMin = props.runningPaceZones.reduce((a, b) => Math.min(a, b.minSeconds), Infinity);
+    const paceZoneMax = props.runningPaceZones.reduce((a, b) => Math.max(a, b.maxSeconds), -Infinity);
+
+    datasets.pace.metaData.max = Math.min(paceSamplesMin, paceZoneMin); // Reversed, max is slowest.
+    datasets.pace.metaData.min = Math.max(paceSamplesMax, paceZoneMax); // Reversed, min is fastest.
+
+    datasets.pace.metaData.minStr = formatPace(datasets.pace.metaData.min);
+    datasets.pace.metaData.maxStr = formatPace(datasets.pace.metaData.max);
   }
 
   if (datasets.altitude.samples) {
     const values = datasets.altitude.samples.map(s => s.y);
-    datasets.altitude.metaData.min = Math.floor(values.reduce((a, b) => Math.min(a, b), Infinity));
-    datasets.altitude.metaData.max = Math.ceil(values.reduce((a, b) => Math.max(a, b), -Infinity));
+    datasets.altitude.metaData.min = datasets.altitude.metaData.minStr = Math.floor(values.reduce((a, b) => Math.min(a, b), Infinity));
+    datasets.altitude.metaData.max = datasets.altitude.metaData.maxStr = Math.ceil(values.reduce((a, b) => Math.max(a, b), -Infinity));
   }
 
   if (datasets.cadence.samples) {
     const values = datasets.cadence.samples.map(s => s.y);
-    datasets.cadence.metaData.min = Math.floor(values.reduce((a, b) => Math.min(a, b), Infinity));
-    datasets.cadence.metaData.max = Math.ceil(values.reduce((a, b) => Math.max(a, b), -Infinity));
+    datasets.cadence.metaData.min = datasets.cadence.metaData.minStr = Math.floor(values.reduce((a, b) => Math.min(a, b), Infinity));
+    datasets.cadence.metaData.max = datasets.cadence.metaData.maxStr = Math.ceil(values.reduce((a, b) => Math.max(a, b), -Infinity));
   }
 
   return { xAxis, datasets };
@@ -183,6 +211,7 @@ onMounted(() => {
 
   fetch();
 })
+
 </script>
 
 <style>
@@ -254,8 +283,8 @@ onMounted(() => {
 
           <div class="flex">
             <div class="hidden lg:flex w-16 lg:shrink-0 flex-col justify-between text-sm text-gray-500 dark:text-gray-300">
-              <p class="text-nowrap">{{ chartData.datasets[field].metaData.max }}</p>
-              <p class="text-nowrap">{{ chartData.datasets[field].metaData.min }}</p>
+              <p class="text-nowrap">{{ chartData.datasets[field].metaData.maxStr }}</p>
+              <p class="text-nowrap">{{ chartData.datasets[field].metaData.minStr }}</p>
             </div>
       
             <div class="grow flex flex-col border-b-2 border-l-2">
@@ -265,6 +294,8 @@ onMounted(() => {
                 :chartHoverPosition="chartHoverPosition"
                 :hoverSource="hoverSource"
                 :reverse="chartData.datasets[field].reverse"
+                :min="chartData.datasets[field].metaData.min"
+                :max="chartData.datasets[field].metaData.max"
                 @hover="handleChartHover"
               />
             </div>
