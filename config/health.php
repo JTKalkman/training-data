@@ -69,8 +69,8 @@ return [
     |
     */
     'checks' => [
-        [DiskSpaceCheck::class, ['path' => '/', 'warningThreshold' => 75, 'errorThreshold' => 90]],
-        [DiskSpaceInodeCheck::class, ['path' => '/', 'warningThreshold' => 75, 'errorThreshold' => 90]],
+        [DiskSpaceCheck::class, ['path' => '/', 'name' => 'Disk space root', 'warningThreshold' => 75, 'errorThreshold' => 90]],
+        [DiskSpaceInodeCheck::class, ['path' => '/', 'name' => 'Disk space inodes root', 'warningThreshold' => 75, 'errorThreshold' => 90]],
         [MemoryCheck::class, ['warningThreshold' => 75, 'errorThreshold' => 90]],
         [CpuLoadCheck::class, ['minutes' => 1,  'warningThreshold' => 70, 'errorThreshold' => 90]],
         [CpuLoadCheck::class, ['minutes' => 5,  'warningThreshold' => 60, 'errorThreshold' => 80]],
