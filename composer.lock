@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0a252931c92bee19128bca83cd3fe8be",
+    "content-hash": "6747d990fca0911aa5990a4fe82f4262",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -1226,6 +1226,65 @@
                 "source": "https://github.com/inertiajs/inertia-laravel/tree/v2.0.20"
             },
             "time": "2026-02-13T11:53:06+00:00"
+        },
+        {
+            "name": "jtkalkman/laravel-health",
+            "version": "v1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/JTKalkman/laravel-health.git",
+                "reference": "5bfcfff47b345c740463405dec3f262d71cb45a5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/JTKalkman/laravel-health/zipball/5bfcfff47b345c740463405dec3f262d71cb45a5",
+                "reference": "5bfcfff47b345c740463405dec3f262d71cb45a5",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/support": "^12.0|^13.0",
+                "php": "^8.3"
+            },
+            "require-dev": {
+                "orchestra/testbench": "^9.0|^10.0",
+                "phpunit/phpunit": "^12.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "JTKalkman\\LaravelHealth\\HealthServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "JTKalkman\\LaravelHealth\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "J.T. Kalkman",
+                    "email": "mail@jtkalkman.nl"
+                }
+            ],
+            "description": "Configurable Laravel health check endpoint with Semonto-compatible JSON output",
+            "homepage": "https://github.com/JTKalkman/laravel-health",
+            "keywords": [
+                "health",
+                "laravel",
+                "monitoring",
+                "semonto"
+            ],
+            "support": {
+                "issues": "https://github.com/JTKalkman/laravel-health/issues",
+                "source": "https://github.com/JTKalkman/laravel-health/tree/v1.0.0"
+            },
+            "time": "2026-06-06T20:30:04+00:00"
         },
         {
             "name": "laravel/fortify",
@@ -10271,12 +10330,12 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {},
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
         "php": "^8.2"
     },
-    "platform-dev": [],
+    "platform-dev": {},
     "plugin-api-version": "2.6.0"
 }
