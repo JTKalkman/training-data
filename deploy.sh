@@ -12,6 +12,14 @@ composer install --optimize-autoloader
 npm install
 npm run build
 
+# If a composer package update doesn't seem to take effect, run:
+# composer clear-cache
+# then re-run this deploy script.
+# composer install --no-dev --optimize-autoloader
+# php artisan config:cache
+# php artisan route:cache
+# php artisan health:clear
+
 # Laravel
 php artisan migrate --force
 php artisan config:cache
