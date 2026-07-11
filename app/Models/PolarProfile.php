@@ -16,6 +16,10 @@ class PolarProfile extends Model
         'last_name',
         'linked_at',
         'unlinked_at',
+        'last_synced_at',
+        'last_sync_attempted_at',
+        'last_sync_error',
+        'consecutive_sync_failures',
     ];
 
     protected $casts = [
