@@ -3,16 +3,22 @@ set -e
 
 cd /var/www/trainingsdata
 
-# Pull latest code
 sudo chown -R $USER:$USER /var/www/trainingsdata
-git pull
+
+# Make sure we are on the main branch and pull the latest changes
+git checkout main
+git pull origin main
+
+# Maintenance mode
+php artisan down --secret="$(openssl rand -hex 8)" || true
 
 # Install dependencies
-composer install --optimize-autoloader
-npm install
+composer install --no-dev --optimize-autoloader
+npm ci
 npm run build
 
 # Laravel
+php artisan config:clear
 php artisan migrate --force
 php artisan config:cache
 php artisan route:cache
@@ -22,3 +28,10 @@ php artisan view:cache
 sudo chown -R www-data:www-data /var/www/trainingsdata
 sudo chmod -R 775 /var/www/trainingsdata/storage
 sudo chmod -R 775 /var/www/trainingsdata/bootstrap/cache
+
+# Bring workers/php-fpm up to date with new code
+sudo systemctl reload php8.3-fpm.service
+php artisan queue:restart
+
+# Back up
+php artisan up

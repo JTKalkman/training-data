@@ -1,22 +1,24 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
-    "name": "laravel/vue-starter-kit",
+    "name": "jtkalkman/training-data",
     "type": "project",
-    "description": "The skeleton application for the Laravel framework.",
+    "description": "Personal training data platform integrating Polar and Garmin training data.",
     "keywords": [
         "laravel",
-        "framework"
+        "training",
+        "data",
+        "polar"
     ],
     "license": "MIT",
     "require": {
-        "php": "^8.2",
+        "php": "^8.3",
         "inertiajs/inertia-laravel": "^2.0",
         "jtkalkman/laravel-health": "^1.0",
         "laravel/fortify": "^1.30",
-        "laravel/framework": "^12.0",
+        "laravel/framework": "^13.0",
         "laravel/sanctum": "^4.0",
         "laravel/telescope": "^5.0",
-        "laravel/tinker": "^2.10.1",
+        "laravel/tinker": "^3.0",
         "laravel/wayfinder": "^0.1.9",
         "league/csv": "^9.28",
         "tightenco/ziggy": "^2.6"
