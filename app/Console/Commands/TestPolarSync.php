@@ -3,7 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\User;
-use App\Support\PolarExerciseSync;
+use App\Support\Sync\PolarProfileSync;
 use Illuminate\Console\Command;
 
 class TestPolarSync extends Command
@@ -25,7 +25,7 @@ class TestPolarSync extends Command
     /**
      * Execute the console command.
      */
-    public function handle(PolarExerciseSync $sync)
+    public function handle(PolarProfileSync $sync)
     {
         $user = User::find($this->argument('userId'));
         $sync->run($user);
