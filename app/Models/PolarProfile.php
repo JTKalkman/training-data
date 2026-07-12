@@ -26,6 +26,8 @@ class PolarProfile extends Model
         'linked_at' => 'datetime',
         'unlinked_at' => 'datetime',
         'token_expires_at' => 'datetime',
+        'last_synced_at' => 'datetime',
+        'last_sync_attempted_at' => 'datetime',
     ];
 
     public function user(): BelongsTo
