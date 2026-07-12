@@ -47,13 +47,23 @@ const breadcrumbs: BreadcrumbItem[] = [
           v-for="profile in polarProfiles.data" 
           :key="profile.id"
         >
-          <div class="flex justify-between space-x-2 items-end">
+          <div class="flex flex-col space-y-1 md:flex-row md:justify-between md:space-x-2 md:items-end">
             <div>
               <p class="text-sm font-medium mb-1">Account name:</p>
               <p class="break-all font-medium">{{ profile.first_name }} {{ profile.last_name }}</p>
             </div>
-            <p class="text-sm" v-if="profile.unlinked_at">Unlinked at {{ profile.unlinked_at }}</p>
-            <p class="text-sm" v-else-if="profile.linked_at">Linked at {{ profile.linked_at }}</p>
+            <div class="flex flex-col space-y-1 md:flex-row md:items-end md:space-x-2 md:space-y-0">
+              <p 
+                class="text-sm" v-if="profile.unlinked_at === null"
+              >
+                <span v-if="profile.sync_status === 'pending'" class="text-gray-500">Sync pending</span>
+                <span v-else-if="profile.sync_status === 'ok'" class="text-green-500">Last synced: {{ profile.last_synced_at ?? 'Not yet synced' }}</span>
+                <span v-else-if="profile.sync_status === 'warning'" class="text-yellow-500">Sync failed</span>
+                <span v-else-if="profile.sync_status === 'error'" class="text-red-500">Sync failed</span>
+              </p>
+              <p class="text-sm" v-if="profile.unlinked_at">Removed: {{ profile.unlinked_at }}</p>
+              <p class="text-sm" v-else-if="profile.linked_at">Added: {{ profile.linked_at }}</p>
+            </div>
           </div>
         </li>
       </ul>

@@ -1,5 +1,7 @@
 <?php
 
+use App\Support\HealthChecks\PolarSyncCheck;
+
 use JTKalkman\LaravelHealth\HealthChecks\CpuLoadCheck;
 use JTKalkman\LaravelHealth\HealthChecks\DatabaseConnectionCheck;
 use JTKalkman\LaravelHealth\HealthChecks\DatabaseConnectionCountCheck;
@@ -77,6 +79,7 @@ return [
         [CpuLoadCheck::class, ['minutes' => 15, 'warningThreshold' => 50, 'errorThreshold' => 70]],
         [DatabaseConnectionCheck::class, ['connection' => 'mariadb']],
         [DatabaseConnectionCountCheck::class, ['connection' => 'mariadb', 'warningThreshold' => 75, 'errorThreshold' => 90]],
+        PolarSyncCheck::class,
     ],
 
 ];

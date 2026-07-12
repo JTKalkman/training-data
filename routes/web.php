@@ -6,7 +6,6 @@ use App\Http\Controllers\TrainingSessionController;
 use App\Http\Controllers\WeekOverviewController;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 
 Route::get('/', function () {
     return redirect()->route('training-sessions');

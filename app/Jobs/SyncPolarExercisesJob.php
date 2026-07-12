@@ -3,7 +3,7 @@
 namespace App\Jobs;
 
 use App\Models\PolarProfile;
-use App\Support\PolarExerciseSync;
+use App\Support\Sync\PolarProfileSync;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Queue\InteractsWithQueue;
@@ -25,6 +25,6 @@ class SyncPolarExercisesJob implements ShouldQueue
      */
     public function handle(): void
     {
-        PolarExerciseSync::run($this->polarProfile->user);
+        (new PolarProfileSync)->run($this->polarProfile->user);
     }
 }
