@@ -16,10 +16,11 @@ class PolarProfileResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'linkedAt' => $this->linked_at?->toDateString(),
+            'linkedAt' => $this->linked_at?->toIso8601String(),
             'firstName' => $this->first_name,
             'lastName' => $this->last_name,
-            'unlinkedAt' => $this->unlinked_at?->toDateString(),
+            'unlinkedAt' => $this->unlinked_at?->toIso8601String(),
+            'lastSyncedAt' => $this->last_synced_at?->toIso8601String(),
         ];
     }
 }

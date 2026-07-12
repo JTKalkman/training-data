@@ -44,7 +44,5 @@ class TrainingSessionResource extends JsonResource
                 return HeartRateZoneResource::collection($this->heartRateZones);
             }),
         ];
-
-        return parent::toArray($request);
     }
 }
