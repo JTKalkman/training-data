@@ -37,6 +37,10 @@ class PolarProfile extends Model
 
     public function getSyncStatusAttribute(): string
     {
+        if ($this->unlinked_at !== null) {
+            return 'removed';
+        }
+
         if ($this->consecutive_sync_failures >= 3) {
             return 'error';
         }
