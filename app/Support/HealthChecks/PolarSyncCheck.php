@@ -37,7 +37,7 @@ class PolarSyncCheck extends HealthCheck
                 name: $this->name,
                 status: HealthCheckStatus::ERROR,
                 value: $erroredCount,
-                description: "{$erroredCount} Polar profiles with sync problems.",
+                description: "{$erroredCount} Polar profile" . ($erroredCount === 1 ? '' : 's') . " with sync problems.",
             );
         }
 
@@ -54,7 +54,7 @@ class PolarSyncCheck extends HealthCheck
                 name: $this->name,
                 status: HealthCheckStatus::WARNING,
                 value: $warnedCount,
-                description: "{$warnedCount} Polar profiles with sync problems.",
+                description: "{$warnedCount} Polar profile" . ($warnedCount === 1 ? '' : 's') . " with sync problems.",
             );
         }
     
