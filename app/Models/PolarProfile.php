@@ -34,4 +34,23 @@ class PolarProfile extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function getSyncStatusAttribute(): string
+    {
+        if ($this->consecutive_sync_failures >= 3) {
+            return 'error';
+        }
+
+        if ($this->consecutive_sync_failures >= 1) {
+            return 'warning';
+        }
+
+        if ($this->last_synced_at === null) {
+            return $this->last_sync_attempted_at === null
+                ? 'pending'   // never even attempted yet
+                : 'pending';  // attempted, in progress / awaiting first success — same UI treatment for now
+        }
+
+        return 'ok';
+    }
 }
