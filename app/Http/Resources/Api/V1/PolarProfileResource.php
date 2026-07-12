@@ -21,6 +21,7 @@ class PolarProfileResource extends JsonResource
             'lastName' => $this->last_name,
             'unlinkedAt' => $this->unlinked_at?->toIso8601String(),
             'lastSyncedAt' => $this->last_synced_at?->toIso8601String(),
+            'syncStatus' => $this->sync_status, // 'ok' | 'warning' | 'error' | 'pending'
         ];
     }
 }
