@@ -7,11 +7,13 @@ use App\Models\PolarProfile;
 use App\Models\TrainingSession;
 use App\Models\User;
 use App\Support\Importers\TrainingSessionImporter;
+
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Log;
 
 abstract class ProfileSync
 {
-    abstract protected function profileQuery(User $user);
+    abstract protected function profileQuery(User $user): Builder;
 
     abstract protected function fetchExercises(PolarProfile $profile): array;
 

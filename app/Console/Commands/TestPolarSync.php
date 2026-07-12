@@ -25,7 +25,7 @@ class TestPolarSync extends Command
     /**
      * Execute the console command.
      */
-    public function handle(PolarProfileSync $sync)
+    public function handle(PolarProfileSync $sync): void
     {
         $user = User::find($this->argument('userId'));
         $sync->run($user);

@@ -7,9 +7,11 @@ use App\Models\User;
 use App\Support\API\Polar\Resources\PolarExerciseResource;
 use App\Support\Parsers\PolarJsonParser;
 
+use Illuminate\Database\Eloquent\Builder;
+
 final class PolarProfileSync extends ProfileSync
 {
-    protected function profileQuery(User $user)
+    protected function profileQuery(User $user): Builder
     {
         return PolarProfile::where('user_id', $user->id);
     }
