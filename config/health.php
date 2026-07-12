@@ -72,13 +72,13 @@ return [
     'checks' => [
         [DiskSpaceCheck::class, ['path' => '/', 'name' => 'Disk space root', 'warningThreshold' => 75, 'errorThreshold' => 90]],
         [DiskSpaceInodeCheck::class, ['path' => '/', 'name' => 'Disk space inodes root', 'warningThreshold' => 75, 'errorThreshold' => 90]],
-        [MemoryCheck::class, ['warningThreshold' => 75, 'errorThreshold' => 90]],
+        MemoryCheck::class,
         [CpuLoadCheck::class, ['minutes' => 1,  'warningThreshold' => 70, 'errorThreshold' => 90]],
         [CpuLoadCheck::class, ['minutes' => 5,  'warningThreshold' => 60, 'errorThreshold' => 80]],
         [CpuLoadCheck::class, ['minutes' => 15, 'warningThreshold' => 50, 'errorThreshold' => 70]],
         [DatabaseConnectionCheck::class, ['connection' => 'mariadb']],
         [DatabaseConnectionCountCheck::class, ['connection' => 'mariadb', 'warningThreshold' => 75, 'errorThreshold' => 90]],
-        [PolarSyncCheck::class, []],
+        PolarSyncCheck::class,
     ],
 
 ];
