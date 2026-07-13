@@ -70,14 +70,14 @@ abstract class ProfileSync
             $profile->update([
                 'last_synced_at' => now(),
                 'last_sync_attempted_at' => now(),
-                'last_synced_error' => null,
-                'consecutive_sync_errors' => 0,
+                'last_sync_error' => null,
+                'consecutive_sync_failures' => 0,
             ]);
         } catch (\Throwable $th) {
             $profile->update([
                 'last_sync_attempted_at' => now(),
-                'last_synced_error' => $th->getMessage(),
-                'consecutive_sync_errors' => $profile->consecutive_sync_errors + 1,
+                'last_sync_error' => $th->getMessage(),
+                'consecutive_sync_failures' => $profile->consecutive_sync_failures + 1,
             ]);
                 
             $result['errors'][] = [
