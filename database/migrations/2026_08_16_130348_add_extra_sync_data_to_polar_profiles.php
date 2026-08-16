@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -15,6 +16,12 @@ return new class extends Migration
             $table->timestamp('next_sync_at')->nullable()->index();
             $table->timestamp('locked_at')->nullable();
         });
+
+        // Existing profiles: make them immediately eligible for the new scheduler,
+        // but skip anyone already unlinked, they should stay excluded.
+        DB::table('polar_profiles')
+            ->whereNull('unlinked_at')
+            ->update(['next_sync_at' => now()]);
     }
 
     /**
