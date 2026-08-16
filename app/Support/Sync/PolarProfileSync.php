@@ -3,6 +3,7 @@
 namespace App\Support\Sync;
 
 use App\Models\PolarProfile;
+use App\Models\SyncProfile;
 use App\Models\User;
 use App\Support\API\Polar\Resources\PolarExerciseResource;
 use App\Support\Parsers\PolarJsonParser;
@@ -16,7 +17,7 @@ final class PolarProfileSync extends ProfileSync
         return PolarProfile::where('user_id', $user->id);
     }
 
-    protected function fetchExercises(PolarProfile $profile): array
+    protected function fetchExercises(SyncProfile $profile): array
     {
         return PolarExerciseResource::list(decrypt($profile->access_token));
     }

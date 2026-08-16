@@ -29,6 +29,13 @@ sudo chown -R www-data:www-data /var/www/trainingsdata
 sudo chmod -R 775 /var/www/trainingsdata/storage
 sudo chmod -R 775 /var/www/trainingsdata/bootstrap/cache
 
+# Makes sure that cron job exists
+CRON_LINE="* * * * * cd $(pwd) && php artisan schedule:run >> /dev/null 2>&1"
+if ! crontab -l 2>/dev/null | grep -qF "artisan schedule:run"; then
+    (crontab -l 2>/dev/null; echo "$CRON_LINE") | crontab -
+    echo "Installed scheduler cron entry."
+fi
+
 # Bring workers/php-fpm up to date with new code
 sudo systemctl reload php8.3-fpm.service
 php artisan queue:restart

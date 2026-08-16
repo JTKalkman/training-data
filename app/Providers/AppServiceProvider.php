@@ -2,12 +2,15 @@
 
 namespace App\Providers;
 
+use App\Listeners\RefreshSyncOnLogin;
 use Carbon\CarbonImmutable;
+use Illuminate\Auth\Events\Login;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
@@ -64,6 +67,8 @@ class AppServiceProvider extends ServiceProvider
                     return response()->json(['message' => 'Too many requests'], 429);
                 });
         });
+
+        Event::listen(Login::class, RefreshSyncOnLogin::class);
     }
 
     /**

@@ -1,11 +1,8 @@
 <?php
 
-use App\Jobs\SyncPolarExercisesJob;
-use App\Models\PolarProfile;
+use App\Console\Commands\SyncPolarProfiles;
 use Illuminate\Support\Facades\Schedule;
 
-Schedule::call(function () {
-    PolarProfile::all()->each(fn($profile) => 
-        dispatch(new SyncPolarExercisesJob($profile))
-    );
-})->daily();
+Schedule::command(SyncPolarProfiles::class)
+    ->everyMinute()
+    ->withoutOverlapping();

@@ -2,4 +2,6 @@
 
 namespace App\Support\API\Polar;
 
-class PolarApiException extends \RuntimeException {}
+use App\Support\API\Exceptions\ApiException;
+
+class PolarApiException extends ApiException {}
