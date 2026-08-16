@@ -20,11 +20,15 @@ class PolarClient implements ApiClientInterface
         return array_map(fn ($value) => is_bool($value) ? ($value ? 'true' : 'false') : $value, $params);
     }
 
-    protected static function throwException($response): void
+    protected static function throwException(Response $response): void
     {
-        throw new PolarApiException(
-            'Polar API request failed: '.$response->status().' '.$response->body()
-        );
+        $message = 'Polar API request failed: '.$response->status().' '.$response->body();
+
+        if ($response->status() === 401) {
+            throw new PolarApiAuthException($message);
+        }
+
+        throw new PolarApiException($message);
     }
 
     public static function get(string $path, array $params = [], array $headers = []): Response

@@ -3,9 +3,10 @@
 namespace App\Support\Sync;
 
 use App\Models\DataSource;
-use App\Models\PolarProfile;
+use App\Models\SyncProfile;
 use App\Models\TrainingSession;
 use App\Models\User;
+use App\Support\API\Exceptions\ApiAuthException;
 use App\Support\Importers\TrainingSessionImporter;
 
 use Illuminate\Database\Eloquent\Builder;
@@ -15,13 +16,18 @@ abstract class ProfileSync
 {
     abstract protected function profileQuery(User $user): Builder;
 
-    abstract protected function fetchExercises(PolarProfile $profile): array;
+    abstract protected function fetchExercises(SyncProfile $profile): array;
 
     abstract protected function parser(): object;
 
     abstract protected function dataSourceName(): string;
 
     abstract protected function providerLabel(): string;
+
+    protected function syncIntervalMinutes(): int
+    {
+        return 60;
+    }
 
     public function run(User $user): array
     {
@@ -30,20 +36,40 @@ abstract class ProfileSync
             'success' => false
         ];
 
-        $profiles = $this->profileQuery($user)->get();
-
-        foreach ($profiles as $profile) {
-            $this->syncProfile($profile, $user, $result);
+        foreach ($this->profileQuery($user)->get() as $profile) {
+            $this->syncProfile($profile, $result);
         }
 
         $result['success'] = count($result['errors']) === 0;
-        // Map the errors to include only the message and trace
 
         return $result;
     }
 
-    protected function syncProfile(PolarProfile $profile, User $user, array &$result): void
+    public function runProfile(SyncProfile $profile): array {
+        $result = [
+            'errors' => [],
+            'success' => false
+        ];
+
+        $this->syncProfile($profile, $result);
+
+        return $result;
+    }
+
+    protected function syncProfile(SyncProfile $profile, array &$result): void
     {
+        $locked = $profile::where('id', $profile->id)
+            ->where(function ($q) {
+                $q->whereNull('locked_at')->orWhere('locked_at', '<', now()->subMinutes(10));
+            })
+            ->update(['locked_at' => now()]);
+
+        if (! $locked) {
+            return; // already being synced elsewhere
+        }
+
+        $profile = $profile->fresh();
+
         try {
             $exercises = $this->fetchExercises($profile);
 
@@ -56,15 +82,13 @@ abstract class ProfileSync
 
                 $exists = TrainingSession::where([
                     'external_id' => $exerciseId,
-                    'user_id' => $user->id,
+                    'user_id' => $profile->user->id,
                     'data_source_id' => $dataSource->id,
                 ])->exists();
 
-                if ($exists) {
-                    continue;
+                if (! $exists) {
+                    $importer->import($profile->user, $dataSource, $parser->parse($exercise));
                 }
-
-                $importer->import($user, $dataSource, $parser->parse($exercise));
             }
 
             $profile->update([
@@ -72,12 +96,32 @@ abstract class ProfileSync
                 'last_sync_attempted_at' => now(),
                 'last_sync_error' => null,
                 'consecutive_sync_failures' => 0,
+                'next_sync_at' => now()->addMinutes($this->syncIntervalMinutes()),
+                'locked_at' => null,
             ]);
+        } catch (ApiAuthException $e) {
+            $profile->update([
+                'last_sync_attempted_at' => now(),
+                'last_sync_error' => $e->getMessage(),
+                'consecutive_sync_failures' => $profile->consecutive_sync_failures + 1,
+                'next_sync_at' => null, // needs relink, stop polling
+                'locked_at' => null,
+            ]);
+
+            $result['errors'][] = [
+                'profile_id' => $profile->id,
+                'message' => $e->getMessage()
+            ];
         } catch (\Throwable $th) {
+            $failures = $profile->consecutive_sync_failures + 1;
+            $backoff = min(60 * 24, 5 * (2 ** $failures)); // minutes, capped at 24h
+
             $profile->update([
                 'last_sync_attempted_at' => now(),
                 'last_sync_error' => $th->getMessage(),
-                'consecutive_sync_failures' => $profile->consecutive_sync_failures + 1,
+                'consecutive_sync_failures' => $failures,
+                'next_sync_at' => now()->addMinutes($backoff),
+                'locked_at' => null,
             ]);
                 
             $result['errors'][] = [
@@ -87,7 +131,7 @@ abstract class ProfileSync
             ];
 
             Log::error("{$this->providerLabel()}Sync failed", [
-                'user_id' => $user->id,
+                'user_id' => $profile->user->id,
                 'errors' => $th->getMessage(),
                 'exception' => $th,
             ]);
