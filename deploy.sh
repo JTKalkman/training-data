@@ -1,9 +1,11 @@
 #!/bin/bash
 set -e
 
-cd /var/www/trainingsdata
+APP_DIR="/var/www/trainingsdata"
 
-sudo chown -R $USER:$USER /var/www/trainingsdata
+cd "$APP_DIR"
+
+sudo chown -R $USER:$USER "$APP_DIR"
 
 # Make sure we are on the main branch and pull the latest changes
 git checkout main
@@ -25,14 +27,13 @@ php artisan route:cache
 php artisan view:cache
 
 # Fix permissions
-sudo chown -R www-data:www-data /var/www/trainingsdata
-sudo chmod -R 775 /var/www/trainingsdata/storage
-sudo chmod -R 775 /var/www/trainingsdata/bootstrap/cache
-
+sudo chown -R www-data:www-data "$APP_DIR"
+sudo chmod -R 775 "$APP_DIR/storage"
+sudo chmod -R 775 "$APP_DIR/bootstrap/cache"
 
 # Make sure the scheduler cron entry exists, running as www-data
 CRON_FILE="/etc/cron.d/trainingsdata-scheduler"
-CRON_LINE="* * * * * www-data cd /var/www/trainingsdata && php artisan schedule:run >> /dev/null 2>&1"
+CRON_LINE="* * * * * www-data cd $APP_DIR && php artisan schedule:run >> /dev/null 2>&1"
 
 if [ ! -f "$CRON_FILE" ] || ! grep -qF "artisan schedule:run" "$CRON_FILE"; then
     echo "$CRON_LINE" | sudo tee "$CRON_FILE" > /dev/null
