@@ -29,11 +29,15 @@ sudo chown -R www-data:www-data /var/www/trainingsdata
 sudo chmod -R 775 /var/www/trainingsdata/storage
 sudo chmod -R 775 /var/www/trainingsdata/bootstrap/cache
 
-# Makes sure that cron job exists
-CRON_LINE="* * * * * cd $(pwd) && php artisan schedule:run >> /dev/null 2>&1"
-if ! crontab -l 2>/dev/null | grep -qF "artisan schedule:run"; then
-    (crontab -l 2>/dev/null; echo "$CRON_LINE") | crontab -
-    echo "Installed scheduler cron entry."
+
+# Make sure the scheduler cron entry exists, running as www-data
+CRON_FILE="/etc/cron.d/trainingsdata-scheduler"
+CRON_LINE="* * * * * www-data cd /var/www/trainingsdata && php artisan schedule:run >> /dev/null 2>&1"
+
+if [ ! -f "$CRON_FILE" ] || ! grep -qF "artisan schedule:run" "$CRON_FILE"; then
+    echo "$CRON_LINE" | sudo tee "$CRON_FILE" > /dev/null
+    sudo chmod 644 "$CRON_FILE"
+    echo "Installed scheduler cron entry for www-data."
 fi
 
 # Bring workers/php-fpm up to date with new code
