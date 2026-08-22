@@ -9,13 +9,14 @@ This demo project focuses on:
 - Linking user accounts to Polar via OAuth 2.0
 - Storing and retrieving heart rate data efficiently
 - Visualizing training sessions and heart rate zones
+- Automatic syncing
+- Training feedback form
+- GPS / route tracking
 
 Out of scope for this demo:
-- GPS / route tracking
 - Cadence, power, distance, speed, altitude metrics
-- Training feedback forms (planned for future)
 - Multi-user features beyond basic authentication
-- Real-time automatic syncing (planned for future)
+- Training analysis based on data and feedback
 
 ## Architecture
 
@@ -107,6 +108,38 @@ Raw per-second heart rate samples are stored as JSON files rather than relationa
 - CSV parsing and transformation are unit-testable
 - ChartData and Duration helpers are reusable and easily tested
 
+## One-time server setup
+
+### Server requirements:
+
+See the [Laravel deployment requirements](https://laravel.com/docs/deployment#server-requirements) for PHP version and extensions.
+
+Additionally required:
+- Nginx
+- Supervisor (for queue workers — see `deploy/supervisor-worker.conf.example`)
+
+### Ngnix
+
+Install `deploy/nginx.conf`.
+
+### Worker configuration
+
+Install `deploy/supervisor-worker.conf` in `/etc/nginx/sites-available/trainingsdata` and then:
+
+```
+sudo supervisorctl reread
+sudo supervisorctl update
+sudo supervisorctl start trainingsdata-worker:*
+```
+
+### Scheduler
+
+Install `deploy/trainingsdata-scheduler` in `/etc/cron.d` and make sure this has the correct rights.
+
+```
+sudo chmod 644 /etc/cron.d/trainingsdata-scheduler
+```
+
 ## Installation
 
 ```
@@ -120,6 +153,35 @@ php artisan key:generate
 
 # Database
 php artisan migrate --seed
+```
+
+## Manual Polar API Testing
+
+A console command is available for manually testing and syncing training sessions from the Polar API:
+
+```
+sudo -u www-data php artisan app:test-polar-sync {userId}
+```
+
+This command:
+- Syncs the user's training sessions from Polar API
+- Parses and stores session metadata, raw heart rate data, map data, and additional metrics (speed, cadence, altitude, etc.)
+- Imports data that can be viewed in the training session dashboard
+
+**Example:**
+```
+sudo -u www-data php artisan app:test-polar-sync 1
+```
+
+## Demo Login
+
+- Email: `test@example.com`
+- Password: `password`
+
+## Running the Application
+
+```
+composer run dev
 ```
 
 ## API Documentation
@@ -231,32 +293,3 @@ GET /sport-types
 - **Description:** Retrieve all available sport types (e.g., running, cycling)
 - **Requires:** Authentication
 - **Returns:** List of sport types used in training sessions
-
-## Manual Polar API Testing
-
-A console command is available for manually testing and syncing training sessions from the Polar API:
-
-```
-sudo -u www-data php artisan app:test-polar-sync {userId}
-```
-
-This command:
-- Syncs the user's training sessions from Polar API
-- Parses and stores session metadata, raw heart rate data, map data, and additional metrics (speed, cadence, altitude, etc.)
-- Imports data that can be viewed in the training session dashboard
-
-**Example:**
-```
-sudo -u www-data php artisan app:test-polar-sync 1
-```
-
-## Demo Login
-
-- Email: `test@example.com`
-- Password: `password`
-
-## Running the Application
-
-```
-composer run dev
-```
