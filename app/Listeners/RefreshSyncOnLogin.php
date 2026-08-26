@@ -2,6 +2,7 @@
 
 namespace App\Listeners;
 
+use App\Jobs\SyncPolarProfileJob;
 use Illuminate\Auth\Events\Login;
 
 class RefreshSyncOnLogin
@@ -14,6 +15,7 @@ class RefreshSyncOnLogin
                 $q->whereNull('last_synced_at')
                   ->orWhere('last_synced_at', '<', now()->subMinutes(10));
             })
-            ->update(['next_sync_at' => now()]);
+            ->get()
+            ->each(fn ($profile) => SyncPolarProfileJob::dispatch($profile));
     }
 }
