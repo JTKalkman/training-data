@@ -31,14 +31,23 @@ sudo chown -R www-data:www-data "$APP_DIR"
 sudo chmod -R 775 "$APP_DIR/storage"
 sudo chmod -R 775 "$APP_DIR/bootstrap/cache"
 
-# Make sure the scheduler cron entry exists, running as www-data
-CRON_FILE="/etc/cron.d/trainingsdata-scheduler"
-CRON_LINE="* * * * * www-data cd $APP_DIR && php artisan schedule:run >> /dev/null 2>&1"
+# Make sure Supervisor is installed and the worker config exists
+if ! command -v supervisorctl &> /dev/null; then
+    echo "WARNING: Supervisor is not installed. Queue workers will not run."
+    echo "Install with: sudo apt install supervisor"
+else
+    SUPERVISOR_CONF="/etc/supervisor/conf.d/trainingsdata-worker.conf"
+    if [ ! -f "$SUPERVISOR_CONF" ]; then
+        echo "WARNING: Supervisor worker config not found at $SUPERVISOR_CONF."
+        echo "Queue jobs will be dispatched but never processed until this is set up."
+    fi
+fi
 
-if [ ! -f "$CRON_FILE" ] || ! grep -qF "artisan schedule:run" "$CRON_FILE"; then
-    echo "$CRON_LINE" | sudo tee "$CRON_FILE" > /dev/null
-    sudo chmod 644 "$CRON_FILE"
-    echo "Installed scheduler cron entry for www-data."
+# Make sure the scheduler cron entry exists
+CRON_FILE="/etc/cron.d/trainingsdata-scheduler"
+if [ ! -f "$CRON_FILE" ]; then
+    echo "WARNING: Scheduler cron not found at $CRON_FILE."
+    echo "Scheduled syncs will not be performed until this is set up."
 fi
 
 # Bring workers/php-fpm up to date with new code
