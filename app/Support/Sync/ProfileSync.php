@@ -29,7 +29,6 @@ abstract class ProfileSync
         return 60;
     }
 
-    // TODO: Maybe rename to runUser?
     public function run(User $user): array
     {
         $result = [
