@@ -2,8 +2,8 @@
 
 namespace App\Console\Commands;
 
+use App\Jobs\SyncPolarProfileJob;
 use App\Models\PolarProfile;
-use App\Support\Sync\PolarProfileSync;
 use Illuminate\Console\Command;
 
 class SyncPolarProfiles extends Command
@@ -18,18 +18,16 @@ class SyncPolarProfiles extends Command
     /**
      * Execute the console command.
      */
-    public function handle(PolarProfileSync $sync): void
+    public function handle(): void
     {
         PolarProfile::whereNotNull('next_sync_at')
             ->where('next_sync_at', '<=', now())
             ->where(function ($q) {
-                $q->whereNull('locked_at') // Not locked
-                    ->orWhere('locked_at', '<', now()->subMinutes(10)); // Stale lock, reclaim these.
+                // Not locked or stale lock, reclaim these.
+                $q->whereNull('locked_at')->orWhere('locked_at', '<', now()->subMinutes(10)); 
             })
-            ->chunkById(100, function ($profiles) use ($sync) {
-                foreach ($profiles as $profile) {
-                    $sync->runProfile($profile);
-                }
+            ->chunkById(100, function ($profiles) {
+                $profiles->each(fn ($profile) => SyncPolarProfileJob::dispatch($profile));
             });
     }
 }

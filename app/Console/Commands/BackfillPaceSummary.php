@@ -13,7 +13,6 @@ class BackfillPaceSummary extends Command
     
     protected $description = 'Backfill min/max pace seconds in training summaries from stored JSON files';
 
-
     public function handle()
     {
         $progressBar = $this->output->createProgressBar();
