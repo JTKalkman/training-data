@@ -116,7 +116,7 @@ See the [Laravel deployment requirements](https://laravel.com/docs/deployment#se
 
 Additionally required:
 - Nginx
-- Supervisor (for queue workers — see `deploy/supervisor-worker.conf.example`)
+- Supervisor (for queue workers, see `deploy/supervisor-worker.conf`)
 
 ### Ngnix
 
