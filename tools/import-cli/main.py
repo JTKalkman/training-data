@@ -4,10 +4,11 @@ from __future__ import annotations
 
 import argparse
 
-from file_reader import iter_training_session_files
+from file_reader import count_training_session_files, iter_training_session_files
 from state import ImportState
 from uploader import Uploader
 from config import load_config
+from progress import Progress
 
 
 def main():
@@ -22,12 +23,20 @@ def main():
     state = ImportState(args.state_db)
     uploader = Uploader(base_url=config.base_url, token=config.token, dry_run=args.dry_run)
 
+    total = count_training_session_files(args.source)
+    progress = Progress(total=total)
+
     with ImportState(args.state_db) as state:
-        for file in iter_training_session_files(args.source):
+        for file in iter_training_session_files(args.source): # Use a true stream
             if state.is_done(file.name):
+                progress.update("duplicate")
                 continue
+
             result = uploader.upload(file)
             state.record(file.name, result)
+            progress.update(result.status)
+
+        progress.finish()
         state.print_summary()
 
 

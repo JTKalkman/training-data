@@ -31,10 +31,8 @@ class ImportState:
         """)
         self._conn.commit()
 
-
     def __enter__(self) -> "ImportState":
         return self
-
 
     def __exit__(
         self,
@@ -43,7 +41,6 @@ class ImportState:
         traceback: TracebackType | None,
     ) -> None:
         self.close()
-
 
     def is_done(self, filename: str) -> bool:
         row = self._conn.execute(
@@ -59,7 +56,6 @@ class ImportState:
             return True
         return attempts >= self.max_attempts
 
-
     def record(self, filename: str, result: UploadResult) -> None:
         now = datetime.now(timezone.utc).isoformat()
         self._conn.execute("""
@@ -73,7 +69,6 @@ class ImportState:
         """, (filename, result.status, result.error, now))
         self._conn.commit()
 
-
     def print_summary(self) -> None:
         rows = self._conn.execute(
             "SELECT status, COUNT(*) FROM import_files GROUP BY status"
@@ -81,7 +76,6 @@ class ImportState:
         print("\n--- Import summary ---")
         for status, count in rows:
             print(f"{status}: {count}")
-
 
     def close(self) -> None:
         self._conn.close()

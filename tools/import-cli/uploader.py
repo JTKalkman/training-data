@@ -42,7 +42,6 @@ class Uploader:
             "Accept": "application/json",
         })
 
-
     def upload(self, file: SourceFile) -> UploadResult:
         try:
             exercise = self._build_payload(file)
@@ -54,7 +53,6 @@ class Uploader:
             return UploadResult(status="success")
 
         return self._upload_with_retry(exercise)
-
 
     def _build_payload(self, file: SourceFile) -> ExercisePayload:
         data = json.loads(file.content)
@@ -70,7 +68,6 @@ class Uploader:
             started_at=exercise["startTime"],
             payload=data,
         )
-
 
     def _upload_with_retry(self, exercise: ExercisePayload) -> UploadResult:
         last_error = None
@@ -118,7 +115,6 @@ class Uploader:
 
         return UploadResult(status="failed", error=last_error)
 
-
     def _respect_rate_limit(self) -> None:
         if self._last_request_at is not None:
             elapsed = time.monotonic() - self._last_request_at
@@ -126,7 +122,6 @@ class Uploader:
             if wait > 0:
                 time.sleep(wait)
         self._last_request_at = time.monotonic()
-
 
     def _backoff(self, attempt: int) -> None:
         time.sleep(min(2 ** attempt, 30))  # 2s, 4s, 8s, capped at 30s
