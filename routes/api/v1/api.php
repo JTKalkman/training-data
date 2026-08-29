@@ -21,7 +21,7 @@ Route::middleware(['throttle:api'])->group(function () {
         Route::get('/devices', [DeviceController::class, 'index']);
 
         Route::get('/training-sessions', [TrainingSessionController::class, 'index']);
-        Route::get('/training-sessions/{trainingSession} ', [TrainingSessionController::class, 'show']);
+        Route::get('/training-sessions/{trainingSession}', [TrainingSessionController::class, 'show']);
         Route::get('/training-sessions/{trainingSession}/sample-data', [TrainingSessionController::class, 'sampleData']);
         Route::get('/training-sessions/{trainingSession}/route-data', [TrainingSessionController::class, 'routeData']);
         Route::patch('/training-sessions/{trainingSession}', [TrainingSessionController::class, 'update']);
@@ -32,4 +32,8 @@ Route::middleware(['throttle:api'])->group(function () {
         // Route::post('/register', [AuthController::class, 'register'])
         //     ->middleware('throttle:register');
     });
+});
+
+Route::middleware(['throttle:training-session-import', 'auth:sanctum'])->group(function () {
+    Route::post('/training-sessions', [TrainingSessionController::class, 'store']);
 });
