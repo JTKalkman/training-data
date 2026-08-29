@@ -32,3 +32,4 @@ yarn-error.log
 .github/skills/
 AGENTS.md
 boost.json
+tools/import-cli/.env
