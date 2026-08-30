@@ -116,6 +116,8 @@ class TrainingSessionController extends Controller
 
         $data = $request->validated();
 
+        sleep(random_int(1, 5));
+
         // TODO: replace with DataSource lookup + real dedup + TrainingSessionImporter
         return match ($this->stubOutcome($data)) {
             'created' => response()->json([
