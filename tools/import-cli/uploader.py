@@ -11,7 +11,11 @@ from state import UploadResult
 
 
 class AuthenticationError(Exception):
-    """Raised on a 401, the whole run should stop, not just this file."""
+    """Raised on a 401, the token is invalid/expired. Re-authenticate."""
+
+
+class AuthorizationError(Exception):
+    """Raised on a 403, the token is valid but lacks permission. Check token abilities."""
 
 
 @dataclass(frozen=True)
@@ -93,7 +97,13 @@ class Uploader:
                 continue
 
             if response.status_code == 401:
-                raise AuthenticationError("Token rejected (401) — stopping import.")
+                raise AuthenticationError("Token rejected (401), stopping import.")
+
+            if response.status_code == 401:
+                raise AuthenticationError("Token rejected (401), stopping import. Generate a new token.")
+
+            if response.status_code == 403:
+                raise AuthorizationError("Token forbidden (403), stopping import. Check token abilities.")
 
             if response.status_code == 201:
                 return UploadResult(status="success")
