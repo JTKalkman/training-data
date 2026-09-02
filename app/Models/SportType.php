@@ -17,4 +17,9 @@ class SportType extends Model
     {
         return $this->hasMany(TrainingSession::class);
     }
+
+    public function externalSportTypeMappings(): HasMany
+    {
+        return $this->hasMany(ExternalSportTypeMapping::class);
+    }
 }
