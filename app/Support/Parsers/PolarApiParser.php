@@ -9,7 +9,7 @@ use App\Support\Parsers\Mappers\PolarSampleTypeMapper;
 use App\Support\Parsers\Mappers\SportTypeMapper;
 use Carbon\Carbon;
 
-class PolarJsonParser implements ParserInterface
+class PolarApiParser implements ParserInterface
 {
     protected function isRunning(array $data): bool
     {

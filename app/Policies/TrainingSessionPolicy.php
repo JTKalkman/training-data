@@ -30,4 +30,9 @@ class TrainingSessionPolicy
     {
         return $user->id === $trainingSession->user_id;
     }
+
+    public function create(User $user): bool
+    {
+        return true; // Any authenticated user may create their own training sessions
+    }
 }

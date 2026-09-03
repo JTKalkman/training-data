@@ -21,4 +21,9 @@ class DataSource extends Model
     {
         return $this->hasMany(Device::class);
     }
+
+    public function externalSportTypeMappings(): HasMany
+    {
+        return $this->hasMany(ExternalSportTypeMapping::class);
+    }
 }
