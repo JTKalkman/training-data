@@ -5,7 +5,7 @@ namespace App\Support\Parsers;
 use App\Models\DataSource;
 use App\Support\Duration;
 use App\Support\Parsers\Mappers\HeartRateZoneMapper;
-use App\Support\Parsers\Mappers\PolarSampleTypeMapper;
+use App\Support\Parsers\Mappers\PolarAPISampleTypeMapper;
 use App\Support\Parsers\Mappers\SportTypeMapper;
 use Carbon\Carbon;
 
@@ -16,7 +16,7 @@ class PolarApiParser implements ParserInterface
         return SportTypeMapper::map($data['detailed_sport_info'] ?? '')?->name === 'running';
     }
 
-    public function createDeviceData($data): ParsedDeviceData
+    public function createDeviceData(array $data): ParsedDeviceData
     {
         return new ParsedDeviceData([
             'external_id' => $data['device_id'],
@@ -118,9 +118,9 @@ class PolarApiParser implements ParserInterface
 
         if (isset($data['samples']) && is_array($data['samples'])) {
             foreach ($data['samples'] as $samples) {
-                if (PolarSampleTypeMapper::map($samples['sample_type'])) {
+                if (PolarAPISampleTypeMapper::map($samples['sample_type'])) {
                     $sampleRates[] = $samples['recording_rate'];
-                    $sampleData[PolarSampleTypeMapper::map($samples['sample_type'])] = $samples['data'];
+                    $sampleData[PolarAPISampleTypeMapper::map($samples['sample_type'])] = $samples['data'];
                 }
             }
         }
