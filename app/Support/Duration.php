@@ -52,4 +52,12 @@ class Duration
     {
         return (int) CarbonInterval::make($duration)->totalSeconds;
     }
+
+    /**
+     * Converts milliseconds to seconds.
+     */
+    public static function fromMillis(int $duration): int
+    {
+        return (int) round($duration/1000);
+    }
 }
