@@ -22,6 +22,7 @@ class AuthorizationError(Exception):
 class ExercisePayload:
     external_id: str
     started_at: str
+    timezone_offset_minutes: str
     payload: dict
 
 
@@ -70,6 +71,7 @@ class Uploader:
         return ExercisePayload(
             external_id=str(exercise["identifier"]["id"]),
             started_at=exercise["startTime"],
+            timezone_offset_minutes=data["timezoneOffsetMinutes"],
             payload=data,
         )
 
@@ -87,6 +89,7 @@ class Uploader:
                         "importMethod": "export",
                         "externalId": exercise.external_id,
                         "startedAt": exercise.started_at,
+                        "timezoneOffsetMinutes": exercise.timezone_offset_minutes,
                         "payload": exercise.payload,
                     },
                     timeout=30,
