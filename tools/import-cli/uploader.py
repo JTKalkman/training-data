@@ -100,9 +100,6 @@ class Uploader:
                 continue
 
             if response.status_code == 401:
-                raise AuthenticationError("Token rejected (401), stopping import.")
-
-            if response.status_code == 401:
                 raise AuthenticationError("Token rejected (401), stopping import. Generate a new token.")
 
             if response.status_code == 403:
