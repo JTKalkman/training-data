@@ -6,11 +6,12 @@ use Illuminate\Support\Facades\Storage;
 
 class DataStreamer
 {
+    /** @var resource */
     private $handle;
 
-    private $tmpPath;
+    private string $tmpPath;
 
-    private $path;
+    private string $path;
 
     private bool $first = true;
 
@@ -18,7 +19,13 @@ class DataStreamer
     {
         $this->path = $path;
         $this->tmpPath = tempnam(sys_get_temp_dir(), 'samples_').'.json';
-        $this->handle = fopen($this->tmpPath, 'w');
+
+        $handle = fopen($this->tmpPath, 'w');
+        if ($handle === false) {
+            throw new \RuntimeException("Could not open temp file for writing: {$this->tmpPath}");
+        }
+        $this->handle = $handle;
+
         fwrite($this->handle, '[');
     }
 
