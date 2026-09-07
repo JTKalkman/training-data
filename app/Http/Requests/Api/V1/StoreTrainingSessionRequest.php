@@ -13,6 +13,7 @@ class StoreTrainingSessionRequest extends FormRequest
             'importMethod' => ['required', 'string', 'in:api,export'],
             'externalId' => ['required', 'string'],
             'startedAt' => ['required', 'date'],
+            'timezoneOffsetMinutes' => ['required', 'integer', 'min:-720', 'max:840'],
             'payload' => ['required', 'array'],
         ];
     }
