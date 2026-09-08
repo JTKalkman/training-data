@@ -23,6 +23,7 @@ class ExercisePayload:
     external_id: str
     started_at: str
     timezone_offset_minutes: str
+    application_name: str
     payload: dict
 
 
@@ -53,6 +54,9 @@ class Uploader:
         except (json.JSONDecodeError, KeyError, IndexError, ValueError) as e:
             return UploadResult(status="invalid", error=f"Could not parse file: {e}")
 
+        if exercise.application_name != "Polar Flow":
+            return UploadResult(status="unsupported", error=f"Unsuppored application type: {exercise.application_name}") 
+
         if self.dry_run:
             print(f"[dry-run] would upload {file.name} (externalId={exercise.external_id})")
             return UploadResult(status="success")
@@ -72,6 +76,7 @@ class Uploader:
             external_id=str(exercise["identifier"]["id"]),
             started_at=exercise["startTime"],
             timezone_offset_minutes=data["timezoneOffsetMinutes"],
+            application_name=data["application"]["name"],
             payload=data,
         )
 
