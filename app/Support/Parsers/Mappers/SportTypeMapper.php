@@ -7,14 +7,14 @@ use App\Models\SportType;
 class SportTypeMapper
 {
     protected const MAP = [
-        'MTB' => 'mountain_bike',
+        'MTB' => 'mountain-biking',
         'CYCLING' => 'cycling',
         'RUNNING' => 'running',
-        'OTHER_INDOOR' => 'other_indoor',
-        'STRENGTH_TRAINING' => 'weight_training',
+        'OTHER_INDOOR' => 'other-indoor',
+        'STRENGTH_TRAINING' => 'strength-training',
         'BOOTCAMP' => 'bootcamp',
-        'MOUNTAIN_BIKING' => 'mountain_bike',
-        'INDOOR_CYCLING' => 'indoor_cycling',
+        'MOUNTAIN_BIKING' => 'mountain-biking',
+        'INDOOR_CYCLING' => 'indoor-cycling',
     ];
 
     public static function map(string $external): ?SportType
