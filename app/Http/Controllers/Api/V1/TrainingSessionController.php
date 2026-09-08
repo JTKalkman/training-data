@@ -7,13 +7,18 @@ use App\Http\Filters\Api\V1\TrainingSessionFilter;
 use App\Http\Requests\Api\V1\StoreTrainingSessionRequest;
 use App\Http\Requests\Api\V1\TrainingSessionUpdateRequest;
 use App\Http\Resources\Api\V1\TrainingSessionResource;
+use App\Models\DataSource;
 use App\Models\TrainingSession;
 use App\Support\DTO\Api\V1\PaginationMeta;
+use App\Support\Importers\TrainingSessionImporter;
+use App\Support\Parsers\PolarExportParser;
 use App\Traits\Api\V1\ApiResponses;
-use DateTimeInterface;
+use Carbon\Carbon;
+// use DateTimeInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class TrainingSessionController extends Controller
@@ -80,7 +85,7 @@ class TrainingSessionController extends Controller
         return $this->error('Not found', [], 404);
     }
 
-    public function update(TrainingSession $trainingSession, TrainingSessionUpdateRequest $request) //: JsonResponse|Response
+    public function update(TrainingSession $trainingSession, TrainingSessionUpdateRequest $request) : JsonResponse|Response
     {
         $this->authorize('update', $trainingSession);
 
@@ -115,35 +120,57 @@ class TrainingSessionController extends Controller
         $this->authorize('create', TrainingSession::class);
 
         $data = $request->validated();
+        $user = Auth::user();
+        $dataSource = DataSource::where('name', $data['platform'])->firstOrFail();
+        $startedAt = Carbon::parse($data['startedAt']);
 
-        sleep(random_int(1, 5));
+        // Check for duplicate training sessions based on ID.
+        $existingId = TrainingSession::where([
+            'external_id' => $data['externalId'],
+            'user_id' => $user->id,
+            'data_source_id' => $dataSource->id,
+        ])->exists();
 
-        // TODO: replace with DataSource lookup + real dedup + TrainingSessionImporter
-        return match ($this->stubOutcome($data)) {
-            'created' => response()->json([
+        if ($existingId) {
+            return response()->json([
+                'message' => 'Already exists (ID)',
+            ], Response::HTTP_OK);
+        }
+
+        // Check for duplicates training sessions based on the start time.
+        $existingStartTime = TrainingSession::where([
+            'user_id' => $user->id,
+            'data_source_id' => $dataSource->id,
+            'started_at' => $startedAt
+        ])->exists();
+
+        if ($existingStartTime) {
+            return response()->json([
+                'message' => 'Already exists (start time)',
+            ], Response::HTTP_OK);
+        }
+
+        try {
+            $importer = new TrainingSessionImporter;
+            $parser = null;
+
+            if ($data['platform'] === 'polar') {
+                $parser = new PolarExportParser();
+            } else if ($data['platform'] === 'garmin') {
+                // TODO: Add support for Garmin.
+            }
+
+            $importer->import($user, $dataSource, $parser->parse($data['payload']));
+
+            return response()->json([
                 'message' => 'Imported',
                 'data' => ['id' => null, 'externalId' => $data['externalId']],
-            ], Response::HTTP_CREATED),
-
-            'duplicate' => response()->json([
-                'message' => 'Already exists',
-            ], Response::HTTP_OK),
-
-            'invalid' => response()->json([
+            ], Response::HTTP_CREATED);
+        } catch (\Throwable $th) {
+            return response()->json([
                 'message' => 'Payload could not be parsed',
                 'errors' => ['payload' => ['Unrecognized structure']],
-            ], Response::HTTP_UNPROCESSABLE_ENTITY),
-        };
-    }
-
-    protected function stubOutcome(array $data): string
-    {
-        // deterministic stub behavior for CLI testing, not random —
-        // lets you script test cases against known externalIds
-        return match (true) {
-            str_starts_with($data['externalId'], 'dup-') => 'duplicate',
-            str_starts_with($data['externalId'], 'bad-') => 'invalid',
-            default => 'created',
-        };
+            ], Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
     }
 }
