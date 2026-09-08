@@ -17,7 +17,7 @@ final class PaceCalculator
     protected const MAX_PACE_SECONDS = 1200;
 
     /**
-     * Fastest pace we'll report, in seconds per km (3:30/km). Anything
+     * Fastest pace we'll report, in seconds per km (2:00/km). Anything
      * faster is clamped here, treated as a data/sensor glitch.
      */
     protected const MIN_PACE_SECONDS = 120;
