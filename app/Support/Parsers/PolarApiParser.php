@@ -3,6 +3,7 @@
 namespace App\Support\Parsers;
 
 use App\Models\DataSource;
+use App\Support\Calculators\PaceCalculator;
 use App\Support\Duration;
 use App\Support\Parsers\Mappers\HeartRateZoneMapper;
 use App\Support\Parsers\Mappers\PolarAPISampleTypeMapper;
@@ -152,23 +153,10 @@ class PolarApiParser implements ParserInterface
 
     protected function calculatePace(string $speedData): string
     {
-        $speeds = explode(',', $speedData);
-
-        $paces = array_map(function ($speed) {
-            $pace = 1200;
-            if (! is_numeric($speed)) return $pace;
-            $speed = (float) $speed;
-
-            if ($speed > 0) {
-                $pace = round((60 / $speed) * 60);
-                if ($pace > 1200) $pace = 1200;
-                if ($pace < 210) $pace = 210;
-            }
-
-            return $pace;
-        }, $speeds);
-
-        return implode(',', $paces);
+        return implode(
+            ',',
+            PaceCalculator::fromSpeeds(explode(',', $speedData))
+        );
     }
 
     public function parse(iterable $data): ParsedSession
