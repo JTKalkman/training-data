@@ -18,7 +18,6 @@ use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class TrainingSessionController extends Controller
@@ -168,6 +167,7 @@ class TrainingSessionController extends Controller
             ], Response::HTTP_CREATED);
         } catch (\Throwable $th) {
             return response()->json([
+                // 'tmp_info' => $th->getMessage(),
                 'message' => 'Payload could not be parsed',
                 'errors' => ['payload' => ['Unrecognized structure']],
             ], Response::HTTP_UNPROCESSABLE_ENTITY);
