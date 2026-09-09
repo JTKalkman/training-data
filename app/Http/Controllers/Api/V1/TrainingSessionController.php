@@ -157,6 +157,13 @@ class TrainingSessionController extends Controller
                 $parser = new PolarExportParser();
             } else if ($data['platform'] === 'garmin') {
                 // TODO: Add support for Garmin.
+                return response()->json([
+                    'message' => 'Garmin is not supported yet.',
+                ], Response::HTTP_NOT_IMPLEMENTED);
+            } else {
+                return response()->json([
+                    'message' => "Unsupported platform: {$data['platform']}",
+                ], Response::HTTP_UNPROCESSABLE_ENTITY);
             }
 
             $importer->import($user, $dataSource, $parser->parse($data['payload']));
