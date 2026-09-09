@@ -4,7 +4,6 @@ namespace App\Support\Parsers;
 
 use App\Models\DataSource;
 use App\Models\ExternalSportTypeMapping;
-use App\Models\SportType;
 use App\Support\Calculators\PaceCalculator;
 use App\Support\Duration;
 use App\Support\Parsers\Mappers\HeartRateZoneMapper;
