@@ -173,7 +173,7 @@ class PolarApiParser implements ParserInterface
             $paces = array_map('intval', explode(',', $paceString));
             $summaryData->minPace = min($paces);
             $summaryData->maxPace = max($paces);
-            $summaryData->avgPace = round(array_sum($paces) / count($paces));
+            $summaryData->avgPace = (int) round(array_sum($paces) / count($paces));
         }
 
         $routeData = $this->createRouteData($data);

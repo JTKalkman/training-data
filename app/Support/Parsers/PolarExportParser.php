@@ -128,7 +128,7 @@ class PolarExportParser implements ParserInterface
                 if (PolarExportSampleTypeMapper::map($samples['type'])) {
                     $sampleData['sample_rate'] = min(
                         $sampleData['sample_rate'],
-                        round($data['exercises'][0]['samples']['samples'][0]['intervalMillis'] / 1000)
+                        (int) (round($data['exercises'][0]['samples']['samples'][0]['intervalMillis'] / 1000))
                     );
                     
                     $sampleData[PolarExportSampleTypeMapper::map($samples['type'])] = $samples['values'];
@@ -197,7 +197,7 @@ class PolarExportParser implements ParserInterface
     
             $summaryData->minPace = min($paceData);
             $summaryData->maxPace = max($paceData);
-            $summaryData->avgPace = round(array_sum($paceData) / count($paceData));
+            $summaryData->avgPace = (int) round(array_sum($paceData) / count($paceData));
         }
     
         $routeData = $this->createRouteData($data);
