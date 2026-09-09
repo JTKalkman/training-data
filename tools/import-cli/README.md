@@ -27,16 +27,33 @@ needed.
 
 ## Usage
 
-Run against a directory of export files:
+The script has a shebang, so once it's executable you can run it
+directly:
+
+```
+chmod +x main.py
+./main.py /path/to/export/directory
+```
+
+Or with `python` explicitly:
 
 ```
 python main.py /path/to/export/directory
 ```
 
+Both forms work the same. Examples below use `./main.py`, but swap in
+`python main.py` if you prefer.
+
+Run against a directory of export files:
+
+```
+./main.py /path/to/export/directory
+```
+
 Or directly against a Polar export zip:
 
 ```
-python main.py /path/to/export.zip
+./main.py /path/to/export.zip
 ```
 
 ### Dry run
@@ -44,7 +61,7 @@ python main.py /path/to/export.zip
 Add `--dry-run` to see what would be uploaded without sending anything:
 
 ```
-python main.py /path/to/export.zip --dry-run
+./main.py /path/to/export.zip --dry-run
 ```
 
 ### Custom state file
@@ -54,7 +71,7 @@ directory. Use `--state-db` to change this, for example if you're
 running multiple imports side by side:
 
 ```
-python main.py /path/to/export.zip --state-db my_import.sqlite3
+./main.py /path/to/export.zip --state-db my_import.sqlite3
 ```
 
 ## How it works
