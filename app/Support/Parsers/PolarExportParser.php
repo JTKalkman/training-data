@@ -31,18 +31,16 @@ class PolarExportParser implements ParserInterface
 
     public function createSessionData(array $data): ParsedSessionData
     {
-        $externalSportType = ExternalSportTypeMapping::where([
-            'external_id' => $data['exercises'][0]["sport"]["id"] ?? null,
-        ])->firstOrFail();
-
-        $sportType = SportType::where([
-            'id' => $externalSportType['sport_type_id']
-        ])->firstOrFail();
-
+        $dataSource = DataSource::where(['name' => 'polar'])->first();
         $startedAt = Carbon::parse($data['exercises'][0]['startTime']);
         $UtcOffset = $data['exercises'][0]['timezoneOffsetMinutes'];
         $duration = Duration::fromMillis($data['exercises'][0]['durationMillis']);
-        $dataSource = DataSource::where(['name' => 'polar'])->first();
+
+        $externalSportType = ExternalSportTypeMapping::where('data_source_id', $dataSource->id)
+            ->where('external_id', $data['exercises'][0]['sport']['id'] ?? null)
+            ->firstOrFail();
+
+        $sportType = $externalSportType->sportType;
 
         return new ParsedSessionData([
             'sport_type_id' => $sportType ? $sportType->id : null,
