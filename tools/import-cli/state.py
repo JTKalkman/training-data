@@ -7,7 +7,7 @@ from datetime import datetime, timezone
 from types import TracebackType
 
 
-TERMINAL_STATUSES = {"success", "duplicate", "invalid"}
+TERMINAL_STATUSES = {"success", "duplicate", "invalid", "unsupported"}
 
 
 @dataclass(frozen=True)
