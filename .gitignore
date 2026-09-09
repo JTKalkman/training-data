@@ -32,3 +32,6 @@ yarn-error.log
 .github/skills/
 AGENTS.md
 boost.json
+tools/import-cli/.env
+tools/import-cli/__pycache__/
+tools/import-cli/import_state.sqlite3

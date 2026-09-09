@@ -52,6 +52,10 @@ class AppServiceProvider extends ServiceProvider
             ];
         });
 
+        RateLimiter::for('training-session-import', function (Request $request) {
+            return Limit::perMinute(60)->by($request->user()->id);
+        });
+
         // Max 3 accounts per IP address per day.
         RateLimiter::for('register', function (Request $request) {
             $key = $request->ip();

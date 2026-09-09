@@ -6,7 +6,7 @@ use App\Models\PolarProfile;
 use App\Models\SyncProfile;
 use App\Models\User;
 use App\Support\API\Polar\Resources\PolarExerciseResource;
-use App\Support\Parsers\PolarJsonParser;
+use App\Support\Parsers\PolarApiParser;
 
 use Illuminate\Database\Eloquent\Builder;
 
@@ -24,7 +24,7 @@ final class PolarProfileSync extends ProfileSync
 
     protected function parser(): object
     {
-        return new PolarJsonParser;
+        return new PolarApiParser;
     }
 
     protected function dataSourceName(): string

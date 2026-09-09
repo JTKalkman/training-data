@@ -2,7 +2,7 @@
 
 namespace App\Support\Parsers\Mappers;
 
-class PolarSampleTypeMapper
+class PolarAPISampleTypeMapper
 {
     protected const MAP = [
         0 => 'heart_rate',

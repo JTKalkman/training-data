@@ -6,6 +6,8 @@ use App\Models\User;
 use App\Support\Sync\PolarProfileSync;
 use Illuminate\Console\Command;
 
+use function Laravel\Prompts\warning;
+
 class TestPolarSync extends Command
 {
     /**
@@ -28,6 +30,12 @@ class TestPolarSync extends Command
     public function handle(PolarProfileSync $sync): void
     {
         $user = User::find($this->argument('userId'));
+
+        if (! $user) {
+            warning("Unknown user. User with ID " . $this->argument('userId') . " not found");
+            return;
+        }
+
         $sync->run($user);
     }
 }

@@ -4,14 +4,21 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Filters\Api\V1\TrainingSessionFilter;
+use App\Http\Requests\Api\V1\StoreTrainingSessionRequest;
 use App\Http\Requests\Api\V1\TrainingSessionUpdateRequest;
 use App\Http\Resources\Api\V1\TrainingSessionResource;
+use App\Models\DataSource;
 use App\Models\TrainingSession;
 use App\Support\DTO\Api\V1\PaginationMeta;
+use App\Support\Importers\TrainingSessionImporter;
+use App\Support\Parsers\PolarExportParser;
 use App\Traits\Api\V1\ApiResponses;
+use Carbon\Carbon;
+// use DateTimeInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class TrainingSessionController extends Controller
@@ -78,7 +85,7 @@ class TrainingSessionController extends Controller
         return $this->error('Not found', [], 404);
     }
 
-    public function update(TrainingSession $trainingSession, TrainingSessionUpdateRequest $request) //: JsonResponse|Response
+    public function update(TrainingSession $trainingSession, TrainingSessionUpdateRequest $request) : JsonResponse|Response
     {
         $this->authorize('update', $trainingSession);
 
@@ -106,5 +113,85 @@ class TrainingSessionController extends Controller
             $resource->resolve(),
             200
         );
+    }
+
+    public function store(StoreTrainingSessionRequest $request): JsonResponse|Response
+    {
+        $this->authorize('create', TrainingSession::class);
+
+        $data = $request->validated();
+        $user = Auth::user();
+        $dataSource = DataSource::where('name', $data['platform'])->firstOrFail();
+        $startedAt = Carbon::parse($data['startedAt']);
+
+        // Check for duplicate training sessions based on ID.
+        $existingId = TrainingSession::where([
+            'external_id' => $data['externalId'],
+            'user_id' => $user->id,
+            'data_source_id' => $dataSource->id,
+        ])->exists();
+
+        if ($existingId) {
+            return response()->json([
+                'message' => 'Already exists (ID)',
+            ], Response::HTTP_OK);
+        }
+
+        // Check for duplicates training sessions based on the start time.
+        $existingStartTime = TrainingSession::where([
+            'user_id' => $user->id,
+            'data_source_id' => $dataSource->id,
+            'started_at' => $startedAt
+        ])->exists();
+
+        if ($existingStartTime) {
+            return response()->json([
+                'message' => 'Already exists (start time)',
+            ], Response::HTTP_OK);
+        }
+
+        try {
+            $importer = new TrainingSessionImporter;
+            $parser = null;
+
+            if ($data['platform'] === 'polar') {
+                $parser = new PolarExportParser();
+            } else if ($data['platform'] === 'garmin') {
+                // TODO: Add support for Garmin.
+                return response()->json([
+                    'message' => 'Garmin is not supported yet.',
+                ], Response::HTTP_NOT_IMPLEMENTED);
+            } else {
+                return response()->json([
+                    'message' => "Unsupported platform: {$data['platform']}",
+                ], Response::HTTP_UNPROCESSABLE_ENTITY);
+            }
+
+            $importer->import($user, $dataSource, $parser->parse($data['payload']));
+
+            return response()->json([
+                'message' => 'Imported',
+                'data' => ['id' => null, 'externalId' => $data['externalId']],
+            ], Response::HTTP_CREATED);
+        } catch (\Throwable $th) {
+            // Duplicate entry, treat as success.
+            if ((int) $th->errorInfo[1] === 1062) {
+                return response()->json([
+                    'message' => 'Already exists (race condition)',
+                ], Response::HTTP_OK);
+            }
+
+            Log::error($th->getMessage(), [
+                'file' => $th->getFile(),
+                'line' => $th->getLine(),
+                'trace' => $th->getTraceAsString(),
+            ]);
+
+            return response()->json([
+                // 'tmp_info' => $th->getMessage() . ' at ' . $th->getFile() . ':' . $th->getLine(),
+                'message' => 'Payload could not be parsed',
+                'errors' => ['payload' => ['Unrecognized structure']],
+            ], Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
     }
 }

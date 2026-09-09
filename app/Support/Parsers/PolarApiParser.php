@@ -3,20 +3,21 @@
 namespace App\Support\Parsers;
 
 use App\Models\DataSource;
+use App\Support\Calculators\PaceCalculator;
 use App\Support\Duration;
 use App\Support\Parsers\Mappers\HeartRateZoneMapper;
-use App\Support\Parsers\Mappers\PolarSampleTypeMapper;
+use App\Support\Parsers\Mappers\PolarAPISampleTypeMapper;
 use App\Support\Parsers\Mappers\SportTypeMapper;
 use Carbon\Carbon;
 
-class PolarJsonParser implements ParserInterface
+class PolarApiParser implements ParserInterface
 {
     protected function isRunning(array $data): bool
     {
         return SportTypeMapper::map($data['detailed_sport_info'] ?? '')?->name === 'running';
     }
 
-    public function createDeviceData($data): ParsedDeviceData
+    public function createDeviceData(array $data): ParsedDeviceData
     {
         return new ParsedDeviceData([
             'external_id' => $data['device_id'],
@@ -64,12 +65,15 @@ class PolarJsonParser implements ParserInterface
             $minHeartRate = null;
         }
 
+        $distance = isset($data['distance']) ? (int) $data['distance'] : null;
+        $calories = isset($data['calories']) ? (int) $data['calories'] : null;
+
         return new ParsedSummaryData([
             'min_heart_rate' => $minHeartRate,
             'avg_heart_rate' => $avgHeartRate,
             'max_heart_rate' => $maxHeartRate,
-            'distance' => $data['distance'] ?? null,
-            'calories' => $data['calories'] ?? null,
+            'distance' => $distance,
+            'calories' => $calories,
             'has_route' => $data['has_route'] ?? false,
             'training_load' => [
                 'training_load' => $data['training_load'] ?? null,
@@ -118,9 +122,9 @@ class PolarJsonParser implements ParserInterface
 
         if (isset($data['samples']) && is_array($data['samples'])) {
             foreach ($data['samples'] as $samples) {
-                if (PolarSampleTypeMapper::map($samples['sample_type'])) {
+                if (PolarAPISampleTypeMapper::map($samples['sample_type'])) {
                     $sampleRates[] = $samples['recording_rate'];
-                    $sampleData[PolarSampleTypeMapper::map($samples['sample_type'])] = $samples['data'];
+                    $sampleData[PolarAPISampleTypeMapper::map($samples['sample_type'])] = $samples['data'];
                 }
             }
         }
@@ -152,23 +156,7 @@ class PolarJsonParser implements ParserInterface
 
     protected function calculatePace(string $speedData): string
     {
-        $speeds = explode(',', $speedData);
-
-        $paces = array_map(function ($speed) {
-            $pace = 1200;
-            if (! is_numeric($speed)) return $pace;
-            $speed = (float) $speed;
-
-            if ($speed > 0) {
-                $pace = round((60 / $speed) * 60);
-                if ($pace > 1200) $pace = 1200;
-                if ($pace < 210) $pace = 210;
-            }
-
-            return $pace;
-        }, $speeds);
-
-        return implode(',', $paces);
+        return implode(',', PaceCalculator::fromSpeeds(explode(',', $speedData)));
     }
 
     public function parse(iterable $data): ParsedSession
@@ -186,9 +174,9 @@ class PolarJsonParser implements ParserInterface
             $sampleData->addPace($paceString);
 
             $paces = array_map('intval', explode(',', $paceString));
-            $summaryData->minPace = min($paces);
-            $summaryData->maxPace = max($paces);
-            $summaryData->avgPace = round(array_sum($paces) / count($paces));
+            $summaryData->minPace = $paces === [] ? null : min($paces);
+            $summaryData->maxPace = $paces === [] ? null : max($paces);
+            $summaryData->avgPace = $paces === [] ? null : (int) round(array_sum($paces) / count($paces));
         }
 
         $routeData = $this->createRouteData($data);
