@@ -12,6 +12,7 @@ class Progress:
         self.duplicate = 0
         self.invalid = 0
         self.failed = 0
+        self.unsupported = 0
         self._started_at = time.monotonic()
 
     def update(self, status: str) -> None:
@@ -28,7 +29,7 @@ class Progress:
 
         line = (
             f"\r{self.done}/{self.total} "
-            f"(✓{self.success} dup:{self.duplicate} inv:{self.invalid} fail:{self.failed}) "
+            f"(✓{self.success} dup:{self.duplicate} inv:{self.invalid} fail:{self.failed} unsupported:{self.unsupported}) "
             f"— {rate:.1f}/s — ETA {self._format_duration(eta_seconds)}   "
         )
         sys.stdout.write(line)
