@@ -153,10 +153,7 @@ class PolarApiParser implements ParserInterface
 
     protected function calculatePace(string $speedData): string
     {
-        return implode(
-            ',',
-            PaceCalculator::fromSpeeds(explode(',', $speedData))
-        );
+        return implode(',', PaceCalculator::fromSpeeds(explode(',', $speedData)));
     }
 
     public function parse(iterable $data): ParsedSession
