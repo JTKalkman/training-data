@@ -18,6 +18,7 @@ use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class TrainingSessionController extends Controller
@@ -173,8 +174,14 @@ class TrainingSessionController extends Controller
                 'data' => ['id' => null, 'externalId' => $data['externalId']],
             ], Response::HTTP_CREATED);
         } catch (\Throwable $th) {
+            Log::error($th->getMessage(), [
+                'file' => $th->getFile(),
+                'line' => $th->getLine(),
+                'trace' => $th->getTraceAsString(),
+            ]);
+
             return response()->json([
-                // 'tmp_info' => $th->getMessage(),
+                // 'tmp_info' => $th->getMessage() . ' at ' . $th->getFile() . ':' . $th->getLine(),
                 'message' => 'Payload could not be parsed',
                 'errors' => ['payload' => ['Unrecognized structure']],
             ], Response::HTTP_UNPROCESSABLE_ENTITY);
