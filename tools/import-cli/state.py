@@ -12,7 +12,7 @@ TERMINAL_STATUSES = {"success", "duplicate", "invalid", "unsupported"}
 
 @dataclass(frozen=True)
 class UploadResult:
-    status: str # "success" | "duplicate" | "invalid" | "failed"
+    status: str # "success" | "duplicate" | "invalid" | "failed" | "unsupported"
     error: str | None = None
 
 
