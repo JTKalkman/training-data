@@ -65,12 +65,15 @@ class PolarApiParser implements ParserInterface
             $minHeartRate = null;
         }
 
+        $distance = isset($data['distance']) ? (int) $data['distance'] : null;
+        $calories = isset($data['calories']) ? (int) $data['calories'] : null;
+
         return new ParsedSummaryData([
             'min_heart_rate' => $minHeartRate,
             'avg_heart_rate' => $avgHeartRate,
             'max_heart_rate' => $maxHeartRate,
-            'distance' => $data['distance'] ?? null,
-            'calories' => $data['calories'] ?? null,
+            'distance' => $distance,
+            'calories' => $calories,
             'has_route' => $data['has_route'] ?? false,
             'training_load' => [
                 'training_load' => $data['training_load'] ?? null,

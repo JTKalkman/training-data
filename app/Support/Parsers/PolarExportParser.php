@@ -64,12 +64,15 @@ class PolarExportParser implements ParserInterface
         $avgHeartRate = $heartRateStatistics['avg'] ?? null;
         $maxHeartRate = $heartRateStatistics['max'] ?? null;
 
+        $distance = isset($data['exercises'][0]['distanceMeters']) ? (int) $data['exercises'][0]['distanceMeters'] : null;
+        $calories = isset($data['exercises'][0]['calories'])       ? (int) $data['exercises'][0]['calories']       : null;
+
         return new ParsedSummaryData([
             'min_heart_rate' => $minHeartRate,
             'avg_heart_rate' => $avgHeartRate,
             'max_heart_rate' => $maxHeartRate,
-            'distance' => $data['exercises'][0]['distanceMeters'] ?? null,
-            'calories' => $data['exercises'][0]['calories'] ?? null,
+            'distance' => $distance,
+            'calories' => $calories,
             'has_route' => ! empty($data['exercises'][0]['routes']),
             'training_load' => [
                 'training_load' => null,
