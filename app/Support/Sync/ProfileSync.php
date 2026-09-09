@@ -119,28 +119,40 @@ abstract class ProfileSync
                 'message' => $e->getMessage()
             ];
         } catch (\Throwable $th) {
-            $failures = $profile->consecutive_sync_failures + 1;
-            $backoff = min(60 * 24, 5 * (2 ** $failures)); // minutes, capped at 24h
+            if ((int) $th->errorInfo[1] === 1062) {
+                // Duplicate entry, treat as success.
+                $profile->update([
+                    'last_synced_at' => now(),
+                    'last_sync_attempted_at' => now(),
+                    'last_sync_error' => null,
+                    'consecutive_sync_failures' => 0,
+                    'next_sync_at' => now()->addMinutes($this->syncIntervalMinutes()),
+                    'locked_at' => null,
+                ]);
+            } else {
+                $failures = $profile->consecutive_sync_failures + 1;
+                $backoff = min(60 * 24, 5 * (2 ** $failures)); // minutes, capped at 24h
 
-            $profile->update([
-                'last_sync_attempted_at' => now(),
-                'last_sync_error' => $th->getMessage(),
-                'consecutive_sync_failures' => $failures,
-                'next_sync_at' => now()->addMinutes($backoff),
-                'locked_at' => null,
-            ]);
-                
-            $result['errors'][] = [
-                'profile_id' => $profile->id,
-                'message' => $th->getMessage(),
-                'trace' => $th->getTraceAsString(),
-            ];
+                $profile->update([
+                    'last_sync_attempted_at' => now(),
+                    'last_sync_error' => $th->getMessage(),
+                    'consecutive_sync_failures' => $failures,
+                    'next_sync_at' => now()->addMinutes($backoff),
+                    'locked_at' => null,
+                ]);
+ 
+                $result['errors'][] = [
+                    'profile_id' => $profile->id,
+                    'message' => $th->getMessage(),
+                    'trace' => $th->getTraceAsString(),
+                ];
 
-            Log::error("{$this->providerLabel()}Sync failed", [
-                'user_id' => $profile->user->id,
-                'errors' => $th->getMessage(),
-                'exception' => $th,
-            ]);
+                Log::error("{$this->providerLabel()}Sync failed", [
+                    'user_id' => $profile->user->id,
+                    'errors' => $th->getMessage(),
+                    'exception' => $th,
+                ]);
+            }
         }
     }
 }

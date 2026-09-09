@@ -174,6 +174,13 @@ class TrainingSessionController extends Controller
                 'data' => ['id' => null, 'externalId' => $data['externalId']],
             ], Response::HTTP_CREATED);
         } catch (\Throwable $th) {
+            // Duplicate entry, treat as success.
+            if ((int) $th->errorInfo[1] === 1062) {
+                return response()->json([
+                    'message' => 'Already exists (race condition)',
+                ], Response::HTTP_OK);
+            }
+
             Log::error($th->getMessage(), [
                 'file' => $th->getFile(),
                 'line' => $th->getLine(),
