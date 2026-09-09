@@ -195,9 +195,9 @@ class PolarExportParser implements ParserInterface
             $paceData = $this->calculatePace($sampleData->speed);
             $sampleData->addPace($paceData);
     
-            $summaryData->minPace = min($paceData);
-            $summaryData->maxPace = max($paceData);
-            $summaryData->avgPace = (int) round(array_sum($paceData) / count($paceData));
+            $summaryData->minPace = $paceData === [] ? null : min($paceData);
+            $summaryData->maxPace = $paceData === [] ? null : max($paceData);
+            $summaryData->avgPace = $paceData === [] ? null : (int) round(array_sum($paceData) / count($paceData));
         }
     
         $routeData = $this->createRouteData($data);
