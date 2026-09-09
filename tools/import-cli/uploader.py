@@ -50,12 +50,21 @@ class Uploader:
 
     def upload(self, file: SourceFile) -> UploadResult:
         try:
-            exercise = self._build_payload(file)
-        except (json.JSONDecodeError, KeyError, IndexError, ValueError) as e:
+            data = json.loads(file.content)
+        except json.JSONDecodeError as e:
             return UploadResult(status="invalid", error=f"Could not parse file: {e}")
 
-        if exercise.application_name != "Polar Flow":
-            return UploadResult(status="unsupported", error=f"Unsuppored application type: {exercise.application_name}") 
+        application_name = data.get("application", {}).get("name")
+        if application_name != "Polar Flow":
+            return UploadResult(
+                status="unsupported",
+                error=f"Unsupported application type: {application_name}",
+            )
+
+        try:
+            exercise = self._build_payload(data)
+        except (KeyError, IndexError, ValueError) as e:
+            return UploadResult(status="invalid", error=f"Could not parse file: {e}")
 
         if self.dry_run:
             print(f"[dry-run] would upload {file.name} (externalId={exercise.external_id})")
@@ -63,8 +72,7 @@ class Uploader:
 
         return self._upload_with_retry(exercise)
 
-    def _build_payload(self, file: SourceFile) -> ExercisePayload:
-        data = json.loads(file.content)
+    def _build_payload(self, data: dict) -> ExercisePayload:
         exercises = data.get("exercises", [])
 
         if len(exercises) != 1:
@@ -75,7 +83,7 @@ class Uploader:
         return ExercisePayload(
             external_id=str(exercise["identifier"]["id"]),
             started_at=exercise["startTime"],
-            timezone_offset_minutes=data["timezoneOffsetMinutes"],
+            timezone_offset_minutes=data.get("timezoneOffsetMinutes"),
             application_name=data["application"]["name"],
             payload=data,
         )
