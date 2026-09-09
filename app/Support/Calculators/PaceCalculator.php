@@ -33,7 +33,7 @@ final class PaceCalculator
      */
     public static function fromSpeeds(array $speedsKmh): array
     {
-        return array_map(fn ($speed) => $this->fromSpeed($speed), $speedsKmh);
+        return array_map(fn ($speed) => self::fromSpeed($speed), $speedsKmh);
     }
 
     protected static function fromSpeed(mixed $speedKmh): int
