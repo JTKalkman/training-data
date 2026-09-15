@@ -21,7 +21,10 @@ class PolarProfile extends SyncProfile
         'last_name',
     ];
 
-    protected $casts = [
-        'token_expires_at' => 'datetime',
-    ];
+    protected function casts(): array
+    {
+        return array_merge(parent::casts(), [
+            'token_expires_at' => 'datetime',
+        ]);
+    }
 }
