@@ -140,7 +140,12 @@ const drawChart = () => {
       events: isMobile ? ['click'] : ['mousemove', 'mouseout', 'click', 'touchstart', 'touchmove'],
       onHover: (event, activeElements) => {
         if (activeElements.length > 0) {
-          emit('hover', { index: activeElements[0].index, x: event.x, }, props.field);
+          const index = activeElements[0].index;
+          emit(
+            'hover',
+            { index, x: event.x, time: props.data[index]?.x, },
+            props.field
+          );
         } else {
           emit('hover', null, props.field)
         }
