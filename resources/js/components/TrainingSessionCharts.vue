@@ -193,7 +193,7 @@ const handleChartHover = (position: HoverPosition | null, sourceField: string | 
   if (!position) {
     hoverData.value = {};
     chartHoverPosition.value = null;
-    hoverSource.value = null;
+    // hoverSource.value = null; // Causes small bug of not destroying the tooltip and marker on the charts.
     emit('hover', null);
     return;
   }
