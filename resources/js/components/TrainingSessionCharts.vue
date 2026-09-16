@@ -14,6 +14,10 @@ const props = defineProps<{
   fields?: string[];
 }>();
 
+const emit = defineEmits<{
+    hover: [position: HoverPosition | null];
+}>();
+
 const { data, loading, error, fetch } = useSampleData(props.sessionId);
 const { formatPace } = usePace();
 
@@ -189,11 +193,14 @@ const handleChartHover = (position: HoverPosition | null, sourceField: string | 
   if (!position) {
     hoverData.value = {};
     chartHoverPosition.value = null;
+    hoverSource.value = null;
+    emit('hover', null);
     return;
   }
 
   chartHoverPosition.value = position;
   hoverSource.value = sourceField;
+  emit('hover', position);
 }
 
 onMounted(() => {
