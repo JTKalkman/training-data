@@ -26,7 +26,7 @@ const chartCanvas = ref<HTMLCanvasElement | null>(null);
 let chartInstance: Chart;
 
 watch(() => props.chartHoverPosition, (position) => {
-  if (props.hoverSource === props.field) return;
+  if (props.hoverSource === null || props.hoverSource === props.field) return;
 
   if (position) {
     showTooltip(position);
