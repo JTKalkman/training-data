@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ref } from 'vue';
 import { Head } from '@inertiajs/vue3';
 import { route } from 'ziggy-js';
 import TrainingSessionCharts from '@/components/TrainingSessionCharts.vue';
@@ -8,7 +9,7 @@ import TrainingSessionSummary from '@/components/TrainingSessionSummary.vue';
 import NavigationNext from '@/components/ui/navigation-menu/NavigationNext.vue';
 import NavigationPrevious from '@/components/ui/navigation-menu/NavigationPrevious.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
-import type { BreadcrumbItem, RunningPaceZone, TrainingSession as TrainingSessionData, TrainingSessionNavigation } from '@/types';
+import type { BreadcrumbItem, HoverPosition, RunningPaceZone, TrainingSession as TrainingSessionData, TrainingSessionNavigation } from '@/types';
 
 const props = defineProps<{
   trainingSession: {
@@ -36,6 +37,8 @@ const fields = [
   'cadence', 
   'altitude'
 ];
+
+const chartHoverPosition = ref<HoverPosition | null>(null);
 
 </script>
 
@@ -83,7 +86,10 @@ const fields = [
     </div>
 
     <div v-if="trainingSession.data.trainingSummary?.hasRoute" class="mb-4 px-4">
-      <TrainingSessionMap :sessionId="trainingSession.data.id" />
+      <TrainingSessionMap
+        :sessionId="trainingSession.data.id"
+        :hoverPosition="chartHoverPosition"
+      />
     </div>
 
     <div class="px-4 mb-16">
@@ -92,6 +98,7 @@ const fields = [
         :heartRateZones="trainingSession.data.heartRateZones"
         :runningPaceZones="runningPaceZones.data"
         :fields="fields"
+        @hover="chartHoverPosition = $event"
         />
     </div>
   </AppLayout>
