@@ -172,6 +172,17 @@ const chartData = computed<ChartData>(() => {
   return { xAxis, datasets };
 })
 
+const HoverPositionStyle = computed(() => {
+  if (!chartHoverPosition.value) return {};
+
+  return {
+    transform: `translateX(${tooltipOnRight.value ? '0' : '-100%'})`,
+    left: tooltipOnRight.value
+      ? `calc(${chartHoverPosition.value.x}px + ${yAxisWidth.value}px - 1em)`
+      : `calc(${chartHoverPosition.value.x}px + ${yAxisWidth.value}px + 1em)`,
+  };
+});
+
 // Hovers and tooltips.
 const chartHoverPosition = ref<HoverPosition | null>(null);
 const hoverData = ref<Record<string, number | null>>({});
@@ -311,12 +322,7 @@ onMounted(() => {
                 absolute top-0 bg-mist-50 shadow-md rounded-xs overflow-hidden
                 dark:text-mist-800 tabular-nums text-nowrap flex z-1
               "
-              :style="{
-                transform: `translateX(${tooltipOnRight ? '0' : '-100%'})`,
-                left: tooltipOnRight
-                  ? `calc(${chartHoverPosition.x}px + ${yAxisWidth}px - 1em)`
-                  : `calc(${chartHoverPosition.x}px + ${yAxisWidth}px + 1em)`,
-                }"
+              :style="HoverPositionStyle"
               >
               <span
                 v-if="field === 'heart_rate' && hoverHeartRateZone && hoverHeartRateZone.color"
@@ -373,12 +379,7 @@ onMounted(() => {
             dark:text-mist-800 tabular-nums text-nowrap z-1
             text-xs font-medium px-2 py-1
           "
-          :style="{
-            transform: `translateX(${tooltipOnRight ? '0' : '-100%'})`,
-            left: tooltipOnRight
-              ? `calc(${chartHoverPosition.x}px + ${yAxisWidth}px - 1em)`
-              : `calc(${chartHoverPosition.x}px + ${yAxisWidth}px + 1em)`,
-          }"
+          :style="HoverPositionStyle"
         >
           <div class="grid grid-cols-2 gap-x-2 w-max">
             <span v-if="hoverTimeLabel">
