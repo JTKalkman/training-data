@@ -80,7 +80,7 @@ onUnmounted(() => {
           type="button"
           title="Zoom in"
           @click="mapInstance.zoomIn()"
-          class="w-8 h-8 p-0 border border-gray-400 dark:border-gray-800 shadow"
+          class="w-8 h-8 p-0 font-medium text-base border border-gray-400 dark:border-gray-800 shadow"
         >+</Button>
       </div>
 
@@ -90,7 +90,7 @@ onUnmounted(() => {
           type="button"
           title="Zoom out"
           @click="mapInstance.zoomOut()"
-          class="w-8 h-8 p-0 border border-gray-400 dark:border-gray-800 shadow"
+          class="w-8 h-8 p-0 font-medium text-base border border-gray-400 dark:border-gray-800 shadow"
           >-</Button>
       </div>
 
@@ -100,7 +100,7 @@ onUnmounted(() => {
           type="button"
           title="Recenter"
           @click="recenter"
-          class="w-8 h-8 p-0 border border-gray-400 dark:border-gray-800 shadow"
+          class="w-8 h-8 p-0 font-medium text-base border border-gray-400 dark:border-gray-800 shadow"
         >⟲</Button>
       </div>
 
