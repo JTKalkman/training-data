@@ -97,13 +97,12 @@ const drawChart = () => {
           lastEmittedIndex = index;
           emit(
             'hover',
-            { index, x: event.x, time: props.data[index]?.x, },
-            props.field // TODO: Can we remove the field prop here?
+            { index, x: event.x, time: props.data[index]?.x, }
           );
         } else {
           if (lastEmittedIndex === null) return; // Already cleared, nothing to do
 
-          emit('hover', null, props.field) // TODO: Can we remove the field prop here?
+          emit('hover', null)
         }
       },
       plugins: {
@@ -130,10 +129,9 @@ onMounted(() => {
 
 <template>
   <div class="w-full h-28">
-    <!-- TODO: Can we remove the field prop here? -->
     <canvas 
       ref="chartCanvas" 
-      @mouseleave="emit('hover', null, props.field)"
+      @mouseleave="emit('hover', null)"
       class=""
     ></canvas>
   </div>

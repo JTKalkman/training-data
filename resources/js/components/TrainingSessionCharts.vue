@@ -218,7 +218,7 @@ const tooltipOnRight = computed(() =>
   (chartHoverPosition.value?.x ?? 0) < containerWidth.value / 2
 );
 
-const handleChartHover = (position: HoverPosition | null, sourceField: string | null) => {
+const handleChartHover = (position: HoverPosition | null) => {
   if (!position) {
     hoverData.value = {};
     chartHoverPosition.value = null;
