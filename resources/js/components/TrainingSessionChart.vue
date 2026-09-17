@@ -1,4 +1,5 @@
 <script setup lang="ts">
+
 import { 
   Chart, CategoryScale, LinearScale, LineController, PointElement, 
   LineElement, Tooltip, 
@@ -6,14 +7,11 @@ import {
 } from 'chart.js';
 import { onMounted, ref, watch } from 'vue';
 import { useIsMobile } from '@/composables/useIsMobile';
-import type { HoverPosition } from '@/types';
 import type { ChartDataPoint } from '@/types/chart-data-point';
 
 const props = defineProps<{
   field: string;
   data: Array<ChartDataPoint>;
-  chartHoverPosition: HoverPosition | null;
-  hoverSource: string | null;
   reverse: boolean;
   min: number|null;
   max: number|null;
@@ -24,54 +22,7 @@ const emit = defineEmits(['hover']);
 const chartCanvas = ref<HTMLCanvasElement | null>(null);
 
 let chartInstance: Chart;
-
-watch(() => props.chartHoverPosition, (position) => {
-  if (props.hoverSource === null || props.hoverSource === props.field) return;
-
-  if (position) {
-    showTooltip(position);
-  } else {
-    destroyTooltip();
-  }
-});
-
-const showTooltip = (position: HoverPosition) => {
-  chartInstance.tooltip?.setActiveElements(
-    [{
-      datasetIndex: 0,
-      index: position.index
-    }], 
-    { x: position.x, y: 0 }
-  );
-  chartInstance.update('none');
-}
-
-const destroyTooltip = () => {
-  chartInstance.tooltip?.setActiveElements([], { x: 0, y: 0 });
-  chartInstance.update();
-}
-
-const crosshairPlugin = {
-  id: 'crosshair',
-  afterDraw(chart: Chart) {
-    const tooltip = chart.tooltip as any; // TODO: A bit ugly for only one property.
-    if (tooltip && tooltip._active?.length) {
-      const x = tooltip._active[0].element.x;
-      const ctx = chart.ctx;
-      const topY = chart.scales.y.top;
-      const bottomY = chart.scales.y.bottom;
-
-      ctx.save();
-      ctx.beginPath();
-      ctx.moveTo(x, topY);
-      ctx.lineTo(x, bottomY);
-      ctx.lineWidth = 1;
-      ctx.strokeStyle = '#6B7280';
-      ctx.stroke();
-      ctx.restore();
-    }
-  }
-};
+let lastEmittedIndex: number | null = null;
 
 const drawChart = () => {
   const isMobile = useIsMobile();
@@ -141,13 +92,17 @@ const drawChart = () => {
       onHover: (event, activeElements) => {
         if (activeElements.length > 0) {
           const index = activeElements[0].index;
+
+          if (index === lastEmittedIndex) return; // Same data point, nothing changed
+          lastEmittedIndex = index;
           emit(
             'hover',
-            { index, x: event.x, time: props.data[index]?.x, },
-            props.field
+            { index, x: event.x, time: props.data[index]?.x, }
           );
         } else {
-          emit('hover', null, props.field)
+          if (lastEmittedIndex === null) return; // Already cleared, nothing to do
+
+          emit('hover', null)
         }
       },
       plugins: {
@@ -156,7 +111,6 @@ const drawChart = () => {
         }
       }
     },
-    plugins: [crosshairPlugin]
   }
 
   const yScale = config?.options?.scales?.y
@@ -177,7 +131,7 @@ onMounted(() => {
   <div class="w-full h-28">
     <canvas 
       ref="chartCanvas" 
-      @mouseleave="emit('hover', null, props.field)"
+      @mouseleave="emit('hover', null)"
       class=""
     ></canvas>
   </div>

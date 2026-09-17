@@ -6,6 +6,7 @@ import type { ChartData, ChartDataSet, HeartRateZone, HoverPosition, RunningPace
 import type { SampleDataPoint } from '@/types/sample-data-point';
 import TrainingSessionChart from './TrainingSessionChart.vue';
 import Spinner from './ui/spinner/Spinner.vue';
+import { getZoneForHeartRate, zoneColorClasses } from '@/lib/heartRateZones.js';
 
 const props = defineProps<{
   sessionId: string;
@@ -15,13 +16,13 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits<{
-    hover: [position: HoverPosition | null];
+  hover: [position: HoverPosition | null];
 }>();
 
 const { data, loading, error, fetch } = useSampleData(props.sessionId);
 const { formatPace } = usePace();
 
-const allFields = ['heart_rate', 'speed', 'pace', 'cadence', 'altitude'] as const;
+const allFields = ['distance', 'heart_rate', 'speed', 'pace', 'cadence', 'altitude'] as const;
 const fields = <string[]>props.fields ?? allFields;
 
 const availableFields = computed(() => {
@@ -89,6 +90,17 @@ const chartData = computed<ChartData>(() => {
       },
       reverse: false,
     },
+    distance: <ChartDataSet>{
+      label: 'Distance (km)',
+      samples: [],
+      metaData: {
+        min: null,
+        max: null,
+        minStr: null,
+        maxStr: null
+      },
+      reverse: false,
+    },
   };
 
   if (data.value?.length) {
@@ -105,6 +117,9 @@ const chartData = computed<ChartData>(() => {
     datasets.altitude.samples = data.value
       .filter((row): row is SampleDataPoint & { altitude: number } => row.altitude !== undefined)
       .map(row => ({ x: row.time, y: row.altitude }))
+    datasets.distance.samples = data.value
+      .filter((row): row is SampleDataPoint & { distance: number } => row.distance !== undefined)
+      .map(row => ({ x: row.time, y: row.distance }))
   };
 
   if (datasets.heart_rate.samples) {
@@ -157,9 +172,19 @@ const chartData = computed<ChartData>(() => {
   return { xAxis, datasets };
 })
 
+const HoverPositionStyle = computed(() => {
+  if (!chartHoverPosition.value) return {};
+
+  return {
+    transform: `translateX(${tooltipOnRight.value ? '0' : '-100%'})`,
+    left: tooltipOnRight.value
+      ? `calc(${chartHoverPosition.value.x}px + ${yAxisWidth.value}px - 1em)`
+      : `calc(${chartHoverPosition.value.x}px + ${yAxisWidth.value}px + 1em)`,
+  };
+});
+
 // Hovers and tooltips.
 const chartHoverPosition = ref<HoverPosition | null>(null);
-const hoverSource = ref<string | null>(null);
 const hoverData = ref<Record<string, number | null>>({});
 
 const tooltipData = computed(() => {
@@ -168,13 +193,28 @@ const tooltipData = computed(() => {
     const index = chartHoverPosition.value.index;
     
     return {
-        heart_rate: chartData.value.datasets['heart_rate']?.samples[index]?.y,
-        pace:       chartData.value.datasets['pace']?.samples[index]?.y,
-        speed:      chartData.value.datasets['speed']?.samples[index]?.y,
-        cadence:    chartData.value.datasets['cadence']?.samples[index]?.y,
-        altitude:   chartData.value.datasets['altitude']?.samples[index]?.y,
+      distance:   chartData.value.datasets['distance']?.samples[index]?.y,
+      heart_rate: chartData.value.datasets['heart_rate']?.samples[index]?.y,
+      pace:       chartData.value.datasets['pace']?.samples[index]?.y,
+      speed:      chartData.value.datasets['speed']?.samples[index]?.y,
+      cadence:    chartData.value.datasets['cadence']?.samples[index]?.y,
+      altitude:   chartData.value.datasets['altitude']?.samples[index]?.y,
     };
 });
+
+const hoverTimeLabel = computed(() => {
+  if (!chartHoverPosition.value) return null;
+  return chartData.value.xAxis[chartHoverPosition.value.index] ?? null;
+});
+
+const hoverHeartRateZone = computed(() => {
+  if (!chartHoverPosition.value) return null;
+
+  const heartRate = chartData.value.datasets.heart_rate.samples[chartHoverPosition.value.index]?.y
+  if (!heartRate) return null;
+
+  return getZoneForHeartRate(heartRate, props.heartRateZones);
+})
 
 const chartsContainer = ref<HTMLElement | null>(null);
 const containerHeight = ref(0);
@@ -186,22 +226,36 @@ const yAxisWidth = computed(() => {
 });
 
 const tooltipOnRight = computed(() => 
-    (chartHoverPosition.value?.x ?? 0) < containerWidth.value / 2
+  (chartHoverPosition.value?.x ?? 0) < containerWidth.value / 2
 );
 
-const handleChartHover = (position: HoverPosition | null, sourceField: string | null) => {
+const handleChartHover = (position: HoverPosition | null) => {
   if (!position) {
     hoverData.value = {};
     chartHoverPosition.value = null;
-    hoverSource.value = null;
     emit('hover', null);
     return;
   }
 
   chartHoverPosition.value = position;
-  hoverSource.value = sourceField;
   emit('hover', position);
 }
+
+const formatValueFor = (field: string): string | null => {
+  const v = tooltipData.value;
+
+  if (!v) return null;
+
+  switch (field) {
+    case 'altitude':   return v.altitude != null ? `${v.altitude} m` : null;
+    case 'cadence':    return v.cadence != null ? `${v.cadence} spm` : null;
+    case 'distance':   return v.distance != null ? `${(v.distance / 1000).toFixed(2)} km` : null;
+    case 'heart_rate': return v.heart_rate != null ? `${v.heart_rate} bpm` : null;
+    case 'pace':       return v.pace != null ? `${formatPace(v.pace)} min/km` : null;
+    case 'speed':      return v.speed != null ? `${v.speed} km/h` : null;
+    default: return null;
+  }
+};
 
 onMounted(() => {
   if (chartsContainer.value) {
@@ -244,39 +298,12 @@ onMounted(() => {
     </div>
 
     <div class="mb-2 relative" >
-      <!-- Tooltip -->
-      <div class="relative">
-        <Transition name="fade">
-          <div
-            v-if="chartHoverPosition && tooltipData"
-            class="absolute w-48 z-10 pointer-events-none bg-white border border-gray-200 rounded-lg shadow-lg px-3 py-2 text-sm text-gray-800"
-            :style="{
-              top: `${containerHeight / 2}px`,
-              transform: `translateX(${tooltipOnRight ? '0' : '-100%'}) translateY(-50%)`,
-              left: tooltipOnRight
-                  ? `calc(${chartHoverPosition.x}px + ${yAxisWidth}px + 1em)`
-                  : `calc(${chartHoverPosition.x}px + ${yAxisWidth}px - 1em)`,
-            }"
-          >
-            <div class="grid grid-cols-2 gap-x-2 gap-y-1 text-nowrap">
-              <span v-if="tooltipData.heart_rate" class="">Heart rate</span>
-              <span v-if="tooltipData.heart_rate" class="font-medium text-right">{{ tooltipData.heart_rate }} bpm</span>
-
-              <span v-if="tooltipData.speed && availableFields.includes('speed')" class="">Speed</span>
-              <span v-if="tooltipData.speed && availableFields.includes('speed')" class="font-medium text-right">{{ tooltipData.speed }} km/h</span>
-
-              <span v-if="tooltipData.pace && availableFields.includes('pace')" class="">Pace</span>
-              <span v-if="tooltipData.pace && availableFields.includes('pace')" class="font-medium text-right">{{ formatPace(tooltipData.pace) }} min/km</span>
-
-              <span v-if="tooltipData.cadence" class="">Cadence</span>
-              <span v-if="tooltipData.cadence" class="font-medium text-right">{{ tooltipData.cadence }} spm</span>
-
-              <span v-if="tooltipData.altitude" class="">Altitude</span>
-              <span v-if="tooltipData.altitude" class="font-medium text-right">{{ tooltipData.altitude }} m</span>
-            </div>
-          </div>
-        </Transition>
-      </div>
+      <!-- Shared crosshair line -->
+      <div
+        v-if="chartHoverPosition"
+        class="absolute top-0 bottom-0 w-px bg-gray-400 pointer-events-none z-1"
+        :style="{ left: `${chartHoverPosition.x + yAxisWidth}px` }"
+      ></div>
 
       <!-- Charts container -->
       <div class="mb-2 relative" ref="chartsContainer">
@@ -286,7 +313,30 @@ onMounted(() => {
           class="flex flex-col mb-4"
         >
 
-          <p class="mb-2 text-sm font-medium">{{ chartData.datasets[field].label }}</p>
+          <!-- Label and hover container for each chart. -->
+          <div class="relative mb-2">
+            <span class="font-medium text-sm">{{ chartData.datasets[field].label }}</span>
+            <div
+              v-if="chartHoverPosition"
+              class="
+                absolute top-0 bg-mist-50 shadow-md rounded-xs overflow-hidden
+                dark:text-mist-800 tabular-nums text-nowrap flex z-1
+              "
+              :style="HoverPositionStyle"
+              >
+              <span
+                v-if="field === 'heart_rate' && hoverHeartRateZone && hoverHeartRateZone.color"
+                class="text-lg w-2"
+                :class="zoneColorClasses(hoverHeartRateZone.color)"
+              ></span>
+              <span class="text-xs font-medium px-2 py-1 flex gap-x-1">
+                <span>{{ formatValueFor(field) }}</span>
+                <span
+                  v-if="field === 'heart_rate' && hoverHeartRateZone && hoverHeartRateZone.name"
+                >({{ hoverHeartRateZone.name }})</span>
+              </span>
+            </div>
+          </div>
 
           <div class="flex">
             <div class="hidden lg:flex w-16 lg:shrink-0 flex-col justify-between text-sm text-gray-500 dark:text-gray-300">
@@ -298,24 +348,19 @@ onMounted(() => {
               <TrainingSessionChart
                 :field="field"
                 :data="chartData.datasets[field].samples"
-                :chartHoverPosition="chartHoverPosition"
-                :hoverSource="hoverSource"
                 :reverse="chartData.datasets[field].reverse"
                 :min="chartData.datasets[field].metaData.min"
                 :max="chartData.datasets[field].metaData.max"
                 @hover="handleChartHover"
               />
             </div>
-      
-            <!-- <div class="hidden lg:flex w-16">
-              <p>zones</p>
-            </div> -->
+
           </div>
         </div>
       </div>
 
       <!-- X-axis -->
-      <div class="lg:pl-16">
+      <div class="lg:pl-16 mb-3">
         <div class="flex justify-between text-sm text-gray-500 dark:text-gray-300">
           <p>{{ chartData.xAxis[0] }}</p>
           <p class="hidden lg:block">{{ chartData.xAxis[Math.floor(chartData.xAxis.length * .25)] }}</p>
@@ -324,6 +369,35 @@ onMounted(() => {
           <p>{{ chartData.xAxis[chartData.xAxis.length - 1] }}</p>
         </div>
       </div>
+
+      <!-- Time/distance tooltip -->
+      <div class="relative pl-16 pr-1 mb-5 text-sm text-gray-500 dark:text-gray-300 h-3">
+        <div
+          v-if="chartHoverPosition && (tooltipData?.distance || hoverTimeLabel)"
+          class="
+            absolute top-0 bg-mist-50 shadow-md rounded-xs overflow-hidden
+            dark:text-mist-800 tabular-nums text-nowrap z-1
+            text-xs font-medium px-2 py-1
+          "
+          :style="HoverPositionStyle"
+        >
+          <div class="grid grid-cols-2 gap-x-2 w-max">
+            <span v-if="hoverTimeLabel">
+              Time
+            </span>
+            <span v-if="hoverTimeLabel" class="text-right">
+              {{ hoverTimeLabel }}
+            </span>
+            <span v-if="chartHoverPosition && tooltipData?.distance != null">
+              Distance
+            </span>
+            <span v-if="chartHoverPosition && tooltipData?.distance != null" class="text-right">
+              {{ formatValueFor('distance') }}
+            </span>
+          </div>
+        </div>
+      </div>
+
     </div>
   
   </div>
