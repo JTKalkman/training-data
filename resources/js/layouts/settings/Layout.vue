@@ -10,11 +10,16 @@ import { edit as editProfile } from '@/routes/profile';
 import { show } from '@/routes/two-factor';
 import { edit as editPassword } from '@/routes/user-password';
 import { type NavItem } from '@/types';
+import trainingSettings from '@/routes/training-settings';
 
 const sidebarNavItems: NavItem[] = [
     {
         title: 'Profile',
         href: editProfile(),
+    },
+    {
+        title: 'Training Settings',
+        href: trainingSettings.edit(),
     },
     {
         title: 'Password',
