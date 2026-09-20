@@ -24,6 +24,8 @@ return new class extends Migration
             $table->unsignedSmallInteger('mas_seconds_per_km')->nullable();
             $table->unsignedSmallInteger('ftp_watts')->nullable();
             $table->timestamps();
+
+            $table->unique(['user_id']);
         });
     }
 
