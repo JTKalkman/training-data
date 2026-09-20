@@ -116,7 +116,7 @@ See the [Laravel deployment requirements](https://laravel.com/docs/deployment#se
 
 Additionally required:
 - Nginx
-- Supervisor (for queue workers, see `deploy/trainingsdata-worker.conf`)
+- Supervisor (for queue workers, see `tools/deploy/trainingsdata-worker.conf`)
 
 ### Ngnix
 
@@ -124,7 +124,7 @@ Install `nginx-trainingsdata.conf` in `/etc/nginx/sites-available/trainingsdata`
 
 ### Worker configuration
 
-Install `deploy/trainingsdata-worker.conf` in `/etc/supervisor/conf.d/trainingsdata-worker.conf` and then:
+Install `tools/deploy/trainingsdata-worker.conf` in `/etc/supervisor/conf.d/trainingsdata-worker.conf` and then:
 
 ```
 sudo supervisorctl reread
@@ -134,7 +134,7 @@ sudo supervisorctl start trainingsdata-worker:*
 
 ### Scheduler
 
-Install `deploy/trainingsdata-scheduler` in `/etc/cron.d` and make sure this has the correct rights.
+Install `tools/deploy/trainingsdata-scheduler` in `/etc/cron.d` and make sure this has the correct rights.
 
 ```
 sudo chmod 644 /etc/cron.d/trainingsdata-scheduler
