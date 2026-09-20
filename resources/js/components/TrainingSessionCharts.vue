@@ -8,7 +8,7 @@ import TrainingSessionChart from './TrainingSessionChart.vue';
 import Spinner from './ui/spinner/Spinner.vue';
 import { getZoneForHeartRate, heartRateZoneColors } from '@/lib/heartRateZones.js';
 import { getZoneColor } from '@/lib/getZoneColor.js';
-import { chartDefaultColors } from '@/lib/chartColors.js';
+import { chartColors, chartDefaultColors } from '@/lib/chartColors.js';
 
 const props = defineProps<{
   sessionId: string;
@@ -237,7 +237,6 @@ const hoverHeartRateZone = computed(() => {
   if (!chartHoverPosition.value) return null;
   if (!hoverHeartRate.value) return null;
 
-  // TODO: replace with getZoneColor which takes out of bound values into account.
   return getZoneForHeartRate(hoverHeartRate.value, props.heartRateZones);
 })
 
@@ -245,7 +244,7 @@ const hoverHeartRateZoneColorConfig = computed(() => {
   if (!chartHoverPosition.value) return null;
   if (!hoverHeartRate.value) return null;
 
-  return getZoneColor(hoverHeartRate.value, heartRateColorZones.value, chartDefaultColors)
+  return getZoneColor(hoverHeartRate.value, heartRateColorZones.value, chartDefaultColors);
 })
 
 const chartsContainer = ref<HTMLElement | null>(null);
@@ -288,6 +287,27 @@ const formatValueFor = (field: string): string | null => {
     default: return null;
   }
 };
+
+const getHoverColorConfig = (field: string): ColorConfig | null => {
+  if (!chartHoverPosition.value) return null;
+
+  const fieldColorConfig = chartColors[field];
+
+  if (!fieldColorConfig) return null;
+
+  if (fieldColorConfig.strategy === 'static') {
+    return fieldColorConfig.default ?? chartDefaultColors;
+  }
+
+  if (fieldColorConfig.strategy === 'zones' && tooltipData.value) {
+    switch (field) {
+      case 'heart_rate': return getZoneColor(tooltipData.value.heart_rate, heartRateColorZones.value, chartDefaultColors);;
+      default: return null;
+    }
+  }
+
+  return chartDefaultColors;
+}
 
 onMounted(() => {
   if (chartsContainer.value) {
@@ -357,10 +377,10 @@ onMounted(() => {
               :style="HoverPositionStyle"
               >
               <span
-                v-if="field === 'heart_rate' && hoverHeartRateZoneColorConfig"
                 class="text-lg w-2"
-                :class="hoverHeartRateZoneColorConfig.tailwind.foreground_color"
+                :class="getHoverColorConfig(field)?.tailwind.foreground_color"
               ></span>
+
               <span class="text-xs font-medium px-2 py-1 flex gap-x-1">
                 <span>{{ formatValueFor(field) }}</span>
                 <span
