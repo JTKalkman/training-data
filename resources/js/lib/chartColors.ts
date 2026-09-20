@@ -62,8 +62,8 @@ export const chartColors: Record<string, FieldColorConfig> = {
         background_color: '#e2e8f0'
       },
       tailwind: {
-        foreground_color: 'slate-400',
-        background_color: 'slate-200'
+        foreground_color: 'bg-slate-400',
+        background_color: 'bg-slate-200'
       }
     }
   },
@@ -76,7 +76,7 @@ export const chartDefaultColors: ColorConfig = {
     background_color: '#e2e8f0'
   },
   tailwind: {
-    foreground_color: 'slate-400',
-    background_color: 'slate-200'
+    foreground_color: 'bg-slate-400',
+    background_color: 'bg-slate-200'
   }
 };
