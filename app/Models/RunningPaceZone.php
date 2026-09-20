@@ -16,6 +16,5 @@ class RunningPaceZone extends Model
         'min_seconds',
         'max_seconds',
         'color',
-        'in_zone_seconds',
     ];
 }
