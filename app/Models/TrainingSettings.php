@@ -16,6 +16,7 @@ class TrainingSettings extends Model
         'aerobic_threshold_bpm',
         'anaerobic_threshold_bpm',
         'mas_seconds_per_km',
+        'map_watts',
         'ftp_watts',
     ];
 
