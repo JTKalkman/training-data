@@ -20,6 +20,7 @@ class RunningPaceZoneResource extends JsonResource
             'minSeconds' => $this->min_seconds,
             'maxSeconds' => $this->max_seconds,
             'color' => $this->color,
+            'inZoneSeconds' => $this->in_zone_seconds,
         ];
     }
 }
