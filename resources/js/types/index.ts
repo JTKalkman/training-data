@@ -3,7 +3,6 @@ export * from './chart-data-point';
 export * from './chart-data-set';
 export * from './chart-data';
 export * from './color-config';
-export * from './color-strategy';
 export * from './color-zone';
 export * from './field-color-config';
 export * from './flash';
