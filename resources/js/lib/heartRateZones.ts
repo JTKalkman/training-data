@@ -3,12 +3,12 @@ import { ColorConfig, HeartRateZone } from "@/types";
 const heartRateZoneColorMap: Record<string, ColorConfig> = {
   blue: {
     hex: {
-      foreground_color: '#00a6f4',
-      background_color: '#b8e6fe'
+      foreground_color: '#74d4ff',
+      background_color: '#dff2fe'
     },
     tailwind: {
-      foreground_color: 'bg-sky-500',
-      background_color: 'bg-sky-200'
+      foreground_color: 'bg-sky-300',
+      background_color: 'bg-sky-100'
     }
   },
   green: {
