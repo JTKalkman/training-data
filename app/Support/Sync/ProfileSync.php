@@ -79,9 +79,6 @@ abstract class ProfileSync
             $parser = $this->parser();
 
             foreach ($exercises as $exercise) {
-                // Store temporary
-                file_put_contents($exercise['id'] . '.json',  json_encode($exercise));
-
                 // Check for duplicates based on id.
                 $existingId = TrainingSession::where([
                     'user_id' => $profile->user->id,
