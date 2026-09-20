@@ -2,11 +2,13 @@
 import { computed, onMounted, onUnmounted, ref } from 'vue';
 import { usePace } from '@/composables/usePace';
 import { useSampleData } from '@/composables/useSampleData';
-import type { ChartData, ChartDataSet, HeartRateZone, HoverPosition, RunningPaceZone } from '@/types';
+import type { ChartData, ChartDataSet, ColorConfig, ColorZone, HeartRateZone, HoverPosition, RunningPaceZone } from '@/types';
 import type { SampleDataPoint } from '@/types/sample-data-point';
 import TrainingSessionChart from './TrainingSessionChart.vue';
 import Spinner from './ui/spinner/Spinner.vue';
-import { getZoneForHeartRate, zoneColorClasses } from '@/lib/heartRateZones.js';
+import { getZoneForHeartRate, heartRateZoneColors } from '@/lib/heartRateZones.js';
+import { getZoneColor } from '@/lib/getZoneColor.js';
+import { chartColors, chartDefaultColors } from '@/lib/chartColors.js';
 
 const props = defineProps<{
   sessionId: string;
@@ -32,6 +34,18 @@ const availableFields = computed(() => {
   return fields.filter(field => firstDataPoint[field] !== undefined);
 });
 
+const heartRateColorZones = computed<ColorZone[]>(() => {
+  return props.heartRateZones.map((zone) => {
+    const colorConfig: ColorConfig | null = zone.color ? heartRateZoneColors(zone.color) : null;
+
+    return {
+      min: zone.min_bpm,
+      max: zone.max_bpm,
+      colorConfig: colorConfig
+    }
+  })
+})
+
 const chartData = computed<ChartData>(() => {
   const xAxis = data.value?.map(row => row.time_label) || [];
   const datasets = {
@@ -42,7 +56,8 @@ const chartData = computed<ChartData>(() => {
         min: null,
         max: null,
         minStr: null,
-        maxStr: null
+        maxStr: null,
+        zones: heartRateColorZones.value,
       },
       reverse: false,
     },
@@ -53,7 +68,8 @@ const chartData = computed<ChartData>(() => {
         min: null,
         max: null,
         minStr: null,
-        maxStr: null
+        maxStr: null,
+        zones: []
       },
       reverse: false,
     },
@@ -64,7 +80,8 @@ const chartData = computed<ChartData>(() => {
         min: null,
         max: null,
         minStr: null,
-        maxStr: null
+        maxStr: null,
+        zones: []
       },
       reverse: true,
     },
@@ -75,7 +92,8 @@ const chartData = computed<ChartData>(() => {
         min: null,
         max: null,
         minStr: null,
-        maxStr: null
+        maxStr: null,
+        zones: []
       },
       reverse: false,
     },
@@ -86,7 +104,8 @@ const chartData = computed<ChartData>(() => {
         min: null,
         max: null,
         minStr: null,
-        maxStr: null
+        maxStr: null,
+        zones: []
       },
       reverse: false,
     },
@@ -97,7 +116,8 @@ const chartData = computed<ChartData>(() => {
         min: null,
         max: null,
         minStr: null,
-        maxStr: null
+        maxStr: null,
+        zones: []
       },
       reverse: false,
     },
@@ -207,13 +227,24 @@ const hoverTimeLabel = computed(() => {
   return chartData.value.xAxis[chartHoverPosition.value.index] ?? null;
 });
 
-const hoverHeartRateZone = computed(() => {
+const hoverHeartRate = computed(() => {
   if (!chartHoverPosition.value) return null;
 
-  const heartRate = chartData.value.datasets.heart_rate.samples[chartHoverPosition.value.index]?.y
-  if (!heartRate) return null;
+  return chartData.value.datasets.heart_rate.samples[chartHoverPosition.value.index]?.y
+})
 
-  return getZoneForHeartRate(heartRate, props.heartRateZones);
+const hoverHeartRateZone = computed(() => {
+  if (!chartHoverPosition.value) return null;
+  if (!hoverHeartRate.value) return null;
+
+  return getZoneForHeartRate(hoverHeartRate.value, props.heartRateZones);
+})
+
+const hoverHeartRateZoneColorConfig = computed(() => {
+  if (!chartHoverPosition.value) return null;
+  if (!hoverHeartRate.value) return null;
+
+  return getZoneColor(hoverHeartRate.value, heartRateColorZones.value, chartDefaultColors);
 })
 
 const chartsContainer = ref<HTMLElement | null>(null);
@@ -256,6 +287,27 @@ const formatValueFor = (field: string): string | null => {
     default: return null;
   }
 };
+
+const getHoverColorConfig = (field: string): ColorConfig | null => {
+  if (!chartHoverPosition.value) return null;
+
+  const fieldColorConfig = chartColors[field];
+
+  if (!fieldColorConfig) return null;
+
+  if (fieldColorConfig.strategy === 'static') {
+    return fieldColorConfig.default ?? chartDefaultColors;
+  }
+
+  if (fieldColorConfig.strategy === 'zones' && tooltipData.value) {
+    switch (field) {
+      case 'heart_rate': return getZoneColor(tooltipData.value.heart_rate, heartRateColorZones.value, chartDefaultColors);;
+      default: return null;
+    }
+  }
+
+  return chartDefaultColors;
+}
 
 onMounted(() => {
   if (chartsContainer.value) {
@@ -325,10 +377,10 @@ onMounted(() => {
               :style="HoverPositionStyle"
               >
               <span
-                v-if="field === 'heart_rate' && hoverHeartRateZone && hoverHeartRateZone.color"
                 class="text-lg w-2"
-                :class="zoneColorClasses(hoverHeartRateZone.color)"
+                :class="getHoverColorConfig(field)?.tailwind.foreground_color"
               ></span>
+
               <span class="text-xs font-medium px-2 py-1 flex gap-x-1">
                 <span>{{ formatValueFor(field) }}</span>
                 <span
@@ -351,6 +403,7 @@ onMounted(() => {
                 :reverse="chartData.datasets[field].reverse"
                 :min="chartData.datasets[field].metaData.min"
                 :max="chartData.datasets[field].metaData.max"
+                :zones="chartData.datasets[field].metaData.zones"
                 @hover="handleChartHover"
               />
             </div>
@@ -360,7 +413,7 @@ onMounted(() => {
       </div>
 
       <!-- X-axis -->
-      <div class="lg:pl-16 mb-3">
+      <div class="lg:pl-16">
         <div class="flex justify-between text-sm text-gray-500 dark:text-gray-300">
           <p>{{ chartData.xAxis[0] }}</p>
           <p class="hidden lg:block">{{ chartData.xAxis[Math.floor(chartData.xAxis.length * .25)] }}</p>
@@ -371,11 +424,11 @@ onMounted(() => {
       </div>
 
       <!-- Time/distance tooltip -->
-      <div class="relative pl-16 pr-1 mb-5 text-sm text-gray-500 dark:text-gray-300 h-3">
+      <div class="relative pl-16 pr-1 mb-5 text-sm text-gray-500 dark:text-gray-300">
         <div
           v-if="chartHoverPosition && (tooltipData?.distance || hoverTimeLabel)"
           class="
-            absolute top-0 bg-mist-50 shadow-md rounded-xs overflow-hidden
+            absolute -top-5 bg-mist-50 shadow-md rounded-xs overflow-hidden
             dark:text-mist-800 tabular-nums text-nowrap z-1
             text-xs font-medium px-2 py-1
           "

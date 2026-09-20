@@ -2,16 +2,19 @@
 
 import { 
   Chart, CategoryScale, LinearScale, LineController, PointElement, 
-  LineElement, Tooltip, 
-  ChartConfiguration
+  LineElement, ChartConfiguration
 } from 'chart.js';
-import { onMounted, ref, watch } from 'vue';
+import { onMounted, ref } from 'vue';
 import { useIsMobile } from '@/composables/useIsMobile';
 import type { ChartDataPoint } from '@/types/chart-data-point';
+import { getZoneColor } from '@/lib/getZoneColor';
+import { ColorZone } from '@/types';
+import { chartColors, chartDefaultColors } from '@/lib/chartColors';
 
 const props = defineProps<{
   field: string;
-  data: Array<ChartDataPoint>;
+  data: ChartDataPoint[];
+  zones: ColorZone[];
   reverse: boolean;
   min: number|null;
   max: number|null;
@@ -25,26 +28,40 @@ let chartInstance: Chart;
 let lastEmittedIndex: number | null = null;
 
 const drawChart = () => {
+  Chart.register(CategoryScale, LinearScale, LineController, PointElement, LineElement)
+
   const isMobile = useIsMobile();
   const labels = props.data.map(d => d.x)
   const chartData = props.data.map(d => d.y)
+  const fieldColorConfig = chartColors[props.field]
+  const borderColor = fieldColorConfig?.default?.hex?.foreground_color || chartDefaultColors.hex.foreground_color;
 
-  Chart.register(CategoryScale, LinearScale, LineController, PointElement, LineElement, Tooltip)
+  const datasetConfig: ChartConfiguration<'line'>['data']['datasets'][0] = {
+    label: props.field,
+    data: chartData,
+    borderColor,
+    borderWidth: 1,
+    pointRadius: 0,
+    pointHoverRadius: 0,
+    fill: false,
+    tension: 0,
+  };
+
+  if (fieldColorConfig && fieldColorConfig.strategy === 'zones' && props.zones) {
+    datasetConfig.segment = {
+      borderColor: (ctx) => {
+        const value = ctx.p1.parsed.y ?? null;
+        const colorConfig = getZoneColor(value, props.zones!, chartDefaultColors)
+        return colorConfig.hex.foreground_color;
+      },
+    };
+  }
 
   const config: ChartConfiguration<'line'> = {
     type: 'line',
     data: {
       labels: labels,
-      datasets: [{
-        label: props.field,
-        data: chartData,
-        borderColor: 'gray',
-        borderWidth: 1,
-        pointRadius: 0,
-        pointHoverRadius: 0,
-        fill: false,
-        tension: 0,
-      }],
+      datasets: [ datasetConfig ],
     },
     options: {
       responsive: true,

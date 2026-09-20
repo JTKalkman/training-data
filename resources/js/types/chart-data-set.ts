@@ -1,4 +1,5 @@
 import type { ChartDataPoint } from "./chart-data-point";
+import { ColorZone } from "./color-zone";
 
 export interface ChartDataSet {
   label: string;
@@ -8,6 +9,7 @@ export interface ChartDataSet {
     max: number | null;
     minStr: string | number | null;
     maxStr: string | number | null;
+    zones: ColorZone[]
   },
   reverse: boolean;
 }
