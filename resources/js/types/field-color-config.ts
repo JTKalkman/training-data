@@ -3,6 +3,6 @@ import { ColorZone } from "./color-zone";
 
 export interface FieldColorConfig {
   strategy: 'static' | 'zones';
-  fallback: ColorConfig; // Fallback colors.
+  default: ColorConfig;
   zones?: ColorZone[];
 }
