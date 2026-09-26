@@ -2,13 +2,13 @@
 
 namespace App\Http\Requests\Settings;
 
-use App\Concerns\TrainingSettingsValidationRules;
+use App\Concerns\PhysicalDataValidationRules;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class TrainingSettingsUpdateRequest extends FormRequest
+class PhysicalDataUpdateRequest extends FormRequest
 {
-    use TrainingSettingsValidationRules;
+    use PhysicalDataValidationRules;
 
     private function parsePaceToSeconds(string $pace): ?int
     {
@@ -42,6 +42,6 @@ class TrainingSettingsUpdateRequest extends FormRequest
      */
     public function rules(): array
     {
-        return $this->trainingSettingsRules();
+        return $this->physicalDataRules();
     }
 }
