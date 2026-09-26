@@ -68,8 +68,8 @@ class User extends Authenticatable
         return $this->hasMany(Device::class);
     }
 
-    public function trainingSettings(): HasOne
+    public function physicalData(): HasOne
     {
-        return $this->hasOne(TrainingSettings::class);
+        return $this->hasOne(PhysicalData::class);
     }
 }
