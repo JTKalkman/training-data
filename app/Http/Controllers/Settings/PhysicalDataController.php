@@ -40,7 +40,7 @@ class PhysicalDataController extends Controller
                 'weight_kg'               => $data['weight_kg'] ?? null,
                 'height_cm'               => $data['height_cm'] ?? null,
                 'sex'                     => $data['sex'] ?? null,
-                'resting_heargt_rate'     => $data['resting_heart_rate'] ?? null,
+                'resting_heart_rate'      => $data['resting_heart_rate'] ?? null,
                 'max_heart_rate'          => $data['max_heart_rate'] ?? null,
                 'aerobic_threshold_bpm'   => $data['aerobic_threshold_bpm'] ?? null,
                 'anaerobic_threshold_bpm' => $data['anaerobic_threshold_bpm'] ?? null,
