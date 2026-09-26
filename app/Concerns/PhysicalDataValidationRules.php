@@ -17,7 +17,7 @@ trait PhysicalDataValidationRules
     {
         return [
             'date_of_birth'           => ['nullable', 'date'],
-            'weight_kg'               => ['nullable', 'decimal:1', 'min:0', 'max:1000'],
+            'weight_kg'               => ['nullable', 'decimal:0,1', 'min:0', 'max:1000'],
             'height_cm'               => ['nullable', 'integer', 'min:50', 'max:300'],
             'sex'                     => ['nullable', 'string', Rule::in(['male', 'female', 'prefer_not_to_say']),],
             'resting_heart_rate'      => [...self::validHeartRate, 'lt:max_heart_rate'],
