@@ -6,17 +6,19 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class TrainingSettings extends Model
+class PhysicalData extends Model
 {
     protected $fillable = [
         'date_of_birth',
         'weight_kg',
         'height_cm',
+        'sex',
         'resting_heart_rate',
         'max_heart_rate',
         'aerobic_threshold_bpm',
         'anaerobic_threshold_bpm',
         'mas_seconds_per_km',
+        'vo2_max',
         'map_watts',
         'ftp_watts',
     ];
