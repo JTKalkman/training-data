@@ -11,10 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('training_settings', function (Blueprint $table) {
+        Schema::create('physical_data', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->date('date_of_birth')->nullable();
+            $table->string('sex')->nullable();
             $table->decimal('weight_kg', 5, 1)->nullable();
             $table->unsignedSmallInteger('height_cm')->nullable();
             $table->unsignedSmallInteger('resting_heart_rate')->nullable();
@@ -22,6 +23,7 @@ return new class extends Migration
             $table->unsignedSmallInteger('aerobic_threshold_bpm')->nullable();
             $table->unsignedSmallInteger('anaerobic_threshold_bpm')->nullable();
             $table->unsignedSmallInteger('mas_seconds_per_km')->nullable();
+            $table->unsignedSmallInteger('vo2_max')->nullable();
             $table->unsignedSmallInteger('map_watts')->nullable();
             $table->unsignedSmallInteger('ftp_watts')->nullable();
             $table->timestamps();
@@ -35,6 +37,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('training_settings');
+        Schema::dropIfExists('physical_data');
     }
 };
