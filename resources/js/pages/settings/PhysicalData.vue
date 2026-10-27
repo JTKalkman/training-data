@@ -12,19 +12,11 @@ import PhysicalDataController from '@/actions/App/Http/Controllers/Settings/Phys
 import { edit } from '@/routes/physical-data';
 import { route } from 'ziggy-js';
 import { computed, ref } from 'vue';
+import { PhysicalData } from '@/types/physical-data';
 
 type Props = {
   physicalData: {
-    date_of_birth?: string;
-    weight_kg?: number;
-    height_cm?: number;
-    sex?: string;
-    resting_heart_rate?: number;
-    max_heart_rate?: number;
-    aerobic_threshold_bpm?: number;
-    anaerobic_threshold_bpm?: number;
-    vo2_max?: number;
-    mas_pace?: number;
+    data: PhysicalData
   }
 };
 
@@ -35,12 +27,9 @@ const breadcrumbItems: BreadcrumbItem[] = [{
   href: edit().url,
 }];
 
-const page = usePage();
-const physicalData = page.props.physicalData;
-
-const dateOfBirth = ref(props.physicalData.date_of_birth ?? '');
-const canEstimateHeartrateLimits = computed(() => dateOfBirth.value !== '');
-const estimateHeartrateLimitsError = ref<string | null>(null);
+const dateOfBirth = ref(props.physicalData.data.dateOfBirth ?? '');
+const weight = ref(props.physicalData.data.weightKg ?? '');
+const height = ref(props.physicalData.data.heightCm ?? '');
 
 const sexOptions = [
   { value: 'male', label: 'Male' },
@@ -48,7 +37,18 @@ const sexOptions = [
   { value: 'prefer_not_to_say', label: 'Prefer not to say' },
 ] as const;
 
-const sex = ref(props.physicalData.sex);
+const sex = ref(props.physicalData.data.sex ?? '');
+const restingHeartRate = ref(props.physicalData.data.restingHeartRate ?? '');
+const maxHeartRate = ref(props.physicalData.data.maxHeartRate ?? '');
+const aerobicThreshold = ref(props.physicalData.data.aerobicThresholdBpm ?? '');
+const anaerobicThreshold = ref(props.physicalData.data.anaerobicThresholdBpm ?? '');
+const VO2_MAX = ref(props.physicalData.data.vo2Max ?? '');
+const MAS_Pace = ref(props.physicalData.data.masPace ?? '');
+const FTP_WATTS = ref(props.physicalData.data.mapWatts ?? '');
+const MAP_WATTS = ref(props.physicalData.data.ftpWatts ?? '');
+
+const canEstimateHeartrateLimits = computed(() => dateOfBirth.value !== '');
+const estimateHeartrateLimitsError = ref<string | null>(null);
 
 const useEstimateHeartRates = async () => {
   if (!dateOfBirth.value) return; // nothing to estimate from yet
@@ -64,9 +64,9 @@ const useEstimateHeartRates = async () => {
 
   const estimates = await response.json();
 
-  props.physicalData.max_heart_rate = estimates.max_heart_rate;
-  props.physicalData.aerobic_threshold_bpm = estimates.aerobic_threshold_bpm;
-  props.physicalData.anaerobic_threshold_bpm = estimates.anaerobic_threshold_bpm;
+  maxHeartRate.value = estimates.maxHeartRate;
+  aerobicThreshold.value = estimates.aerobicThresholdBpm;
+  anaerobicThreshold.value = estimates.anaerobicThresholdBpm;
 };
 
 </script>
@@ -102,11 +102,10 @@ const useEstimateHeartRates = async () => {
             <div class="sm:col-span-2">
               <Label class="mb-2" for="date_of_birth">Date of birth</Label>
               <Input
+                v-model="dateOfBirth"
                 name="date_of_birth"
                 id="date_of_birth"
                 type="date"
-                :value="dateOfBirth"
-                @input="dateOfBirth = ($event.target as HTMLInputElement).value"
                 class="mt-1 block w-full"
                 autocomplete="date of birth"
                 placeholder="Date of birth"
@@ -126,7 +125,7 @@ const useEstimateHeartRates = async () => {
                 step="0.1"
                 min="0"
                 max="1000"
-                v-model="props.physicalData.weight_kg"
+                v-model="weight"
               />
               <InputError class="mt-2" :message="errors.weight_kg" />
             </div>
@@ -137,7 +136,7 @@ const useEstimateHeartRates = async () => {
                 id="height_cm"
                 class="mt-1 block w-full"
                 name="height_cm"
-                v-model="props.physicalData.height_cm"
+                v-model="height"
                 autocomplete="height"
                 placeholder="Height"
                 type="number"
@@ -175,7 +174,7 @@ const useEstimateHeartRates = async () => {
 
             <div class="sm:col-span-2">
               <p class="text-sm text-muted-foreground">
-                We use your age to estimate the default heart rate zones and maximum heart rate.
+                We can use your age to estimate the default heart rate zones and maximum heart rate.
                 Your weight and height aren't used for further analysis for now but this might change
                 in the future. 
               </p>
@@ -187,7 +186,7 @@ const useEstimateHeartRates = async () => {
                 id="resting_heart_rate"
                 class="mt-1 block w-full"
                 name="resting_heart_rate"
-                v-model="props.physicalData.resting_heart_rate"
+                v-model="restingHeartRate"
                 autocomplete="Resting heart rate"
                 placeholder="Resting heart rate"
                 type="number"
@@ -203,7 +202,7 @@ const useEstimateHeartRates = async () => {
                 id="max_heart_rate"
                 class="mt-1 block w-full"
                 name="max_heart_rate"
-                v-model="props.physicalData.max_heart_rate"
+                v-model="maxHeartRate"
                 autocomplete="Max heart rate"
                 placeholder="Max heart rate"
                 type="number"
@@ -219,7 +218,7 @@ const useEstimateHeartRates = async () => {
                 id="aerobic_threshold_bpm"
                 class="mt-1 block w-full"
                 name="aerobic_threshold_bpm"
-                v-model="props.physicalData.aerobic_threshold_bpm"
+                v-model="aerobicThreshold"
                 autocomplete="Aerobic threshold"
                 placeholder="Aerobic threshold"
                 type="number"
@@ -235,7 +234,7 @@ const useEstimateHeartRates = async () => {
                 id="anaerobic_threshold_bpm"
                 class="mt-1 block w-full"
                 name="anaerobic_threshold_bpm"
-                v-model="props.physicalData.anaerobic_threshold_bpm"
+                v-model="anaerobicThreshold"
                 autocomplete="Anaerobic threshold"
                 placeholder="Anaerobic threshold"
                 type="number"
@@ -247,7 +246,7 @@ const useEstimateHeartRates = async () => {
 
             <div class="sm:col-span-2">
               <p class="text-sm text-muted-foreground">
-                You can use our estimated heart rate or if you have access to more accurate
+                You can use our estimated maximum heart rate or if you have access to more accurate
                 measures you can enter these here. You should measure your resting heart rate yourself.
               </p>
             </div>
@@ -275,7 +274,7 @@ const useEstimateHeartRates = async () => {
                 id="vo2_max"
                 class="mt-1 block w-full"
                 name="vo2_max"
-                v-model="props.physicalData.vo2_max"
+                v-model="VO2_MAX"
                 autocomplete="VO₂max"
                 placeholder="VO₂max"
                 type="number"
@@ -293,7 +292,7 @@ const useEstimateHeartRates = async () => {
             </div>
 
             <!-- Running -->
-            <div class="md:col-span-2">
+            <div class="sm:col-span-2">
               <h3 class="text-base font-medium">Running</h3>
             </div>
 
@@ -303,7 +302,7 @@ const useEstimateHeartRates = async () => {
                 id="mas_pace"
                 class="mt-1 block w-full"
                 name="mas_pace"
-                :default-value="physicalData?.mas_pace ?? null"
+                v-model="MAS_Pace"
                 autocomplete="Maximum aerobic speed"
                 placeholder="Maximum aerobic speed"
                 type="text"
@@ -312,20 +311,6 @@ const useEstimateHeartRates = async () => {
             </div>
             <!-- pattern="/^(\d+):([0-5]\d)$/" -->
 
-            <div class="flex flex-col">
-              <Label class="mb-2" for="map_watts">Maximum aerobic power (MAP, watts)</Label>
-              <Input
-              id="map_watts"
-              class="mt-1 block w-full"
-              name="map_watts"
-              :default-value="physicalData?.map_watts ?? null"
-              autocomplete="Maximum aerobic power"
-              placeholder="Maximum aerobic power"
-              type="number"
-              />
-              <InputError class="mt-2" :message="errors.map_watts" />
-            </div>
-
             <div class="sm:col-span-2">
               <p class="text-sm text-muted-foreground">
                 This is the running pace intensity you can sustain for a few minutes only. This is 
@@ -333,15 +318,8 @@ const useEstimateHeartRates = async () => {
               </p>
             </div>
 
-            <div class="sm:col-span-2 flex justify-end">
-              <Button
-                type="button"
-                variant="secondary"
-              >Estimated MAS and MAP</Button>
-            </div>
-
             <!-- Cycling -->
-            <div class="md:col-span-2">
+            <div class="sm:col-span-2">
               <h3 class="text-base font-medium">Cycling</h3>
             </div>
 
@@ -351,12 +329,26 @@ const useEstimateHeartRates = async () => {
                 id="ftp_watts"
                 class="mt-1 block w-full"
                 name="ftp_watts"
-                :default-value="physicalData?.ftp_watts ?? null"
+                v-model="FTP_WATTS"
                 autocomplete="Functional threshold power"
                 placeholder="Functional threshold power"
                 type="number"
               />
               <InputError class="mt-2" :message="errors.ftp_watts" />
+            </div>
+
+            <div class="flex flex-col">
+              <Label class="mb-2" for="map_watts">Maximum aerobic power (MAP, watts)</Label>
+              <Input
+              id="map_watts"
+              class="mt-1 block w-full"
+              name="map_watts"
+              :v-model="MAP_WATTS"
+              autocomplete="Maximum aerobic power"
+              placeholder="Maximum aerobic power"
+              type="number"
+              />
+              <InputError class="mt-2" :message="errors.map_watts" />
             </div>
 
             <div class="sm:col-span-2">
@@ -367,14 +359,7 @@ const useEstimateHeartRates = async () => {
               </p>
             </div>
 
-            <div class="sm:col-span-2 flex justify-end">
-              <Button
-                type="button"
-                variant="secondary"
-              >Estimated FTP</Button>
-            </div>
-
-            <div class="sm:col-span-2">
+            <div class="sm:col-span-2 mt-3">
               <Button
                 class="w-full"
                 :disabled="processing"
