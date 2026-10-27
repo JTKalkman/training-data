@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Settings;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Settings\EstimateHeartRateRequest;
 use App\Http\Requests\Settings\PhysicalDataUpdateRequest;
+use App\Http\Resources\PhysicalDataResource;
 use App\Models\PhysicalData;
 use App\Support\Services\HeartRateEstimationService;
 use Carbon\Carbon;
@@ -22,11 +23,11 @@ class PhysicalDataController extends Controller
     public function edit(Request $request): Response
     {
         $user = $request->user();
-        $physicalData = PhysicalData::where('user_id', $user->id)
-            ->first();
 
         return Inertia::render('settings/PhysicalData', [
-            'physicalData' => $physicalData
+            'physicalData' => new PhysicalDataResource(
+                PhysicalData::firstOrNew(['user_id' => $user->id])
+            ),
         ]);
     }
 
@@ -69,6 +70,8 @@ class PhysicalDataController extends Controller
     {
         $data = $request->validated();
         $age = Carbon::parse($data['date_of_birth'])->age;
-        return response()->json(app(HeartRateEstimationService::class)->estimate($age));
+        $estimates = app(HeartRateEstimationService::class)->estimate($age);
+
+        return response()->json($estimates);
     }
 }
