@@ -32,6 +32,8 @@ class PhysicalDataUpdateRequest extends FormRequest
     {
         return [
             'mas_pace.regex' => 'Enter your MAS pace as mm:ss, e.g. 4:46.',
+            'resting_heart_rate.required_with' => 'Enter your resting heart rate too, it is needed with your max heart rate.',
+            'max_heart_rate.required_with' => 'Enter your maximum heart rate too, it is needed with your resting heart rate.',
         ];
     }
 
