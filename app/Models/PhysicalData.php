@@ -34,6 +34,13 @@ class PhysicalData extends Model
         );
     }
 
+    protected function casts(): array
+    {
+        return [
+            'date_of_birth' => 'date:Y-m-d',
+        ];
+    }
+
     // TODO: Convert comma's in weights to decimal points.
 
     public function user(): BelongsTo
