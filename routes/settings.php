@@ -15,6 +15,11 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('settings/physical-data', [PhysicalDataController::class, 'edit'])->name('physical-data.edit');
     Route::patch('settings/physical-data', [PhysicalDataController::class, 'update'])->name('physical-data.update');
+
+    Route::get(
+        'settings/physical-data/estimate/heart-rate',
+        [PhysicalDataController::class, 'estimateHeartRate']
+    )->name('physical-data.estimate-heart-rate');
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {
