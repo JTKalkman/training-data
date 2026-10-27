@@ -13,9 +13,9 @@ class HeartRateEstimationService
         $maxHeartRate = round(208 - (0.7 * $age));
 
         return [
-            'max_heart_rate' => $maxHeartRate,
-            'aerobic_threshold_bpm' => round($maxHeartRate * 0.75),
-            'anaerobic_threshold_bpm' => round($maxHeartRate * 0.88)
+            'maxHeartRate' => $maxHeartRate,
+            'aerobicThresholdBpm' => round($maxHeartRate * 0.75),
+            'anaerobicThresholdBpm' => round($maxHeartRate * 0.88)
         ];
     }
 }
