@@ -3,8 +3,12 @@
 namespace App\Http\Controllers\Settings;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Settings\EstimateHeartRateRequest;
 use App\Http\Requests\Settings\PhysicalDataUpdateRequest;
 use App\Models\PhysicalData;
+use App\Support\Services\HeartRateEstimationService;
+use Carbon\Carbon;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -59,5 +63,12 @@ class PhysicalDataController extends Controller
         );
 
         return to_route('physical-data.edit');
+    }
+
+    public function estimateHeartRate(EstimateHeartRateRequest $request): JsonResponse
+    {
+        $data = $request->validated();
+        $age = Carbon::parse($data['date_of_birth'])->age;
+        return response()->json(app(HeartRateEstimationService::class)->estimate($age));
     }
 }
