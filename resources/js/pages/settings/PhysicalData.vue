@@ -10,12 +10,25 @@ import SettingsLayout from '@/layouts/settings/Layout.vue';
 import { type BreadcrumbItem } from '@/types';
 import PhysicalDataController from '@/actions/App/Http/Controllers/Settings/PhysicalDataController';
 import { edit } from '@/routes/physical-data';
+import { route } from 'ziggy-js';
+import { computed, ref } from 'vue';
 
 type Props = {
-  'physicalData': object | null
+  physicalData: {
+    date_of_birth?: string;
+    weight_kg?: number;
+    height_cm?: number;
+    sex?: string;
+    resting_heart_rate?: number;
+    max_heart_rate?: number;
+    aerobic_threshold_bpm?: number;
+    anaerobic_threshold_bpm?: number;
+    vo2_max?: number;
+    mas_pace?: number;
+  }
 };
 
-defineProps<Props>();
+const props = defineProps<Props>();
 
 const breadcrumbItems: BreadcrumbItem[] = [{
   title: 'Training settings',
@@ -23,13 +36,38 @@ const breadcrumbItems: BreadcrumbItem[] = [{
 }];
 
 const page = usePage();
-const physicalData = page.props.physicalData ?? null;
+const physicalData = page.props.physicalData;
+
+const dateOfBirth = ref(props.physicalData.date_of_birth ?? '');
+const canEstimateHeartrateLimits = computed(() => dateOfBirth.value !== '');
+const estimateHeartrateLimitsError = ref<string | null>(null);
 
 const sexOptions = [
   { value: 'male', label: 'Male' },
   { value: 'female', label: 'Female' },
   { value: 'prefer_not_to_say', label: 'Prefer not to say' },
-];
+] as const;
+
+const sex = ref(props.physicalData.sex);
+
+const useEstimateHeartRates = async () => {
+  if (!dateOfBirth.value) return; // nothing to estimate from yet
+
+  const response = await fetch(
+    route('physical-data.estimate-heart-rate', { date_of_birth: dateOfBirth.value })
+  );
+
+  if (!response.ok) {
+    estimateHeartrateLimitsError.value = 'Could not calculate an estimate. Check your date of birth.';
+    return;
+  }
+
+  const estimates = await response.json();
+
+  props.physicalData.max_heart_rate = estimates.max_heart_rate;
+  props.physicalData.aerobic_threshold_bpm = estimates.aerobic_threshold_bpm;
+  props.physicalData.anaerobic_threshold_bpm = estimates.anaerobic_threshold_bpm;
+};
 
 </script>
 
@@ -64,42 +102,47 @@ const sexOptions = [
             <div class="sm:col-span-2">
               <Label class="mb-2" for="date_of_birth">Date of birth</Label>
               <Input
-                id="date_of_birth"
-                class="mt-1 block w-full"
                 name="date_of_birth"
-                :default-value="physicalData?.date_of_birth ?? null"
+                id="date_of_birth"
+                type="date"
+                :value="dateOfBirth"
+                @input="dateOfBirth = ($event.target as HTMLInputElement).value"
+                class="mt-1 block w-full"
                 autocomplete="date of birth"
                 placeholder="Date of birth"
-                type="date"
               />
               <InputError class="mt-2" :message="errors.date_of_birth" />
             </div>
 
-            <div class="flex flex-col justify-between">
+            <div class="flex flex-col">
               <Label class="mb-2" for="weight_kg">Weight (kg)</Label>
               <Input
                 id="weight_kg"
                 class="mt-1 block w-full"
                 name="weight_kg"
-                :default-value="physicalData?.weight_kg ?? null"
                 autocomplete="weight"
                 placeholder="Weight"
                 type="number"
                 step="0.1"
+                min="0"
+                max="1000"
+                v-model="props.physicalData.weight_kg"
               />
               <InputError class="mt-2" :message="errors.weight_kg" />
             </div>
 
-            <div class="flex flex-col justify-between">
+            <div class="flex flex-col">
               <Label class="mb-2" for="height_cm">Height (cm)</Label>
               <Input
                 id="height_cm"
                 class="mt-1 block w-full"
                 name="height_cm"
-                :default-value="physicalData?.height_cm ?? null"
+                v-model="props.physicalData.height_cm"
                 autocomplete="height"
                 placeholder="Height"
                 type="number"
+                min="0"
+                max="300"
               />
               <InputError class="mt-2" :message="errors.height_cm" />
             </div>
@@ -111,20 +154,20 @@ const sexOptions = [
               <div class="flex flex-wrap gap-x-4">
                 <div
                   class="flex flex-nowrap gap-x-2"  
-                  v-for="option in sexOptions" 
-                  :key="option.value"
+                  v-for="{ value, label } in sexOptions" 
+                  :key="value"
                 >
                   <Label 
                     class="text-nowrap" 
-                    :for="`sex-${option.label}`"
-                  >{{ option.label }}</Label>
+                    :for="`sex-${value}`"
+                  >{{ label }}</Label>
                   <Input
-                    :id="`sex-${option.label}`"
-                    class=""
+                    :id="`sex-${value}`"
                     name="sex"
-                    :default-value="option.value"
+                    :value="value"
                     type="radio"
-                    :checked="option.value === physicalData.sex"
+                    :checked="value === sex"
+                    @change="sex = value"
                   />
                 </div>
               </div>
@@ -138,88 +181,115 @@ const sexOptions = [
               </p>
             </div>
 
-            <div class="flex flex-col justify-between">
+            <div class="flex flex-col">
               <Label class="mb-2" for="resting_heart_rate">Resting heart rate (bpm)</Label>
               <Input
                 id="resting_heart_rate"
                 class="mt-1 block w-full"
                 name="resting_heart_rate"
-                :default-value="physicalData?.resting_heart_rate ?? null"
+                v-model="props.physicalData.resting_heart_rate"
                 autocomplete="Resting heart rate"
                 placeholder="Resting heart rate"
                 type="number"
+                min="0"
+                max="300"
               />
               <InputError class="mt-2" :message="errors.resting_heart_rate" />
             </div>
 
-            <div class="flex flex-col justify-between">
+            <div class="flex flex-col">
               <Label class="mb-2" for="max_heart_rate">Max heart rate (bpm)</Label>
               <Input
                 id="max_heart_rate"
                 class="mt-1 block w-full"
                 name="max_heart_rate"
-                :default-value="physicalData?.max_heart_rate ?? null"
+                v-model="props.physicalData.max_heart_rate"
                 autocomplete="Max heart rate"
                 placeholder="Max heart rate"
                 type="number"
+                min="0"
+                max="300"
               />
               <InputError class="mt-2" :message="errors.max_heart_rate" />
             </div>
 
-            <div class="flex flex-col justify-between">
+            <div class="flex flex-col">
               <Label class="mb-2" for="aerobic_threshold_bpm">Aerobic threshold (bpm)</Label>
               <Input
                 id="aerobic_threshold_bpm"
                 class="mt-1 block w-full"
                 name="aerobic_threshold_bpm"
-                :default-value="physicalData?.aerobic_threshold_bpm ?? null"
+                v-model="props.physicalData.aerobic_threshold_bpm"
                 autocomplete="Aerobic threshold"
                 placeholder="Aerobic threshold"
                 type="number"
+                min="0"
+                max="300"
               />
               <InputError class="mt-2" :message="errors.aerobic_threshold_bpm" />
             </div>
 
-            <div class="flex flex-col justify-between">
+            <div class="flex flex-col">
               <Label class="mb-2" for="anaerobic_threshold_bpm">Anaerobic threshold (bpm)</Label>
               <Input
-                  id="anaerobic_threshold_bpm"
-                  class="mt-1 block w-full"
-                  name="anaerobic_threshold_bpm"
-                  :default-value="physicalData?.anaerobic_threshold_bpm ?? null"
-                  autocomplete="Anaerobic threshold"
-                  placeholder="Anaerobic threshold"
-                  type="number"
+                id="anaerobic_threshold_bpm"
+                class="mt-1 block w-full"
+                name="anaerobic_threshold_bpm"
+                v-model="props.physicalData.anaerobic_threshold_bpm"
+                autocomplete="Anaerobic threshold"
+                placeholder="Anaerobic threshold"
+                type="number"
+                min="0"
+                max="300"
               />
               <InputError class="mt-2" :message="errors.anaerobic_threshold_bpm" />
             </div>
 
-            <div class="flex flex-col justify-between">
-              <Label class="mb-2 gap-x-0" for="vo2_max">VO<sub>2</sub>max</Label>
+            <div class="sm:col-span-2">
+              <p class="text-sm text-muted-foreground">
+                You can use our estimated heart rate or if you have access to more accurate
+                measures you can enter these here. You should measure your resting heart rate yourself.
+              </p>
+            </div>
+
+            <div class="sm:col-span-2 flex justify-end">
+              <div class="flex flex-col items-end">
+                <Button
+                  type="button"
+                  variant="secondary"
+                  :disabled="!canEstimateHeartrateLimits"
+                  @click="useEstimateHeartRates"
+                >Estimate heart rate and thresholds</Button>
+
+                <InputError 
+                  v-if="estimateHeartrateLimitsError"  
+                  class="mt-2" 
+                  :message=estimateHeartrateLimitsError
+                />
+              </div>
+            </div>
+
+            <div class="flex flex-col">
+              <Label class="mb-2 gap-x-0" for="vo2_max">VO<sub>2</sub>max (mL/(kg·min))</Label>
               <Input
                 id="vo2_max"
                 class="mt-1 block w-full"
                 name="vo2_max"
-                :default-value="physicalData?.vo2_max ?? null"
+                v-model="props.physicalData.vo2_max"
                 autocomplete="VO₂max"
                 placeholder="VO₂max"
                 type="number"
+                min="0"
+                max="300"
               />
               <InputError class="mt-2" :message="errors.vo2_max" />
             </div>
 
             <div class="sm:col-span-2">
               <p class="text-sm text-muted-foreground">
-                You can use our estimated heart rate or if you have access to more accurate
-                measures you can enter these here.
+                If you have a reliable measurement, a lab or a field test, of your VO<sub>2</sub>max 
+                you can enter this here. Estimating this value is quite unreliable without more data.
               </p>
-            </div>
-
-            <div class="sm:col-span-2 flex justify-end">
-              <Button
-                type="button"
-                variant="secondary"
-              >Estimate heart rate and VO2 max</Button>
             </div>
 
             <!-- Running -->
@@ -227,7 +297,7 @@ const sexOptions = [
               <h3 class="text-base font-medium">Running</h3>
             </div>
 
-            <div class="flex flex-col justify-between">
+            <div class="flex flex-col">
               <Label class="mb-2" for="mas_pace">Maximum aerobic speed (MAS, minute/km)</Label>
               <Input
                 id="mas_pace"
@@ -242,7 +312,7 @@ const sexOptions = [
             </div>
             <!-- pattern="/^(\d+):([0-5]\d)$/" -->
 
-            <div class="flex flex-col justify-between">
+            <div class="flex flex-col">
               <Label class="mb-2" for="map_watts">Maximum aerobic power (MAP, watts)</Label>
               <Input
               id="map_watts"
@@ -275,7 +345,7 @@ const sexOptions = [
               <h3 class="text-base font-medium">Cycling</h3>
             </div>
 
-            <div class="flex flex-col justify-between">
+            <div class="flex flex-col">
               <Label class="mb-2" for="ftp_watts">Functional threshold power (FTP, watts)</Label>
               <Input
                 id="ftp_watts"
