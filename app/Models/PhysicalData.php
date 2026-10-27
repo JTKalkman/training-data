@@ -41,8 +41,6 @@ class PhysicalData extends Model
         ];
     }
 
-    // TODO: Convert comma's in weights to decimal points.
-
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
