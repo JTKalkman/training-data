@@ -16,6 +16,7 @@ php artisan down --secret="$(openssl rand -hex 8)" || true
 
 # Install dependencies
 composer install --no-dev --optimize-autoloader
+php artisan wayfinder:generate --with-form
 npm ci
 npm run build
 
