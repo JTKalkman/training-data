@@ -8,14 +8,13 @@ use App\Support\Calculators\PaceCalculator;
 use App\Support\Duration;
 use App\Support\Parsers\Mappers\HeartRateZoneMapper;
 use App\Support\Parsers\Mappers\PolarAPISampleTypeMapper;
-use App\Support\Parsers\Mappers\SportTypeMapper;
 use Carbon\Carbon;
 
 class PolarApiParser implements ParserInterface
 {
     protected function isRunning(array $data): bool
     {
-        return SportTypeMapper::map($data['detailed_sport_info'] ?? '')?->name === 'running';
+        return ($data['detailed_sport_info'] ?? null) === 'RUNNING';
     }
 
     public function createDeviceData(array $data): ParsedDeviceData
@@ -32,7 +31,6 @@ class PolarApiParser implements ParserInterface
         $externalSportType = ExternalSportTypeMapping::where('data_source_id', $dataSource->id)
             ->where('external_name', $data['detailed_sport_info'] ?? null)
             ->firstOrFail();
-
         $startedAt = Carbon::parse($data['start_time']);
         $UtcOffset = $data['start_time_utc_offset'];
         $duration = Duration::fromIso($data['duration']);
