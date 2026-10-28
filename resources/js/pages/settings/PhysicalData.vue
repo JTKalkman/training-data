@@ -200,7 +200,7 @@ const useEstimateHeartRates = async () => {
               </div>
 
               <div class="row-span-3 grid grid-rows-subgrid gap-y-2">
-                <Label for="max_heart_rate">Max heart rate (bpm)</Label>
+                <Label for="max_heart_rate">Max max heart rate (bpm)</Label>
                 <Input
                   id="max_heart_rate"
                   name="max_heart_rate"
@@ -364,9 +364,9 @@ const useEstimateHeartRates = async () => {
             </div>
 
             <!-- Form submit -->
-            <div>
+            <div class="flex items-center gap-4">
               <Button
-                class="w-full"
+                class=""
                 :disabled="processing"
               >Save</Button>
 
@@ -378,7 +378,7 @@ const useEstimateHeartRates = async () => {
               >
                 <p
                   v-show="recentlySuccessful"
-                  class="text-sm text-neutral-600 w-full text-center mt-4"
+                  class="text-sm text-neutral-600"
                 >
                   Saved
                 </p>
