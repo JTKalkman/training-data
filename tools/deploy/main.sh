@@ -16,9 +16,11 @@ php artisan down --secret="$(openssl rand -hex 8)" || true
 
 # Install dependencies
 composer install --no-dev --optimize-autoloader
+php artisan optimize:clear
 php artisan wayfinder:generate --with-form
 npm ci
 npm run build
+php artisan optimize
 
 # Laravel
 php artisan config:clear
