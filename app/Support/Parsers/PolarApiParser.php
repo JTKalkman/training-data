@@ -3,6 +3,7 @@
 namespace App\Support\Parsers;
 
 use App\Models\DataSource;
+use App\Models\ExternalSportTypeMapping;
 use App\Support\Calculators\PaceCalculator;
 use App\Support\Duration;
 use App\Support\Parsers\Mappers\HeartRateZoneMapper;
@@ -27,14 +28,17 @@ class PolarApiParser implements ParserInterface
 
     public function createSessionData(array $data): ParsedSessionData
     {
-        $sportType = SportTypeMapper::map($data['detailed_sport_info']);
+        $dataSource = DataSource::where(['name' => 'polar'])->first();
+        $externalSportType = ExternalSportTypeMapping::where('data_source_id', $dataSource->id)
+            ->where('external_name', $data['detailed_sport_info'] ?? null)
+            ->firstOrFail();
+
         $startedAt = Carbon::parse($data['start_time']);
         $UtcOffset = $data['start_time_utc_offset'];
         $duration = Duration::fromIso($data['duration']);
-        $dataSource = DataSource::where(['name' => 'polar'])->first();
 
         return new ParsedSessionData([
-            'sport_type_id' => $sportType ? $sportType->id : null,
+            'sport_type_id' => $externalSportType ? $externalSportType->sport_type_id : null,
             'started_at' => $startedAt,
             'duration_seconds' => $duration,
             'utc_offset' => $UtcOffset,
