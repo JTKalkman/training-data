@@ -3,14 +3,15 @@
 namespace App\Support\Parsers;
 
 use App\Support\Duration;
-use App\Support\Parsers\Mappers\SportTypeMapper;
+// use App\Support\Parsers\Mappers\SportTypeMapper;
 use Carbon\Carbon;
 
 class PolarCsvParser implements ParserInterface
 {
     public function createSessionData(array $headerData): ParsedSessionData
     {
-        $sportType = SportTypeMapper::map($headerData['Sport']);
+        // TODO: Use ExternalSportTypeMapping if this importer is still required.
+        // $sportType = SportTypeMapper::map($headerData['Sport']);
         $startedAt = Carbon::createFromFormat('d-m-Y H:i:s', $headerData['Date'].' '.$headerData['Start time']);
         $duration = Duration::fromHms($headerData['Duration']);
 
