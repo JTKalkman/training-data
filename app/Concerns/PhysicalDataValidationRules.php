@@ -6,7 +6,7 @@ use Illuminate\Validation\Rule;
 
 trait PhysicalDataValidationRules
 {
-    protected const validHeartRate = ['nullable', 'integer', 'min:50', 'max:300'];
+    protected const validHeartRate = ['nullable', 'integer', 'min:0', 'max:300'];
 
     protected const heartRateChain = [
         'resting_heart_rate',
