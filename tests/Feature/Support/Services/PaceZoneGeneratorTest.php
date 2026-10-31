@@ -16,7 +16,7 @@ function scheme(): array
 test('generate default pace zones', function () {
     $config = config('pace_zones');
     $mas = 240;
-    $zones = (new PaceZoneGenerator())->generateDefaultPaceZones($config['polar_mas_5'], 'mas', $mas);
+    $zones = (new PaceZoneGenerator())->generateDefaultPaceZones($config['polar_mas_5'], $mas);
 
     // Make it readable quickly.
     // var_dump(
@@ -45,7 +45,7 @@ test('generate default pace zones', function () {
 });
 
 test('test_calculates_boundaries_from_mas', function () {
-    $zones = (new PaceZoneGenerator())->generateDefaultPaceZones(scheme(), 'mas', 300);
+    $zones = (new PaceZoneGenerator())->generateDefaultPaceZones(scheme(), 300);
 
     $this->assertSame(300, $zones[0]['min_seconds_per_km']);
     $this->assertSame(600, $zones[0]['max_seconds_per_km']);
@@ -58,7 +58,7 @@ test('test_default_scheme_is_consistent', function () {
 
     foreach ($masValues as $mas) {
         $zones = (new PaceZoneGenerator())
-            ->generateDefaultPaceZones(config('pace_zones.polar_mas_5'), 'mas', $mas);
+            ->generateDefaultPaceZones(config('pace_zones.polar_mas_5'), $mas);
     
         $this->assertCount(5, $zones);
     
