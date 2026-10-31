@@ -5,6 +5,7 @@ namespace App\Support\Importers;
 use App\Models\DataSource;
 use App\Models\Device;
 use App\Models\HeartRateZone;
+use App\Models\PaceZoneSet;
 use App\Models\TrainingSession;
 use App\Models\TrainingSummary;
 use App\Models\User;
@@ -66,6 +67,20 @@ class TrainingSessionImporter
             'external_id' => $parsedSession->sessionData->externalId,
             'device_id' => $device->id,
         ]);
+
+        // Link running training session to the current active pace zone.
+        if ($trainingSession->sportType->name === 'running') {
+            $physicalData = $user->physicalData;
+            $mas = $physicalData->mas_seconds_per_km;
+
+            if ($mas !== null) {
+                $set = $physicalData->activePaceZoneSet ?? PaceZoneSet::forMas($user, $mas);
+
+                $trainingSession->update([
+                    'pace_zone_set_id' => $set->id,
+                ]);
+            }
+        }
 
         $trainingSummary = TrainingSummary::firstOrCreate([
             'training_session_id' => $trainingSession->id,
