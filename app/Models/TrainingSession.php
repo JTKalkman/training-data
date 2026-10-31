@@ -29,6 +29,8 @@ class TrainingSession extends Model
         'device_id',
         'notes',
         'rating',
+        'pace_zone_set_id',
+        'pace_zone_set_is_estimated',
     ];
 
     protected $casts = [
