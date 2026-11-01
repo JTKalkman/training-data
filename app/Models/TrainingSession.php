@@ -3,7 +3,9 @@
 namespace App\Models;
 
 use App\Http\Filters\Api\V1\QueryFilter;
+use App\Support\Services\PaceZoneGenerator;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -55,14 +57,19 @@ class TrainingSession extends Model
         return $this->hasMany(HeartRateZone::class);
     }
 
-    public function trainingSummary(): HasOne
+    public function paceZoneSet(): BelongsTo
     {
-        return $this->hasOne(TrainingSummary::class);
+        return $this->belongsTo(PaceZoneSet::class);
     }
 
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function trainingSummary(): HasOne
+    {
+        return $this->hasOne(TrainingSummary::class);
     }
 
     public function filePath(): string
@@ -114,5 +121,25 @@ class TrainingSession extends Model
             ->where('started_at', '>', $this->started_at)
             ->orderBy('started_at', 'asc')
             ->first();
+    }
+
+    public function effectivePaceZoneSet(int $masSecondsPerKm, string $scheme): self
+    {
+        $set = new PaceZoneSet([
+            'mas_seconds_per_km' => $masSecondsPerKm,
+            'source' => 'default',
+            'scheme' => $scheme
+        ]);
+
+        $zones = (new PaceZoneGenerator())->generateDefaultPaceZones(
+            config("pace_zones.{$scheme}"),
+            $masSecondsPerKm
+        );
+
+        $set->setRelation('paceZones', new Collection(
+            array_map(fn (array $zone) => new PaceZone($zone), $zones)
+        ));
+
+        return self::setRelation('paceZoneSet', $set);
     }
 }
