@@ -48,22 +48,22 @@ return [
                 'to_pct' => 88
             ],
             3 => [
-                'name' => 'Temp',
+                'name' => 'Tempo',
                 'from_pct' => 88,
                 'to_pct' => 94
             ],
             4 => [
-                'name' => 'Sub-lactate threshold',
+                'name' => 'Sub lactate threshold',
                 'from_pct' => 94,
                 'to_pct' => 100
             ],
             5 => [
-                'name' => 'Super-lactate threshold',
+                'name' => 'Super lactate threshold',
                 'from_pct' => 100,
                 'to_pct' => 106
             ],
             6 => [
-                'name' => 'Vo2max',
+                'name' => 'V̇O2 max',
                 'from_pct' => 106, 
                 'to_pct' => 115
             ],
