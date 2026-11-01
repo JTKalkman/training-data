@@ -131,7 +131,7 @@ class TrainingSession extends Model
             'scheme' => $scheme
         ]);
 
-        $zones = (new PaceZoneGenerator())->generateDefaultPaceZones(
+        $zones = (new PaceZoneGenerator())->default(
             config("pace_zones.{$scheme}"),
             $masSecondsPerKm
         );
