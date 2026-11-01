@@ -19,7 +19,7 @@ class TrainingSessionController extends Controller
             'paceZoneSet.paceZones' => fn ($q) => $q->orderBy('zone_number'),
         ]);
 
-        $masSecondsPerKm = $session->user->physicalData->mas_seconds_per_km;
+        $masSecondsPerKm = $session->user->physicalData->mas_seconds_per_km ?? null;
         if ($session->sportType->name === 'running' && $session->paceZoneSet === null && isset($masSecondsPerKm)) {
             $session->effectivePaceZoneSet($masSecondsPerKm, 'polar_mas_5');
         }
