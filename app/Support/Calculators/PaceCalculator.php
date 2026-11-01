@@ -52,4 +52,13 @@ final class PaceCalculator
 
         return min(max($pace, self::MIN_PACE_SECONDS), self::MAX_PACE_SECONDS);
     }
+
+    public static function fromSeconds(?int $seconds): ?string
+    {
+        if ($seconds === null || $seconds <= 0) {
+            return null;
+        }
+
+        return sprintf('%d:%02d', intdiv($seconds, 60), $seconds % 60);
+    }
 }
