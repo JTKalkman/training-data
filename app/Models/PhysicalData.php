@@ -2,13 +2,21 @@
 
 namespace App\Models;
 
+use App\Observers\PhysicalDataObserver;
 use App\Support\Calculators\PaceCalculator;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+#[ObservedBy([PhysicalDataObserver::class])]
 class PhysicalData extends Model
 {
+    /**
+     * active_pace_zone_set_id should stay out of fillable, so a
+     * form can never set the pointer. Only the observer and the
+     * zones page set it.
+     */
     protected $fillable = [
         'date_of_birth',
         'weight_kg',
@@ -45,5 +53,10 @@ class PhysicalData extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function activePaceZoneSet(): BelongsTo
+    {
+        return $this->belongsTo(PaceZoneSet::class, 'active_pace_zone_set_id');
     }
 }
