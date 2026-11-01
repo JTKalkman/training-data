@@ -35,6 +35,10 @@ class TrainingSessionResource extends JsonResource
             'heartRateZones' => $this->whenLoaded('heartRateZones',
                 fn () => HeartRateZoneResource::collection($this->heartRateZones)
             ),
+
+            'paceZoneSet' => $this->whenLoaded('paceZoneSet',
+                fn () => new PaceZoneSetResource($this->paceZoneSet)
+            ),
         ];
     }
 }

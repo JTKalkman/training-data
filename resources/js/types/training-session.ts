@@ -1,4 +1,5 @@
 import type { HeartRateZone } from './heart-rate-zone';
+import { PaceZoneSet } from './pace-zone-set';
 import type { SportType } from './sport-type'
 import type { TrainingSummary } from './training-summary'
 
@@ -15,4 +16,5 @@ export interface TrainingSession {
   sportType: SportType;
   trainingSummary?: TrainingSummary;
   heartRateZones: HeartRateZone[];
+  paceZoneSet?: PaceZoneSet;
 };

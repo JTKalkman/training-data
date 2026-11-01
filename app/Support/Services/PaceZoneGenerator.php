@@ -13,7 +13,7 @@ class PaceZoneGenerator
         return (int) round($anchorSecondsPerKm * 100 / $percent);
     }
 
-    public function generateDefaultPaceZones(array $scheme, int $anchorSecondsPerKm): array
+    public function default(array $scheme, int $anchorSecondsPerKm): array
     {
         $zones = [];
 

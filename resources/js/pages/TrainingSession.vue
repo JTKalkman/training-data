@@ -9,14 +9,11 @@ import TrainingSessionSummary from '@/components/TrainingSessionSummary.vue';
 import NavigationNext from '@/components/ui/navigation-menu/NavigationNext.vue';
 import NavigationPrevious from '@/components/ui/navigation-menu/NavigationPrevious.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
-import type { BreadcrumbItem, HoverPosition, RunningPaceZone, TrainingSession as TrainingSessionData, TrainingSessionNavigation } from '@/types';
+import type { BreadcrumbItem, HoverPosition, TrainingSession as TrainingSessionData, TrainingSessionNavigation } from '@/types';
 
 const props = defineProps<{
   trainingSession: {
     data: TrainingSessionData;
-  };
-  runningPaceZones: {
-    data: RunningPaceZone[]
   };
   navigation: TrainingSessionNavigation;
 }>()
@@ -96,10 +93,10 @@ const chartHoverPosition = ref<HoverPosition | null>(null);
       <TrainingSessionCharts 
         :sessionId="trainingSession.data.id" 
         :heartRateZones="trainingSession.data.heartRateZones"
-        :runningPaceZones="runningPaceZones.data"
+        :paceZones="trainingSession.data.paceZoneSet?.zones ?? []"
         :fields="fields"
         @hover="chartHoverPosition = $event"
-        />
+      />
     </div>
   </AppLayout>
 

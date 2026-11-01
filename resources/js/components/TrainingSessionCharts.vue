@@ -2,18 +2,20 @@
 import { computed, onMounted, onUnmounted, ref } from 'vue';
 import { usePace } from '@/composables/usePace';
 import { useSampleData } from '@/composables/useSampleData';
-import type { ChartData, ChartDataSet, ColorConfig, ColorZone, HeartRateZone, HoverPosition, RunningPaceZone } from '@/types';
+import type { ChartData, ChartDataSet, ColorConfig, ColorZone, HeartRateZone, HoverPosition } from '@/types';
 import type { SampleDataPoint } from '@/types/sample-data-point';
 import TrainingSessionChart from './TrainingSessionChart.vue';
 import Spinner from './ui/spinner/Spinner.vue';
 import { getZoneForHeartRate, heartRateZoneColors } from '@/lib/heartRateZones.js';
 import { getZoneColor } from '@/lib/getZoneColor.js';
 import { chartColors, chartDefaultColors } from '@/lib/chartColors.js';
+import { PaceZone } from '@/types/pace-zone.js';
+import { getZoneForPace, paceZoneColors } from '@/lib/paceZones.js';
 
 const props = defineProps<{
   sessionId: string;
   heartRateZones: HeartRateZone[];
-  runningPaceZones: RunningPaceZone[];
+  paceZones: PaceZone[];
   fields?: string[];
 }>();
 
@@ -41,6 +43,18 @@ const heartRateColorZones = computed<ColorZone[]>(() => {
     return {
       min: zone.min_bpm,
       max: zone.max_bpm,
+      colorConfig: colorConfig
+    }
+  })
+})
+
+const paceColorZones = computed<ColorZone[]>(() => {
+  return props.paceZones.map((zone) => {
+    const colorConfig: ColorConfig | null = paceZoneColors(zone);
+
+    return {
+      min: zone.minSeconds,
+      max: zone.maxSeconds,
       colorConfig: colorConfig
     }
   })
@@ -81,7 +95,7 @@ const chartData = computed<ChartData>(() => {
         max: null,
         minStr: null,
         maxStr: null,
-        zones: []
+        zones: paceColorZones.value
       },
       reverse: true,
     },
@@ -167,8 +181,8 @@ const chartData = computed<ChartData>(() => {
     const paceSamplesMin = Math.floor(values.reduce((a, b) => Math.min(a, b), Infinity));
     const paceSamplesMax = Math.ceil(values.reduce((a, b) => Math.max(a, b), -Infinity));
 
-    const paceZoneMin = props.runningPaceZones.reduce((a, b) => Math.min(a, b.minSeconds), Infinity);
-    const paceZoneMax = props.runningPaceZones.reduce((a, b) => Math.max(a, b.maxSeconds), -Infinity);
+    const paceZoneMin = props.paceZones.reduce((a, b) => Math.min(a, b.minSeconds), Infinity);
+    const paceZoneMax = props.paceZones.reduce((a, b) => Math.max(a, b.maxSeconds), -Infinity);
 
     datasets.pace.metaData.max = Math.min(paceSamplesMin, paceZoneMin); // Reversed, max is slowest.
     datasets.pace.metaData.min = Math.max(paceSamplesMax, paceZoneMax); // Reversed, min is fastest.
@@ -233,11 +247,24 @@ const hoverHeartRate = computed(() => {
   return chartData.value.datasets.heart_rate.samples[chartHoverPosition.value.index]?.y
 })
 
+const hoverPace = computed(() => {
+  if (!chartHoverPosition.value) return null;
+
+  return chartData.value.datasets.pace.samples[chartHoverPosition.value.index]?.y
+})
+
 const hoverHeartRateZone = computed(() => {
   if (!chartHoverPosition.value) return null;
   if (!hoverHeartRate.value) return null;
 
   return getZoneForHeartRate(hoverHeartRate.value, props.heartRateZones);
+})
+
+const hoverPaceZone = computed(() => {
+  if (!chartHoverPosition.value) return null;
+  if (!hoverPace.value) return null;
+
+  return getZoneForPace(hoverPace.value, props.paceZones);
 })
 
 const hoverHeartRateZoneColorConfig = computed(() => {
@@ -301,7 +328,8 @@ const getHoverColorConfig = (field: string): ColorConfig | null => {
 
   if (fieldColorConfig.strategy === 'zones' && tooltipData.value) {
     switch (field) {
-      case 'heart_rate': return getZoneColor(tooltipData.value.heart_rate, heartRateColorZones.value, chartDefaultColors);;
+      case 'heart_rate': return getZoneColor(tooltipData.value.heart_rate, heartRateColorZones.value, chartDefaultColors);
+      case 'pace': return getZoneColor(tooltipData.value.pace, paceColorZones.value, chartDefaultColors);
       default: return null;
     }
   }
@@ -385,12 +413,23 @@ onMounted(() => {
                 <span>{{ formatValueFor(field) }}</span>
                 <span
                   v-if="field === 'heart_rate' && hoverHeartRateZone && hoverHeartRateZone.name"
-                >({{ hoverHeartRateZone.name }})</span>
+                >
+                  ({{ hoverHeartRateZone.name }})
+                </span>
+
+                <span
+                  v-if="field === 'pace' && hoverPaceZone && hoverPaceZone.name"
+                >
+                  ({{ hoverPaceZone.name }})
+                </span>
+
               </span>
             </div>
           </div>
 
           <div class="flex">
+
+            <!-- Y-axis -->
             <div class="hidden lg:flex w-16 lg:shrink-0 flex-col justify-between text-sm text-gray-500 dark:text-gray-300">
               <p class="text-nowrap">{{ chartData.datasets[field].metaData.maxStr }}</p>
               <p class="text-nowrap">{{ chartData.datasets[field].metaData.minStr }}</p>

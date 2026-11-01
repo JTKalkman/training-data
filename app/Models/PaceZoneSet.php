@@ -32,7 +32,7 @@ class PaceZoneSet extends Model
             ]);
 
             if ($set->wasRecentlyCreated) {
-                $zones = (new PaceZoneGenerator())->generateDefaultPaceZones(
+                $zones = (new PaceZoneGenerator())->default(
                     config('pace_zones.polar_mas_5'),
                     $masSecondsPerKm
                 );
@@ -40,6 +40,10 @@ class PaceZoneSet extends Model
                 foreach ($zones as $zone) {
                     $set->paceZones()->create($zone);
                 }
+
+                $user->physicalData()->update([
+                    'active_pace_zone_set_id' => $set->id
+                ]);
             }
 
             return $set;
