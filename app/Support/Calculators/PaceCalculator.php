@@ -55,9 +55,7 @@ final class PaceCalculator
 
     public static function fromSeconds(?int $seconds): ?string
     {
-        if ($seconds === null || $seconds <= 0) {
-            return null;
-        }
+        if ($seconds === null || $seconds <= 0) return null;
 
         return sprintf('%d:%02d', intdiv($seconds, 60), $seconds % 60);
     }
