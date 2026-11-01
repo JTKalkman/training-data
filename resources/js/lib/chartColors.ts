@@ -29,7 +29,7 @@ export const chartColors: Record<string, FieldColorConfig> = {
     }
   },
   pace:     { 
-    strategy: 'static', 
+    strategy: 'zones', 
     default: {
       hex: {
         foreground_color: '#74d4ff',
