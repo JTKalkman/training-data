@@ -160,14 +160,14 @@ const useEstimateHeartRates = async () => {
                       class="text-nowrap" 
                       :for="`sex-${value}`"
                     >{{ label }}</Label>
-                    <Input
+                    <input
                       :id="`sex-${value}`"
+                      type="radio"
                       name="sex"
                       :value="value"
-                      type="radio"
-                      :checked="value === sex"
-                      @change="sex = value"
+                      v-model="sex"
                     />
+
                   </div>
                 </div>
               </div>
