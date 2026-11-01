@@ -53,6 +53,15 @@ final class PaceCalculator
         return min(max($pace, self::MIN_PACE_SECONDS), self::MAX_PACE_SECONDS);
     }
 
+    public static function toSeconds(string $pace): ?int
+    {
+        if (!preg_match('/^(\d+):([0-5]\d)$/', trim($pace), $matches)) {
+            return null; // will fail integer/required validation naturally
+        }
+
+        return ((int) $matches[1] * 60) + (int) $matches[2];
+    }
+
     public static function fromSeconds(?int $seconds): ?string
     {
         if ($seconds === null || $seconds <= 0) return null;

@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Settings;
 
 use App\Concerns\PhysicalDataValidationRules;
+use App\Support\Calculators\PaceCalculator;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -10,20 +11,11 @@ class PhysicalDataUpdateRequest extends FormRequest
 {
     use PhysicalDataValidationRules;
 
-    private function parsePaceToSeconds(string $pace): ?int
-    {
-        if (!preg_match('/^(\d+):([0-5]\d)$/', trim($pace), $matches)) {
-            return null; // will fail integer/required validation naturally
-        }
-
-        return ((int) $matches[1] * 60) + (int) $matches[2];
-    }
-
     protected function prepareForValidation(): void
     {
-        if ($this->filled('mas_pace')) {
+        if ($this->has('mas_pace')) {
             $this->merge([
-                'mas_seconds_per_km' => $this->parsePaceToSeconds($this->input('mas_pace')),
+                'mas_seconds_per_km' => PaceCalculator::toSeconds((string) $this->input('mas_pace')),
             ]);
         }
     }
