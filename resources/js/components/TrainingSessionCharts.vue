@@ -38,7 +38,7 @@ const availableFields = computed(() => {
 
 const heartRateColorZones = computed<ColorZone[]>(() => {
   return props.heartRateZones.map((zone) => {
-    const colorConfig: ColorConfig | null = zone.color ? heartRateZoneColors(zone.color) : null;
+    const colorConfig: ColorConfig | null = zone.color ? heartRateZoneColors(zone.zone_number) : null;
 
     return {
       min: zone.min_bpm,
