@@ -21,6 +21,16 @@ class PaceZoneSet extends Model
         return $this->hasMany(PaceZone::class);
     }
 
+    public function trainingSessions(): HasMany
+    {
+        return $this->hasMany(TrainingSession::class);
+    }
+
+    public function activeForPhysicalData(): HasMany
+    {
+        return $this->hasMany(PhysicalData::class, 'active_pace_zone_set_id');
+    }
+
     public static function forMas(user $user, int $masSecondsPerKm): PaceZoneSet
     {
         return DB::transaction(function () use ($user, $masSecondsPerKm) {
