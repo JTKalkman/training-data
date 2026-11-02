@@ -267,13 +267,6 @@ const hoverPaceZone = computed(() => {
   return getZoneForPace(hoverPace.value, props.paceZones);
 })
 
-const hoverHeartRateZoneColorConfig = computed(() => {
-  if (!chartHoverPosition.value) return null;
-  if (!hoverHeartRate.value) return null;
-
-  return getZoneColor(hoverHeartRate.value, heartRateColorZones.value, chartDefaultColors);
-})
-
 const chartsContainer = ref<HTMLElement | null>(null);
 const containerHeight = ref(0);
 const containerWidth = ref(0);

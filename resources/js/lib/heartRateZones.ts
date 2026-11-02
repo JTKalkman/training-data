@@ -34,21 +34,21 @@ const heartRateZoneColorMap: Record<string, ColorConfig> = {
   orange: {
     hex: {
       foreground_color: '#ff6900',
-      background_color: '#ffd6a7'
+      background_color: '#ffb86a'
     },
     tailwind: {
       foreground_color: 'bg-orange-500',
-      background_color: 'bg-orange-200'
+      background_color: 'bg-orange-300'
     }
   },
   red: {
     hex: {
       foreground_color: '#fb2c36',
-      background_color: '#ffc9c9'
+      background_color: '#ffa2a2'
     },
     tailwind: {
       foreground_color: 'bg-red-500',
-      background_color: 'bg-red-200'
+      background_color: 'bg-red-300'
     }
   },
 };

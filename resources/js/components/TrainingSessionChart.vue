@@ -27,6 +27,40 @@ const chartCanvas = ref<HTMLCanvasElement | null>(null);
 let chartInstance: Chart;
 let lastEmittedIndex: number | null = null;
 
+const zoneBackgroundPlugin = {
+  id: 'zoneBackground',
+  beforeDatasetsDraw(chart: Chart, _args: unknown, options: { zones?: ColorZone[] }) {
+    const zones = options?.zones;
+    if (!zones?.length) return; // speed, altitude, or no zones: no bands
+
+    const { ctx, chartArea, scales } = chart;
+    const { min: axisMin, max: axisMax } = scales.y;
+    const sorted = [...zones].sort((a, b) => a.min - b.min);
+
+    ctx.save();
+    ctx.beginPath();
+    ctx.rect(chartArea.left, chartArea.top, chartArea.width, chartArea.height);
+    ctx.clip();
+    ctx.globalAlpha = 0.5; // soften the background colors; tune to taste
+
+    sorted.forEach((zone, i) => {
+      const isFirst = i === 0;
+      const isLast = i === sorted.length - 1;
+
+      const from = isFirst ? Math.min(zone.min, axisMin) : zone.min;
+      const to = isLast ? Math.max(zone.max, axisMax) : sorted[i + 1].min;
+
+      const a = scales.y.getPixelForValue(from);
+      const b = scales.y.getPixelForValue(to);
+
+      ctx.fillStyle = zone.colorConfig.hex.background_color;
+      ctx.fillRect(chartArea.left, Math.min(a, b), chartArea.width, Math.abs(a - b));
+    });
+
+    ctx.restore();
+  },
+};
+
 const drawChart = () => {
   Chart.register(CategoryScale, LinearScale, LineController, PointElement, LineElement)
 
@@ -76,7 +110,7 @@ const drawChart = () => {
       },
       scales: {
         x: {
-          display: true,
+          display: false,
           ticks: {
             display: false,
           },
@@ -89,7 +123,7 @@ const drawChart = () => {
           position: 'top',
         },
         y: {
-          display: true,
+          display: false,
           reverse: props.reverse,
           ticks: {
             display: false,
@@ -97,8 +131,9 @@ const drawChart = () => {
           },
           border: {
             display: false,
+            width: 0,
           },
-          position: 'right'
+          position: 'right',
         }
       },
       interaction: {
@@ -123,11 +158,11 @@ const drawChart = () => {
         }
       },
       plugins: {
-        tooltip: {
-          enabled: false,
-        }
-      }
+        tooltip: { enabled: false, },
+        zoneBackground: { zones: props.zones },
+      },
     },
+    plugins: [zoneBackgroundPlugin],
   }
 
   const yScale = config?.options?.scales?.y
