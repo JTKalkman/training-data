@@ -21,7 +21,7 @@ class PaceZoneSet extends Model
         return $this->hasMany(PaceZone::class);
     }
 
-    public static function forMas(user $user, int $masSecondsPerKm)
+    public static function forMas(user $user, int $masSecondsPerKm): PaceZoneSet
     {
         return DB::transaction(function () use ($user, $masSecondsPerKm) {
             $set = self::firstOrCreate([
