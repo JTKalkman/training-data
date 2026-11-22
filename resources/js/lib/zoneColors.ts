@@ -3,25 +3,35 @@ import { ColorConfig } from "@/types";
 export const zoneColors: Record<number, ColorConfig> = {
   1: {
     hex: {
-      foreground_color: '#74d4ff',
-      background_color: '#dff2fe'
+      foreground_color: '#737373',
+      background_color: '#e5e5e5'
     },
     tailwind: {
-      foreground_color: 'bg-sky-300',
-      background_color: 'bg-sky-100'
+      foreground_color: 'bg-neutral-500',
+      background_color: 'bg-neutral-300'
     }
   },
   2: {
     hex: {
-      foreground_color: '#00c950',
-      background_color: '#b9f8cf'
+      foreground_color: '#0084d1',
+      background_color: '#74d4ff'
     },
     tailwind: {
-      foreground_color: 'bg-green-500',
-      background_color: 'bg-green-200'
+      foreground_color: 'bg-sky-500',
+      background_color: 'bg-sky-300'
     }
   },
   3: {
+    hex: {
+      foreground_color: '#00a63e',
+      background_color: '#7bf1a8'
+    },
+    tailwind: {
+      foreground_color: 'bg-green-600',
+      background_color: 'bg-green-300'
+    }
+  },
+  4: {
     hex: {
       foreground_color: '#f0b100',
       background_color: '#fff085'
@@ -31,23 +41,13 @@ export const zoneColors: Record<number, ColorConfig> = {
       background_color: 'bg-yellow-200'
     }
   },
-  4: {
-    hex: {
-      foreground_color: '#ff6900',
-      background_color: '#ffb86a'
-    },
-    tailwind: {
-      foreground_color: 'bg-orange-500',
-      background_color: 'bg-orange-300'
-    }
-  },
   5: {
     hex: {
-      foreground_color: '#fb2c36',
+      foreground_color: '#e7000b',
       background_color: '#ffa2a2'
     },
     tailwind: {
-      foreground_color: 'bg-red-500',
+      foreground_color: 'bg-red-600',
       background_color: 'bg-red-300'
     }
   },
