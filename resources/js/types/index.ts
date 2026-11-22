@@ -20,4 +20,3 @@ export * from './training-summary';
 export * from './ui'; 
 export * from './week-navigation';
 export * from './training-session-navigation';
-export * from './running-pace-zone';
