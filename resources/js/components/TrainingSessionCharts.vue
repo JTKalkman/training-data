@@ -38,7 +38,7 @@ const availableFields = computed(() => {
 
 const heartRateColorZones = computed<ColorZone[]>(() => {
   return props.heartRateZones.map((zone) => {
-    const colorConfig: ColorConfig | null = zone.color ? heartRateZoneColors(zone.color) : null;
+    const colorConfig: ColorConfig | null = zone.color ? heartRateZoneColors(zone.zone_number) : null;
 
     return {
       min: zone.min_bpm,
@@ -267,13 +267,6 @@ const hoverPaceZone = computed(() => {
   return getZoneForPace(hoverPace.value, props.paceZones);
 })
 
-const hoverHeartRateZoneColorConfig = computed(() => {
-  if (!chartHoverPosition.value) return null;
-  if (!hoverHeartRate.value) return null;
-
-  return getZoneColor(hoverHeartRate.value, heartRateColorZones.value, chartDefaultColors);
-})
-
 const chartsContainer = ref<HTMLElement | null>(null);
 const containerHeight = ref(0);
 const containerWidth = ref(0);
@@ -435,7 +428,7 @@ onMounted(() => {
               <p class="text-nowrap">{{ chartData.datasets[field].metaData.minStr }}</p>
             </div>
       
-            <div class="grow flex flex-col border-b-2 border-l-2">
+            <div class="grow flex flex-col">
               <TrainingSessionChart
                 :field="field"
                 :data="chartData.datasets[field].samples"
