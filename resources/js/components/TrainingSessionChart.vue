@@ -41,7 +41,7 @@ const zoneBackgroundPlugin = {
     ctx.beginPath();
     ctx.rect(chartArea.left, chartArea.top, chartArea.width, chartArea.height);
     ctx.clip();
-    ctx.globalAlpha = 0.5; // soften the background colors; tune to taste
+    // ctx.globalAlpha = 0.5; // soften the background colors; tune to taste
 
     sorted.forEach((zone, i) => {
       const isFirst = i === 0;
@@ -180,9 +180,10 @@ onMounted(() => {
 </script>
 
 <template>
+  <!-- bg-white -->
   <div 
     :class="[
-      'w-full h-28 bg-white',
+      'w-full h-28 ',
       props.zones.length > 0
         ? `dark:bg-neutral-200`
         : `dark:bg-sidebar-accent`
