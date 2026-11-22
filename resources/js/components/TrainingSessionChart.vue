@@ -53,7 +53,7 @@ const zoneBackgroundPlugin = {
       const a = scales.y.getPixelForValue(from);
       const b = scales.y.getPixelForValue(to);
 
-      ctx.fillStyle = zone.colorConfig.hex.background_color;
+      ctx.fillStyle = zone.colorConfig ? zone.colorConfig.hex.background_color : '';
       ctx.fillRect(chartArea.left, Math.min(a, b), chartArea.width, Math.abs(a - b));
     });
 
