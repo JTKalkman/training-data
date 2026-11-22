@@ -180,11 +180,17 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="w-full h-28">
+  <div 
+    :class="[
+      'w-full h-28 bg-white',
+      props.zones.length > 0
+        ? `dark:bg-neutral-200`
+        : `dark:bg-sidebar-accent`
+    ]"
+  >
     <canvas 
       ref="chartCanvas" 
       @mouseleave="emit('hover', null)"
-      class=""
     ></canvas>
   </div>
 </template>

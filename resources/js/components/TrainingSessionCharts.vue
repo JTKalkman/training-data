@@ -428,7 +428,7 @@ onMounted(() => {
               <p class="text-nowrap">{{ chartData.datasets[field].metaData.minStr }}</p>
             </div>
       
-            <div class="grow flex flex-col border-b-2 border-l-2">
+            <div class="grow flex flex-col">
               <TrainingSessionChart
                 :field="field"
                 :data="chartData.datasets[field].samples"
