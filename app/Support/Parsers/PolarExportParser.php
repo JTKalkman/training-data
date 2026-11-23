@@ -8,7 +8,7 @@ use App\Support\Calculators\PaceCalculator;
 use App\Support\Duration;
 use App\Support\Parsers\Mappers\HeartRateZoneMapper;
 use App\Support\Parsers\Mappers\PolarExportSampleTypeMapper;
-use Carbon\Carbon;
+use App\Support\PolarTime;
 
 class PolarExportParser implements ParserInterface
 {
@@ -31,8 +31,10 @@ class PolarExportParser implements ParserInterface
     public function createSessionData(array $data): ParsedSessionData
     {
         $dataSource = DataSource::where(['name' => 'polar'])->first();
-        $startedAt = Carbon::parse($data['exercises'][0]['startTime']);
-        $UtcOffset = $data['exercises'][0]['timezoneOffsetMinutes'];
+        $offset = $data['exercises'][0]['timezoneOffsetMinutes'];
+
+        // Polar gives local wall-clock time; convert to true UTC.
+        $startedAt = PolarTime::toUtc($data['exercises'][0]['start_time'], $offset);
         $duration = Duration::fromMillis($data['exercises'][0]['durationMillis']);
 
         $externalSportType = ExternalSportTypeMapping::where('data_source_id', $dataSource->id)
@@ -45,7 +47,7 @@ class PolarExportParser implements ParserInterface
             'sport_type_id' => $sportType ? $sportType->id : null,
             'started_at' => $startedAt,
             'duration_seconds' => $duration,
-            'utc_offset' => $UtcOffset,
+            'utc_offset' => $offset,
             'data_source_id' => $dataSource->id,
             'external_id' => $data['exercises'][0]['identifier']['id']
         ]);

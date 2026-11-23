@@ -6,9 +6,9 @@ use App\Models\DataSource;
 use App\Models\ExternalSportTypeMapping;
 use App\Support\Calculators\PaceCalculator;
 use App\Support\Duration;
+use App\Support\PolarTime;
 use App\Support\Parsers\Mappers\HeartRateZoneMapper;
 use App\Support\Parsers\Mappers\PolarAPISampleTypeMapper;
-use Carbon\Carbon;
 
 class PolarApiParser implements ParserInterface
 {
@@ -31,15 +31,16 @@ class PolarApiParser implements ParserInterface
         $externalSportType = ExternalSportTypeMapping::where('data_source_id', $dataSource->id)
             ->where('external_name', $data['detailed_sport_info'] ?? null)
             ->firstOrFail();
-        $startedAt = Carbon::parse($data['start_time']);
-        $UtcOffset = $data['start_time_utc_offset'];
+        $offset = $data['start_time_utc_offset'];
+        // Polar gives local wall-clock time; convert to true UTC.
+        $startedAt = PolarTime::toUtc($data['start_time'], $offset);
         $duration = Duration::fromIso($data['duration']);
 
         return new ParsedSessionData([
             'sport_type_id' => $externalSportType ? $externalSportType->sport_type_id : null,
             'started_at' => $startedAt,
             'duration_seconds' => $duration,
-            'utc_offset' => $UtcOffset,
+            'utc_offset' => $offset,
             'data_source_id' => $dataSource->id,
             'external_id' => $data['id'],
         ]);
