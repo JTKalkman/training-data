@@ -79,6 +79,8 @@ abstract class ProfileSync
             $parser = $this->parser();
 
             foreach ($exercises as $exercise) {
+                $parsed = $parser->parse($exercise);
+
                 // Check for duplicates based on id.
                 $existingId = TrainingSession::where([
                     'user_id' => $profile->user->id,
@@ -86,16 +88,17 @@ abstract class ProfileSync
                     'external_id' => $exercise['id'],
                 ])->exists();
 
-                // Check for duplicates based on the start time.
-                $existingStartTime = TrainingSession::where([
-                    'user_id' => $profile->user->id,
-                    'data_source_id' => $dataSource->id,
-                    'started_at' => $exercise['start_time']
-                ])->exists();
+                // Same session already imported (any source), within a small tolerance.
+                $existingStartTime = TrainingSession::where('user_id', $profile->user->id)
+                    ->whereBetween('started_at', [
+                        $parsed->sessionData->startedAt->copy()->subSeconds(2),
+                        $parsed->sessionData->startedAt->copy()->addSeconds(2),
+                    ])
+                ->exists();
 
                 try {
                     if (! ($existingId || $existingStartTime)) {
-                        $importer->import($profile->user, $dataSource, $parser->parse($exercise));
+                        $importer->import($profile->user, $dataSource, $parsed);
                     }
                 } catch (Throwable $th) {
                     if (! ((int) $th->errorInfo[1] === 1062)) {

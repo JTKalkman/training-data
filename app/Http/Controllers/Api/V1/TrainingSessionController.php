@@ -12,9 +12,9 @@ use App\Models\TrainingSession;
 use App\Support\DTO\Api\V1\PaginationMeta;
 use App\Support\Importers\TrainingSessionImporter;
 use App\Support\Parsers\PolarExportParser;
+use App\Support\PolarTime;
 use App\Traits\Api\V1\ApiResponses;
-use Carbon\Carbon;
-// use DateTimeInterface;
+
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Response;
@@ -122,7 +122,7 @@ class TrainingSessionController extends Controller
         $data = $request->validated();
         $user = Auth::user();
         $dataSource = DataSource::where('name', $data['platform'])->firstOrFail();
-        $startedAt = Carbon::parse($data['startedAt']);
+        $startedAt = PolarTime::toUtc($data['startedAt'], $data['timezoneOffsetMinutes']);
 
         // Check for duplicate training sessions based on ID.
         $existingId = TrainingSession::where([
@@ -143,6 +143,14 @@ class TrainingSessionController extends Controller
             'data_source_id' => $dataSource->id,
             'started_at' => $startedAt
         ])->exists();
+
+        // Same session already imported (any source), within a small tolerance.
+        $existingStartTime = TrainingSession::where('user_id', $user->id)
+            ->whereBetween('started_at', [
+                $startedAt->copy()->subSeconds(2),
+                $startedAt->copy()->addSeconds(2),
+            ])
+            ->exists();
 
         if ($existingStartTime) {
             return response()->json([
