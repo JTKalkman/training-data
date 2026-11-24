@@ -14,8 +14,7 @@ use App\Support\Importers\TrainingSessionImporter;
 use App\Support\Parsers\PolarExportParser;
 use App\Support\PolarTime;
 use App\Traits\Api\V1\ApiResponses;
-use Carbon\Carbon;
-// use DateTimeInterface;
+
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Response;
